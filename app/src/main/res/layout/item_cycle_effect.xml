@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="42dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="10dp"
+    android:paddingEnd="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="?attr/elementBackground"
+    android:layout_marginBottom="1dp">
+
+    <!-- Назва ефекту (Збільшив до 18sp) -->
+    <TextView
+        android:id="@+id/textEffectName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Effect Name"
+        android:textColor="?attr/mainTextColor"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:includeFontPadding="false"/>
+
+    <!-- Галочка -->
+    <CheckBox
+        android:id="@+id/checkInclude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:buttonTint="?attr/accentColor"/>
+
+</LinearLayout>

@@ -1,0 +1,91 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ============================================== -->
+    <!-- ТЕМА 1: НЕОН (Темна, за замовчуванням)         -->
+    <!-- ============================================== -->
+    <style name="Theme.LedLamp" parent="Theme.AppCompat.NoActionBar">
+        <!-- Наші змінні -->
+        <item name="appBackground">#121212</item>          <!-- Темно-сірий фон -->
+        <item name="elementBackground">@drawable/bg_compact</item> <!-- Темні плашки -->
+        <item name="mainTextColor">#FFFFFF</item>          <!-- Білий текст -->
+        <item name="subTextColor">#AAAAAA</item>           <!-- Сірий текст -->
+        <item name="accentColor">#00FF00</item>            <!-- Неоновий зелений -->
+        <item name="dangerColor">#FF3333</item>            <!-- Червоний -->
+        
+        <!-- НОВЕ: Колір панелей/плашок -->
+        <item name="panelColor">#2C2C2C</item>
+
+        <!-- Кольори інструментів малювання -->
+        <item name="toolBtnColor">#2C2C2C</item>
+        <item name="toolIconColor">#FFFFFF</item>
+
+        <!-- Стандартні атрибути Android (для сумісності) -->
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#AAAAAA</item>
+        <item name="android:windowBackground">#121212</item>
+        <item name="colorControlNormal">#FFFFFF</item>     <!-- Колір іконок (в т.ч. кнопки назад) -->
+
+        <!-- Системні налаштування (status bar) -->
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- ============================================== -->
+    <!-- ТЕМА 2: СВІТЛА (Light / Day)                   -->
+    <!-- ============================================== -->
+    <style name="Theme.LedLamp.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="appBackground">#F2F2F2</item>          <!-- Світлий фон (трохи сіруватий для комфорту) -->
+        <item name="elementBackground">@drawable/bg_compact_light</item> <!-- Світлі плашки -->
+        <item name="mainTextColor">#121212</item>          <!-- Чорний текст -->
+        <item name="subTextColor">#555555</item>           <!-- Темно-сірий текст -->
+        <item name="accentColor">#00AA00</item>            <!-- Зелений (темніший для контрасту на білому) -->
+        <item name="dangerColor">#CC0000</item>            <!-- Червоний -->
+
+        <!-- НОВЕ: Колір панелей/плашок (білий на світло-сірому фоні) -->
+        <item name="panelColor">#FFFFFF</item>
+
+        <!-- Кольори інструментів малювання -->
+        <item name="toolBtnColor">#E0E0E0</item>
+        <item name="toolIconColor">#121212</item>
+
+        <!-- Стандартні атрибути Android -->
+        <item name="android:textColor">#121212</item>
+        <item name="android:textColorPrimary">#121212</item>
+        <item name="android:textColorSecondary">#555555</item>
+        <item name="android:windowBackground">#F2F2F2</item>
+        <item name="colorControlNormal">#121212</item>     <!-- Колір іконок (кнопка назад стане чорною) -->
+
+        <item name="android:statusBarColor">#E0E0E0</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- ============================================== -->
+    <!-- ТЕМА 3: КІБЕРПАНК (Blue / Pink)                -->
+    <!-- ============================================== -->
+    <style name="Theme.LedLamp.Cyberpunk" parent="Theme.AppCompat.NoActionBar">
+        <item name="appBackground">#050A30</item>          <!-- Глибокий синій -->
+        <item name="elementBackground">@drawable/bg_compact</item>
+        <item name="mainTextColor">#00F0FF</item>          <!-- Блакитний неон -->
+        <item name="subTextColor">#D000F0</item>           <!-- Рожевий неон -->
+        <item name="accentColor">#FFFF00</item>            <!-- Жовтий -->
+        <item name="dangerColor">#FF0055</item>            <!-- Маджента -->
+
+        <!-- НОВЕ: Колір панелей/плашок -->
+        <item name="panelColor">#273C90</item>
+
+        <!-- Кольори інструментів малювання (Кіберпанк) -->
+        <item name="toolBtnColor">#3F51B5</item>           <!-- Темно-синій фон -->
+        <item name="toolIconColor">#0B1340</item>          <!-- Неоновий блакитний для іконок -->
+
+        <!-- Стандартні атрибути -->
+        <item name="android:textColor">#00F0FF</item>
+        <item name="android:textColorPrimary">#00F0FF</item>
+        <item name="android:textColorSecondary">#D000F0</item>
+        <item name="android:windowBackground">#050A30</item>
+        <item name="colorControlNormal">#00F0FF</item>
+
+        <item name="android:statusBarColor">#020515</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

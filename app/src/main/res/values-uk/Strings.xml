@@ -1,0 +1,294 @@
+<resources>
+    <string name="app_name">LedLamp Control</string>
+
+    <!-- ГОЛОВНИЙ ЕКРАН -->
+    <string name="label_lamp">ЛАМПА</string>
+    <string name="label_cycle">ЦИКЛ</string>
+    <string name="label_brightness">ЯСКРАВІСТЬ</string>
+    <string name="label_speed">ШВИДКІСТЬ</string>
+    <string name="label_scale">МАСШТАБ</string>
+    <string name="label_color">КОЛІР</string>
+    <string name="btn_reset">СКИНУТИ</string>
+
+    <!-- МЕНЮ -->
+    <string name="menu_title">МЕНЮ</string>
+    <string name="menu_connection">З\'ЄДНАННЯ</string>
+    <string name="menu_app_settings">НАЛАШТУВАННЯ ДОДАТКУ</string>
+    <string name="menu_effects">КЕРУВАННЯ ЕФЕКТАМИ</string>
+    <string name="menu_matrix">НАЛАШТУВАННЯ МАТРИЦІ</string>
+    <string name="menu_cycle_mode">РЕЖИМ ЦИКЛУ</string>
+    <string name="menu_dawn_alarm">СВІТАНОК</string>
+    <string name="menu_sleep_timer">ТАЙМЕР ВИМКНЕННЯ</string>
+    <string name="menu_schedule">РОЗКЛАД ВМИКАННЯ</string>
+    <string name="menu_painting">МАЛЮВАННЯ</string>
+    <string name="menu_language">МОВА / LANGUAGE</string>
+    <string name="btn_back">НАЗАД</string>
+
+    <!-- ЕКРАН З'ЄДНАННЯ -->
+    <string name="title_connection">НАЛАШТУВАННЯ З\'ЄДНАННЯ</string>
+    <string name="label_ip_address">Адреса лампи:</string>
+    <string name="btn_find_lamps">ЗНАЙТИ ЛАМПИ</string>
+    <string name="btn_check_connection">ПЕРЕВІРИТИ З\'ЄДНАННЯ</string>
+    <string name="btn_save_exit">ЗБЕРЕГТИ ТА ПОВЕРНУТИСЬ</string>
+    <string name="btn_clear_list">ОЧИСТИТИ СПИСОК</string>
+    <string name="btn_reset_wifi">СКИНУТИ WI-FI ЛАМПИ</string>
+    <string name="info_ap">192.168.4.1 - Точка доступу</string>
+    <string name="info_pass">Пароль: 12345678</string>
+    <string name="hint_name">Назва (напр. Кухня)</string>
+    <string name="btn_add_lamp">ДОДАТИ ЛАМПУ</string>
+    <string name="label_saved_lamps">Збережені лампи:</string>
+
+    <!-- ЕКРАН НАЛАШТУВАНЬ ДОДАТКУ -->
+    <string name="title_app_settings">НАЛАШТУВАННЯ ПРОГРАМИ</string>
+    <string name="label_vibration">Вібрація при натисканні</string>
+    <string name="label_confirm_exit">Підтверджувати вихід</string>
+    <string name="label_slider_style">СТИЛЬ РЕГУЛЯТОРІВ</string>
+    <string name="style_neon">Неон (Стандарт)</string>
+    <string name="style_plasma">Плазма</string>
+    <string name="style_cyber">Кібер</string>
+    <string name="style_gradient">Градієнт</string>
+    <string name="label_timezone">Часовий пояс (GMT)</string>
+    <string name="label_auto_dst">Автоматичний літній час</string>
+    <string name="label_draw_order">Порядок кольорів (RGB/GRB)</string>
+
+    <!-- ЕКРАН МАТРИЦІ / ТЕКСТУ -->
+    <string name="title_matrix">НАЛАШТУВАННЯ МАТРИЦІ</string>
+    <string name="menu_text">ТЕКСТОВИЙ РЯДОК</string>
+    <string name="label_running_text">Бігучий рядок</string>
+    <string name="hint_enter_text">Введіть текст...</string>
+    <string name="btn_send_text">ВІДПРАВИТИ ТЕКСТ</string>
+
+    <string name="btn_help">ДОВІДКА КОМАНД</string>
+    <string name="title_help">ТЕКСТОВІ КОМАНДИ КЕРУВАННЯ</string>
+
+    <!-- ЕКРАН СПИСКУ ЕФЕКТІВ -->
+    <string name="title_effects">СПИСОК ЕФЕКТІВ</string>
+
+    <!-- ПОВІДОМЛЕННЯ ТА ДІАЛОГИ -->
+    <string name="msg_lamp_not_found">Лампа не відповідає!</string>
+    <string name="msg_saved">Збережено!</string>
+    <string name="msg_reset_done">Налаштування скинуто!</string>
+    <string name="msg_hidden_effect">Грає прихований ефект: %1$s</string>
+    <string name="msg_text_sent">Текст відправлено!</string>
+    <string name="msg_syncing">Синхронізація...</string>
+    <string name="msg_synced">Синхронізовано!</string>
+
+    <!-- Нові переклади для ConnectionActivity -->
+    <string name="msg_ip_exists">IP вже існує!</string>
+    <string name="msg_empty_fields">Помилка: Порожні поля</string>
+    <string name="msg_scanning">Сканування...</string>
+    <string name="msg_pinging">Ping %1$s...</string>
+    <string name="msg_ping_ok">✅ %1$s OK!</string>
+    <string name="msg_reset_cmd_sent">Команду скидання надіслано</string>
+    <string name="msg_deleted">Видалено</string>
+    <string name="msg_found_lamp">Знайдено: %1$s</string>
+    <string name="default_new_lamp_name">Нова Лампа</string>
+
+    <string name="dialog_delete_title">Видалення</string>
+    <string name="dialog_delete_msg">Видалити лампу \"%1$s\"?</string>
+
+    <string name="dialog_reset_title">Скидання Wi-Fi</string>
+    <string name="dialog_reset_msg">Ви впевнені, що хочете скинути Wi-Fi для \"%1$s\"?</string>
+
+    <string name="btn_yes">ТАК</string>
+    <string name="btn_no">НІ</string>
+    <string name="btn_cancel">СКАСУВАТИ</string>
+
+    <!-- ЕКРАН ЦИКЛУ -->
+    <string name="title_cycle_settings">НАЛАШТУВАННЯ ЦИКЛУ</string>
+    <string name="label_keep_cycle">Не вимикати цикл при вимкненні лампи</string>
+    <string name="label_interval">Інтервал зміни</string>
+    <string name="btn_select_all">ВИБРАТИ ВСЕ</string>
+    <string name="btn_deselect_all">ЗНЯТИ ВСЕ</string>
+    <string name="unit_sec">сек</string>
+    <string name="unit_min">хв</string>
+
+    <!-- БУДИЛЬНИК -->
+    <string name="title_dawn_alarm">БУДИЛЬНИК \"СВІТАНОК\"</string>
+    <string name="label_dawn_duration">Тривалість світанку</string>
+    <string name="label_lamp_time">Час у лампі: </string>
+    <string name="btn_sync_time">СИНХРОНІЗУВАТИ ЧАС</string>
+    <string name="day_mon">Понеділок</string>
+    <string name="day_tue">Вівторок</string>
+    <string name="day_wed">Середа</string>
+    <string name="day_thu">Четвер</string>
+    <string name="day_fri">П\'ятниця</string>
+    <string name="day_sat">Субота</string>
+    <string name="day_sun">Неділя</string>
+
+    <!-- ТАЙМЕР -->
+    <string name="title_sleep_timer">ТАЙМЕР ВИМКНЕННЯ</string>
+    <string name="label_turn_off_in">Вимкнути лампу через</string>
+    <string name="label_countdown">Вимкнення через:</string>
+    <string name="timer_off">Не вимикати</string>
+    <string name="timer_min">хв</string>
+    <string name="timer_not_active">Таймер не активний</string>
+
+    <!-- РОЗКЛАД -->
+    <string name="title_schedule">НАЛАШТУВАННЯ РОЗКЛАДУ</string>
+    <string name="label_enable_schedule">Увімкнути розклад</string>
+    <string name="label_time_on">ЧАС ВВІМКНЕННЯ</string>
+    <string name="label_time_off">ЧАС ВИМКНЕННЯ</string>
+    <string name="btn_save_send">ЗБЕРЕГТИ ТА ВІДПРАВИТИ</string>
+
+    <string name="title_weekly_schedule">ТИЖНЕВИЙ РОЗКЛАД</string>
+    <string name="btn_send_to_lamp">ЗБЕРЕГТИ ТА ВІДПРАВИТИ</string>
+    <string name="title_day_edit">РЕДАГУВАННЯ: %1$s</string>
+    <string name="action_none">Немає дії</string>
+    <string name="action_on">УВІМКНУТИ</string>
+    <string name="action_off">ВИМКНУТИ</string>
+    <string name="slot_label">Подія %1$d</string>
+
+    <string name="short_day_mon">Пн</string>
+    <string name="short_day_tue">Вт</string>
+    <string name="short_day_wed">Ср</string>
+    <string name="short_day_thu">Чт</string>
+    <string name="short_day_fri">Пт</string>
+    <string name="short_day_sat">Сб</string>
+    <string name="short_day_sun">Нд</string>
+
+    <!-- МАЛЮВАННЯ -->
+    <string name="title_painting">МАЛЮВАННЯ</string>
+    <string name="btn_clear_matrix">ОЧИСТИТИ МАТРИЦЮ</string>
+    <string name="label_brush_brightness">Яскравість</string>
+
+    <string name="text_help_content"><![CDATA[
+        Введіть ці команди в поле тексту та натисніть ВІДПРАВИТИ.<br><br>
+        <b>СИСТЕМНІ:</b><br>
+        <b>TXT-reset=wifi</b><br>
+        — Скинути налаштування Wi-Fi (Лампа створить Точку Доступу).<br><br>
+        <b>TXT-reset=effects</b><br>
+        — Скинути налаштування всіх ефектів на заводські.<br><br>
+        <b>TXT-esp_mode=1</b><br>
+        — Перемкнути в режим Роутера (Клієнт).<br><br>
+        <b>TXT-esp_mode=0</b><br>
+        — Перемкнути в режим Точки Доступу.<br><br>
+        <b>РАНДОМІЗАТОР:</b><br>
+        <b>TXT-random=on</b><br>
+        — Увімкнути випадковість у циклі.<br><br>
+       <b>TXT-random=off</b><br>
+        — Вимкнути рандомізатор.
+    ]]></string>
+
+    <!-- ІНСТРУКЦІЯ (КНОПКИ МЕНЮ) -->
+    <string name="menu_manual">ІНСТРУКЦІЯ</string>
+    <string name="title_manual_1">1. ПІДКЛЮЧЕННЯ</string>
+    <string name="title_manual_2">2. РОБОТА З ДОДАТКОМ</string>
+    <string name="title_manual_3">3. КЕРУВАННЯ КНОПКОЮ</string>
+    <string name="title_manual_4">4. БАГАТО ПРИСТРОЇВ</string>
+    <string name="title_manual_5">5. КОМАНДИ</string>
+
+    <!-- ТЕКСТИ ІНСТРУКЦІЙ (ТИМЧАСОВО АНГЛІЙСЬКОЮ, ЩОБ ЗАПУСТИЛОСЬ) -->
+    <!-- Ми не можемо видалити ці ключі, бо Java код їх використовує -->
+
+    <!-- ТЕКСТИ РОЗДІЛІВ -->
+
+    <!-- Розділ 1: Підключення -->
+    <string name="text_manual_1"><![CDATA[
+        <b>ПЕРШЕ ПІДКЛЮЧЕННЯ:</b><br>
+        1. Увімкніть лампу.<br>
+        2. Підключіться до Wi-Fi <b>LedLamp1</b> (пароль: <b>12345678</b>).<br>
+        3. Відкриється вікно налаштувань (або введіть в браузері адресу <b>192.168.4.1</b>).<br>
+        4. Введіть назву та пароль вашого роутера.<br>
+        5. Лампа перезавантажиться в режим клієнта і підключиться до вашої мережі.<br>
+        6. В меню \"З\'єднання\" зробіть пошук ламп. Після того, як відобразиться IP-адреса лампи, надайте їй ім\'я та натисніть \"Додати лампу\".<br><br>
+
+        <b>РЕЖИМИ РОБОТИ:</b><br>
+        1. <b>Точка Доступу (AP):</b> Лампа створює свою мережу. Немає інтернету.<br>
+        2. <b>Клієнт (WLAN):</b> Лампа підключена до роутера. Основний режим.<br><br>
+
+        <i>Якщо лампа не може підключитися до роутера, вона знову створить точку доступу.</i>
+    ]]></string>
+
+    <!-- Розділ 2: Додаток (Твій текст) -->
+    <string name="text_manual_2"><![CDATA[
+        <b><big>РОЗДІЛ 2. РОБОТА З ДОДАТКОМ</big></b><br><br>
+
+        <b>ГОЛОВНИЙ ЕКРАН:</b><br>
+        • <b>Вибір лампи:</b> Дозволяє обрати потрібну лампу, якщо їх декілька.<br>
+        • <b>Лампа:</b> Вмикає та вимикає лампу, а також відображає поточний стан.<br>
+        • <b>Цикл:</b> Вмикає автоматичну зміну ефектів. Налаштування часу зміни та перелік ефектів знаходиться в меню &quot;Режим Циклу&quot;.<br>
+        • <b>Список ефектів:</b> Дозволяє обрати ефект зі списку.<br>
+        • <b>Регулятори:</b><br>
+        — <i>Яскравість:</i> Яскравість поточного ефекту.<br>
+        — <i>Швидкість:</i> Швидкість анімації ефекту.<br>
+        — <i>Масштаб / Колір:</i> Для деяких ефектів змінює розмір елементів, для інших — вибирає колір (відображається як градієнт).<br>
+        • <b>Скинути:</b> Скидає налаштування поточного ефекту до стандартних.<br>
+        <br>
+        <i><b>ЗБЕРЕЖЕННЯ НАЛАШТУВАНЬ:</b><br>
+        Додаток автоматично запам\'ятовує останній обраний ефект. Лампа запам\'ятовує налаштування швидкості та яскравості для кожного ефекту окремо.</i><br>
+        <br>
+        --------------------------------<br>
+        <br>
+        <b><big>МЕНЮ НАЛАШТУВАНЬ</big></b><br><br>
+
+        <b>1. З\'ЄДНАННЯ</b><br>
+        Пошук ламп у мережі, додавання нових ламп за IP-адресою, редагування списку збережених ламп.<br><br>
+
+        <b>2. НАЛАШТУВАННЯ ДОДАТКУ</b><br>
+        Керування вібрацією, вибір стилю регуляторів, налаштування часу лампи. Лампа отримує час з мережі інтернет. Якщо інтернет відсутній, то час можна вказати лампі через відправку текстової команди або через кнопку &quot;Синхронізувати час&quot;. Якщо час на лампі буде відрізнятись від часу на телефоні, повторна синхронізація внесе корективи похибки. Синхронізація через інтернет завжди в пріоритеті.<br><br>
+
+        <b>3. КЕРУВАННЯ ЕФЕКТАМИ</b><br>
+        Сортування списку ефектів (перетягування вгору/вниз) та відключення непотрібних ефектів з головного екрану.<br><br>
+
+        <b>4. РЕЖИМ ЦИКЛУ</b><br>
+        Вибір ефектів, що будуть програватися в автоматичному режимі, та налаштування інтервалу їх зміни.<br><br>
+
+        <b>5. БУДИЛЬНИК &quot;СВІТАНОК&quot;</b><br>
+        Налаштування часу та днів тижня для увімкнення плавної імітації світанку перед пробудженням. Після режиму \"Світанок\" лампа перейде в режим роботи, який був до його початку. Якщо під час режиму \"Світанок\" буде спрацювання команди вимкнення або увімкнення за розкладом, команда виконається після завершення режиму \"Світанок\". <br><br>
+
+        <b>6. ТАЙМЕР ВИМКНЕННЯ</b><br>
+        Встановлення зворотного відліку до автоматичного вимкнення лампи.<br><br>
+
+        <b>7. МАЛЮВАННЯ</b><br>
+        Малювання пікселями на матриці в реальному часі. Доступні інструменти: олівець, гумка, вибір кольору та яскравості пензля. Малюнок буде збережений в ефекті &quot;Малюнок&quot;.<br><br>
+
+        <b>8. ТЕКСТ</b><br>
+        Відправка тексту для відображення в ефекті &quot;Текстовий рядок&quot;. Також тут можна вводити сервісні команди для лампи.<br><br>
+
+        <b>9. РОЗКЛАД ВМИКАННЯ</b><br>
+        Гнучке налаштування часу ввімкнення та вимкнення лампи по днях тижня (до 5 подій на день). Дозволяється увімкнення лампи одного дня, а вимикання — іншого.<br><br>
+
+        <b>10. МОВА / LANGUAGE</b><br>
+        Зміна мови інтерфейсу додатку (Українська, English, Dansk).
+    ]]></string>
+
+
+    <string name="text_manual_3"><![CDATA[
+        <b>КЕРУВАННЯ КНОПКОЮ:</b><br><br>
+        Керування лампою можливе за допомогою сенсорної кнопки, що розташована на верхній частині лампи. При натисканні кнопка світиться червоним кольором.<br><br>
+        • <b>1 клік</b> — Увімкнення / Вимкнення.<br>
+        • <b>2 кліки</b> — Наступний ефект.<br>
+        • <b>3 кліки</b> — Попередній ефект.<br>
+        • <b>4 кліки</b> — Режим оновлення прошивки OTA (для розробників прошивки лампи).<br>
+        • <b>5 кліків</b> — Показати IP-адресу (бігучий рядок).<br>
+        • <b>6 кліків</b> — Показати поточний час.<br>
+        • <b>7 кліків</b> — Зміна режиму Wi-Fi (Точка доступу <-> Клієнт).<br>
+        <br>
+        <b>УТРИМАННЯ:</b><br><br>
+        • <b>Утримання</b> — Зміна Яскравості.<br>
+        • <b>1 клік + Утримання</b> — Зміна Швидкості.<br>
+        • <b>2 кліки + Утримання</b> — Зміна Масштабу.<br>
+        <br>
+        <i>Примітка: Кожне наступне утримання змінює напрямок регулювання (збільшення/зменшення).</i>
+    ]]></string>
+
+
+    <!-- Розділ 4: Багато пристроїв -->
+    <string name="text_manual_4"><![CDATA[
+        <b>ДЕКІЛЬКА ТЕЛЕФОНІВ:</b><br>
+        Ви можете керувати лампою з різних телефонів.<br><br>
+
+        <b>СИНХРОНІЗАЦІЯ:</b><br>
+        • <b>Список &quot;Цикл&quot;:</b> Зберігається в лампі. Спільний для всіх. Список в лампі оновлюється при останній зміні на будь-якому телефоні.<br>
+        • <b>Порядок відображення ефектів на головному екрані:</b> Зберігається в телефоні. Індивідуальний для кожного.<br><br>
+
+        <b>ДЕКІЛЬКА ЛАМП:</b><br>
+        Додайте їх IP-адреси в меню &quot;З\'єднання&quot; і перемикайтеся між ними на головному екрані. Всі команди надсилаються тільки тій лампі, що вибрана на головному екрані.
+    ]]></string>
+    <string name="label_device_time">Час на пристрої:</string>
+    <string name="error_connection">Немає з\'єднання</string>
+    <string name="hint_dawn_description">Встановіть час пробудження (коли лампа світитиме на максимум). Ефект почнеться раніше, залежно від тривалості.</string>
+    <string name="dialog_exit_title">Вихід</string>
+    <string name="dialog_exit_msg">Вийти з програми?</string>
+</resources>

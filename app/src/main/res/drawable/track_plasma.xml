@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Фон (пуста частина) - Темно-сірий -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="5dp"/>
+            <solid android:color="#333333"/>
+            <size android:height="20dp"/> <!-- Товста лінія -->
+        </shape>
+    </item>
+
+    <!-- Заповнена частина - Неон -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="5dp"/>
+                <solid android:color="?attr/accentColor"/>
+                <size android:height="20dp"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>

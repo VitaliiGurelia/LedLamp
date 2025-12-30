@@ -1,0 +1,285 @@
+<resources>
+    <string name="app_name">LedLamp Control</string>
+
+    <!-- MAIN SCREEN -->
+    <string name="label_lamp">LAMPE</string>
+    <string name="label_cycle">CYKLUS</string>
+    <string name="label_brightness">LYSSTYRKE</string>
+    <string name="label_speed">HASTIGHED</string>
+    <string name="label_scale">SKALA</string>
+    <string name="label_color">FARVE</string>
+    <string name="btn_reset">NULSTIL</string>
+
+    <!-- MENUS -->
+    <string name="menu_title">MENU</string>
+    <string name="menu_connection">FORBINDELSE</string>
+    <string name="menu_app_settings">APP INDSTILLINGER</string>
+    <string name="menu_effects">EFFEKT STYRING</string>
+    <string name="menu_matrix">MATRIX INDSTILLINGER</string>
+    <string name="menu_cycle_mode">CYKLUS TILSTAND</string>
+    <string name="menu_dawn_alarm">SOLOPGANG</string>
+    <string name="menu_sleep_timer">SLUK TIMER</string>
+    <string name="menu_schedule">TÆNDINGSPLAN</string>
+    <string name="menu_painting">TEGNING</string>
+    <string name="menu_language">SPROG</string>
+    <string name="btn_back">TILBAGE</string>
+
+    <!-- CONNECTION -->
+    <string name="title_connection">FORBINDELSE OPSAETNING</string>
+    <string name="label_ip_address">Lampe Adresse:</string>
+    <string name="btn_find_lamps">FIND LAMPER</string>
+    <string name="btn_check_connection">TJEK FORBINDELSE</string>
+    <string name="btn_save_exit">GEM OG TILBAGE</string>
+    <string name="btn_clear_list">RYD LISTE</string>
+    <string name="btn_reset_wifi">NULSTIL WIFI</string>
+    <string name="info_ap">192.168.4.1 - Access Point</string>
+    <string name="info_pass">Kodeord: 12345678</string>
+    <string name="hint_name">Navn (f.eks. Køkken)</string>
+    <string name="btn_add_lamp">TILFØJ LAMPE</string>
+    <string name="label_saved_lamps">Gemte lamper:</string>
+
+    <!-- APP SETTINGS -->
+    <string name="title_app_settings">PROGRAM INDSTILLINGER</string>
+    <string name="label_vibration">Vibration ved tryk</string>
+    <string name="label_confirm_exit">Bekræft afslutning</string>
+    <string name="label_slider_style">SKYDER STIL</string>
+    <string name="style_neon">Neon (Standard)</string>
+    <string name="style_plasma">Plasma</string>
+    <string name="style_cyber">Cyber</string>
+    <string name="style_gradient">Gradient</string>
+
+    <!-- MATRIX -->
+    <string name="title_matrix">MATRIX INDSTILLINGER</string>
+    <string name="label_running_text">Løbende tekst</string>
+    <string name="hint_enter_text">Indtast tekst...</string>
+    <string name="btn_send_text">SEND TEKST</string>
+    <string name="label_draw_order">Farverækkefølge (RGB/GRB)</string>
+
+    <!-- EFFECTS -->
+    <string name="title_effects">EFFEKT LISTE</string>
+
+    <!-- MESSAGES -->
+    <string name="msg_lamp_not_found">Lampe svarer ikke!</string>
+    <string name="msg_saved">Gemt!</string>
+    <string name="msg_reset_done">Nulstillet!</string>
+    <string name="msg_hidden_effect">Spiller skjult effekt: %1$s</string>
+    <string name="msg_text_sent">Tekst sendt!</string>
+
+    <!-- Nye oversættelser for ConnectionActivity -->
+    <string name="msg_ip_exists">IP findes allerede!</string>
+    <string name="msg_empty_fields">Fejl: Tomme felter</string>
+    <string name="msg_scanning">Skanner...</string>
+    <string name="msg_pinging">Pinger %1$s...</string>
+    <string name="msg_ping_ok">✅ %1$s OK!</string>
+    <string name="msg_reset_cmd_sent">Nulstillingskommando sendt</string>
+    <string name="msg_deleted">Slettet</string>
+    <string name="msg_found_lamp">Fundet: %1$s</string>
+    <string name="default_new_lamp_name">Ny Lampe</string>
+
+    <string name="dialog_delete_title">Slet</string>
+    <string name="dialog_delete_msg">Slet lampe "%1$s"?</string>
+
+    <string name="dialog_reset_title">Nulstil Wi-Fi</string>
+    <string name="dialog_reset_msg">Er du sikker på at du vil nulstille Wi-Fi for "%1$s"?</string>
+
+    <string name="btn_yes">JA</string>
+    <string name="btn_no">NEJ</string>
+    <string name="btn_cancel">ANNULLER</string>
+
+    <string name="title_cycle_settings">CYKLUS INDSTILLINGER</string>
+    <string name="label_keep_cycle">Sluk ikke cyklus når lampen er slukket</string>
+    <string name="label_interval">Skifteinterval</string>
+    <string name="btn_select_all">VÆLG ALLE</string>
+    <string name="btn_deselect_all">FRAVÆLG ALLE</string>
+    <string name="unit_sec">sek</string>
+    <string name="unit_min">min</string>
+
+    <string name="title_dawn_alarm">LYS VÆKKEUR</string>
+    <string name="label_dawn_duration">Solopgang varighed</string>
+    <string name="label_lamp_time">Lampe tid: </string>
+    <string name="btn_sync_time">SYNKRONISER TID</string>
+    <string name="day_mon">Mandag</string>
+    <string name="day_tue">Tirsdag</string>
+    <string name="day_wed">Onsdag</string>
+    <string name="day_thu">Torsdag</string>
+    <string name="day_fri">Fredag</string>
+    <string name="day_sat">Lørdag</string>
+    <string name="day_sun">Søndag</string>
+
+    <string name="title_sleep_timer">SLUK TIMER</string>
+    <string name="label_turn_off_in">Sluk lampen om</string>
+    <string name="label_countdown">Slukker om:</string>
+    <string name="timer_off">Sluk ikke</string>
+    <string name="timer_min">min</string>
+    <string name="timer_not_active">Timer ikke aktiv</string>
+
+    <string name="title_schedule">TIDSPLAN INDSTILLINGER</string>
+    <string name="label_enable_schedule">Aktiver tidsplan</string>
+    <string name="label_time_on">TÆND TID</string>
+    <string name="label_time_off">SLUK TID</string>
+    <string name="btn_save_send">GEM OG SEND</string>
+
+    <string name="title_weekly_schedule">UGENTLIG TIDSPLAN</string>
+    <string name="btn_send_to_lamp">GEM OG SEND</string>
+    <string name="title_day_edit">REDIGER: %1$s</string>
+    <string name="action_none">Ingen handling</string>
+    <string name="action_on">TÆND</string>
+    <string name="action_off">SLUK</string>
+    <string name="slot_label">Begivenhed %1$d</string>
+    <string name="msg_syncing">Synkronisering...</string>
+    <string name="msg_synced">Synkroniseret!</string>
+    <string name="short_day_mon">Man</string>
+    <string name="short_day_tue">Tir</string>
+    <string name="short_day_wed">Ons</string>
+    <string name="short_day_thu">Tor</string>
+    <string name="short_day_fri">Fre</string>
+    <string name="short_day_sat">Lør</string>
+    <string name="short_day_sun">Søn</string>
+
+    <string name="title_painting">TEGNING</string>
+    <string name="btn_clear_matrix">RYD MATRIX</string>
+
+    <string name="label_timezone">Tidszone (GMT)</string>
+    <string name="label_auto_dst">Automatisk sommertid</string>
+
+    <string name="label_brush_brightness">Lysstyrke</string>
+
+    <string name="menu_text">LØBENDE TEKST</string>
+
+    <string name="btn_help">KOMMANDO HJÆLP</string>
+    <string name="title_help">TEKSTKOMMANDOER</string>
+    <string name="text_help_content"><![CDATA[
+        Indtast disse kommandoer i tekstfeltet, og tryk på SEND.<br><br>
+        <b>SYSTEM:</b><br>
+        <b>TXT-reset=wifi</b><br>
+        — Nulstil Wi-Fi-indstillinger.<br><br>
+        <b>TXT-reset=effects</b><br>
+        — Nulstil alle effekter til standard.<br><br>
+        <b>TXT-esp_mode=1</b><br>
+        — Skift til Router-tilstand (Client).<br><br>
+        <b>TXT-esp_mode=0</b><br>
+        — Skift til Adgangspunkt-tilstand (AP).<br><br>
+        <b>RANDOMIZER:</b><br>
+        <b>TXT-random=on</b><br>
+        — Aktiver tilfældig hastighed i cyklus.<br><br>
+        <b>TXT-random=off</b><br>
+        — Deaktiver randomizer.
+    ]]></string>
+    <string name="menu_manual">BRUGERMANUAL</string>
+    <!-- AFSNITSOVERSKRIFTER -->
+    <string name="title_manual_1">1. FORBINDELSE</string>
+    <string name="title_manual_2">2. APP BRUG</string>
+    <string name="title_manual_3">3. KNAPKONTROL</string>
+    <string name="title_manual_4">4. FLERE ENHEDER</string>
+    <string name="title_manual_5">5. KOMMANDOER</string>
+
+    <!-- AFSNITSTEKSTER -->
+
+    <!-- Afsnit 1: Forbindelse -->
+    <string name="text_manual_1"><![CDATA[
+        <b>FØRSTE TILSLUTNING:</b><br>
+        1. Tænd lampen.<br>
+        2. Opret forbindelse til Wi-Fi <b>LedLamp 1</b> (adgangskode: <b>12345678</b>).<br>
+        3. Indstillingsvinduet åbnes (eller indtast adressen <b>192.168.4.1</b> i browseren).<br>
+        4. Indtast navn og adgangskode til din router.<br>
+        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværk.<br>
+        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn og tryk på \"Tilføj lampe\".<br><br>
+
+        <b>DRIFTSTILSTANDE:</b><br>
+        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværk. Intet internet.<br>
+        2. <b>Klient (WLAN):</b> Lampen er forbundet til routeren. Hovedtilstand.<br><br>
+
+        <i>Hvis lampen ikke kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
+    ]]></string>
+
+    <!-- Afsnit 2: App Brug -->
+    <string name="text_manual_2"><![CDATA[
+        <b><big>AFSNIT 2. BRUG AF APPEN</big></b><br><br>
+
+        <b>HOVEDSKÆRM:</b><br>
+        • <b>Valg af lampe:</b> Giver mulighed for at vælge den ønskede lampe, hvis der er flere.<br>
+        • <b>Lampe:</b> Tænder og slukker lampen samt viser aktuel status.<br>
+        • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid og liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
+        • <b>Effektliste:</b> Giver mulighed for at vælge en effekt fra listen.<br>
+        • <b>Skydere:</b><br>
+        — <i>Lysstyrke:</i> Lysstyrke for den aktuelle effekt.<br>
+        — <i>Hastighed:</i> Animationens hastighed.<br>
+        — <i>Skala / Farve:</i> For nogle effekter ændres elementstørrelsen, for andre vælges farven (vist som en gradient).<br>
+        • <b>Nulstil:</b> Nulstiller indstillingerne for den aktuelle effekt til standard.<br>
+        <br>
+        <i><b>GEM INDSTILLINGER:</b><br>
+        Appen husker automatisk den sidst valgte effekt. Lampen husker hastigheds- og lysstyrkeindstillinger for hver effekt individuelt.</i><br>
+        <br>
+        --------------------------------<br>
+        <br>
+        <b><big>INDSTILLINGSMENU</big></b><br><br>
+
+        <b>1. FORBINDELSE</b><br>
+        Søg efter lamper på netværket, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
+
+        <b>2. APP INDSTILLINGER</b><br>
+        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller knappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
+
+        <b>3. EFFEKT STYRING</b><br>
+        Sorter effektlisten (træk op/ned) og deaktiver uønskede effekter fra hovedskærmen.<br><br>
+
+        <b>4. CYKLUS TILSTAND</b><br>
+        Vælg effekter til automatisk afspilning og indstil skifteinterval.<br><br>
+
+        <b>5. LYS VÆKKEUR</b><br>
+        Indstil tid og ugedage for jævn solopgangssimulering før opvågning.<br><br>
+
+        <b>6. SLUK TIMER</b><br>
+        Indstil nedtælling til automatisk slukning af lampen.<br><br>
+
+        <b>7. TEGNING</b><br>
+        Tegn med pixels på matricen i realtid. Værktøjer: blyant, viskelæder, farvevælger, pensellysstyrke. Tegningen gemmes i effekten &quot;Tegning&quot;.<br><br>
+
+        <b>8. LØBENDE TEKST</b><br>
+        Send tekst til effekten &quot;Løbende tekst&quot;. Bruges også til servicekommandoer.<br><br>
+
+        <b>9. TÆNDINGSPLAN</b><br>
+        Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag og slukke en anden.<br><br>
+
+        <b>10. SPROG</b><br>
+        Skift app-grænsefladesprog (Ukrainsk, Engelsk, Dansk).
+    ]]></string>
+
+    <!-- Afsnit 3: Knapkontrol -->
+    <string name="text_manual_3"><![CDATA[
+        <b>KNAPKONTROL:</b><br><br>
+        Lampen kan betjenes ved hjælp af berøringsknappen placeret øverst på lampen. Når der trykkes, lyser knappen rødt.<br><br>
+        • <b>1 klik</b> — Tænd / Sluk.<br>
+        • <b>2 klik</b> — Næste effekt.<br>
+        • <b>3 klik</b> — Forrige effekt.<br>
+        • <b>4 klik</b> — OTA firmwareopdateringstilstand (for udviklere).<br>
+        • <b>5 klik</b> — Vis IP-adresse (løbende tekst).<br>
+        • <b>6 klik</b> — Vis aktuel tid.<br>
+        • <b>7 klik</b> — Skift Wi-Fi-tilstand (Adgangspunkt <-> Klient).<br>
+        <br>
+        <b>HOLDHANDLINGER:</b><br><br>
+        • <b>Hold</b> — Juster lysstyrke.<br>
+        • <b>1 klik + Hold</b> — Juster hastighed.<br>
+        • <b>2 klik + Hold</b> — Juster skala.<br>
+        <br>
+        <i>Bemærk: Hvert efterfølgende hold ændrer justeringsretningen (øg/mindsk).</i>
+    ]]></string>
+
+    <!-- Afsnit 4: Flere Enheder -->
+    <string name="text_manual_4"><![CDATA[
+        <b>FLERE TELEFONER:</b><br>
+        Du kan styre lampen fra forskellige telefoner.<br><br>
+
+        <b>SYNKRONISERING:</b><br>
+        • <b>&quot;Cyklus&quot; liste:</b> Gemmes i lampen. Fælles for alle. Listen i lampen opdateres ved den seneste ændring på enhver telefon.<br>
+        • <b>Visningsrækkefølge af effekter på hovedskærmen:</b> Gemmes i telefonen. Individuel for hver.<br><br>
+
+        <b>FLERE LAMPER:</b><br>
+        Tilføj deres IP-adresser i menuen &quot;Forbindelse&quot; og skift mellem dem på hovedskærmen. Alle kommandoer sendes kun til den lampe, der er valgt på hovedskærmen.
+    ]]></string>
+    <string name="label_device_time">Enhedstid:</string>
+    <string name="error_connection">Ingen forbindelse</string>
+    <string name="hint_dawn_description">Indstil vækningstid (maks lysstyrke). Effekten starter tidligere afhængigt af varigheden.</string>
+    <string name="dialog_exit_title">Afslut</string>
+    <string name="dialog_exit_msg">Afslut appen?</string>
+</resources>

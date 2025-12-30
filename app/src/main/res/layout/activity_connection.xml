@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_connection"
+            android:textColor="?attr/mainTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- БЛОК ДОДАВАННЯ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_panel"
+            android:backgroundTint="?attr/panelColor"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/editLampName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/hint_name"
+                android:textColorHint="?attr/subTextColor"
+                android:textColor="?attr/mainTextColor"
+                android:backgroundTint="?attr/accentColor"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editIpAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:hint="IP (192.168.0.xxx)"
+                    android:textColorHint="?attr/subTextColor"
+                    android:inputType="number|textUri"
+                    android:textColor="?attr/mainTextColor"
+                    android:backgroundTint="?attr/accentColor"/>
+
+                <Button
+                    android:id="@+id/btnFindLamps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔍"
+                    android:textColor="?attr/mainTextColor"
+                    android:backgroundTint="?attr/panelColor"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnAddLamp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_add_lamp"
+                android:backgroundTint="?attr/accentColor"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- СПИСОК ЛАМП -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_saved_lamps"
+            android:textColor="?attr/mainTextColor"
+            android:layout_marginBottom="5dp"/>
+
+        <ListView
+            android:id="@+id/listViewLamps"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="?attr/panelColor"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- КНОПКА ВИХОДУ -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/btn_back"
+            android:backgroundTint="?attr/panelColor"
+            android:textColor="?attr/mainTextColor"/>
+
+        <!-- НИЖНІЙ БЛОК (ІНФО) -->
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Info / AP Mode:"
+            android:textColor="?attr/subTextColor"
+            android:gravity="center"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_ap"
+            android:textColor="?attr/mainTextColor"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_pass"
+            android:textColor="?attr/mainTextColor"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Колір кнопок інструментів малювання для темної теми -->
+    <color name="tool_btn_color">#2C2C2C</color>
+    <color name="tool_icon_color">#FFFFFF</color>
+</resources>

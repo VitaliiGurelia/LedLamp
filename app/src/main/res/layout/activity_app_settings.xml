@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_app_settings"
+            android:textColor="?attr/mainTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+        <!-- ТЕМА -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_theme"
+            android:textColor="?attr/accentColor"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp">
+
+            <RadioButton
+                android:id="@+id/radioThemeDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_dark"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"
+                android:layout_marginEnd="15dp"/>
+
+            <RadioButton
+                android:id="@+id/radioThemeLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_light"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"
+                android:layout_marginEnd="15dp"/>
+
+            <RadioButton
+                android:id="@+id/radioThemeCyber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_cyber"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"/>
+        </RadioGroup>
+
+        <!-- Лінія розділення (тепер використовує panelColor для сумісності) -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/panelColor" android:layout_marginBottom="20dp"/>
+
+        <!-- 1. ВІБРО -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_vibration"
+                android:textColor="?attr/mainTextColor"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/switchVibration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/thumb_round"
+                android:track="@drawable/track_neon"
+                />
+        </LinearLayout>
+
+        <!-- 2. ПІДТВЕРДЖЕННЯ ВИХОДУ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_confirm_exit"
+                android:textColor="?attr/mainTextColor"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/switchExitConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/thumb_round"
+                android:track="@drawable/track_neon"
+                />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/panelColor" android:layout_marginBottom="20dp"/>
+
+        <!-- 3. СТИЛЬ РЕГУЛЯТОРІВ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_slider_style"
+            android:textColor="?attr/accentColor"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupSliders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp">
+            <RadioButton
+                android:id="@+id/radioStyleNeon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/style_neon"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"/>
+            <RadioButton
+                android:id="@+id/radioStylePlasma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/style_plasma"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"
+                android:layout_marginTop="10dp"/>
+            <RadioButton
+                android:id="@+id/radioStyleCyber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/style_cyber"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"
+                android:layout_marginTop="10dp"/>
+            <RadioButton
+                android:id="@+id/radioStyleGradient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/style_gradient"
+                android:textColor="?attr/mainTextColor"
+                android:buttonTint="?attr/accentColor"
+                android:layout_marginTop="10dp"/>
+        </RadioGroup>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/panelColor" android:layout_marginBottom="20dp"/>
+
+        <!-- 4. ЧАСОВИЙ ПОЯС -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_timezone"
+                android:textColor="?attr/mainTextColor"
+                android:textSize="16sp"/>
+            <Spinner
+                android:id="@+id/spinnerTimeZone"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:background="@drawable/bg_panel"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <!-- 5. АВТО ЛІТНІЙ ЧАС -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_auto_dst"
+                android:textColor="?attr/mainTextColor"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/switchAutoDst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/thumb_round"
+                android:track="@drawable/track_neon"
+                />
+        </LinearLayout>
+
+        <!-- ЧАС НА ПРИСТРОЇ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="?attr/elementBackground"
+            android:padding="10dp"
+            android:layout_marginBottom="15dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_device_time"
+                    android:textColor="?attr/subTextColor"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/textDeviceTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--:--:--"
+                    android:textColor="?attr/mainTextColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSyncTime"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/btn_sync_time"
+                android:backgroundTint="?attr/panelColor"
+                android:textColor="?attr/accentColor"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/panelColor" android:layout_marginBottom="20dp"/>
+
+        <!-- 6. ПОРЯДОК КОЛЬОРІВ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="40dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_draw_order"
+                android:textColor="?attr/mainTextColor"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/switchSwapColors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/thumb_round"
+                android:track="@drawable/track_neon"
+                />
+        </LinearLayout>
+
+        <!-- КНОПКА НАЗАД -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:text="@string/btn_back"
+            android:backgroundTint="?attr/panelColor"
+            android:textColor="?attr/mainTextColor"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+</ScrollView>

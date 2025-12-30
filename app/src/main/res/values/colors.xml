@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="dark_bg">#121212</color>
+    <color name="dark_grey">#9D9292</color>
+
+    <!-- Основні кольори -->
+    <color name="neon_green">#00FF00</color>
+    <color name="neon_red">#FF3333</color>
+
+    <!-- Колір кнопок інструментів малювання -->
+    <color name="tool_btn_color">#E0E0E0</color>
+    <color name="tool_icon_color">#1135D9</color>
+
+    <!-- Рядки "switch_thumb_color" та "switch_track_color" звідси ВИДАЛЕНІ,
+         тому що вони існують як окремі файли в папці res/color/ -->
+</resources>

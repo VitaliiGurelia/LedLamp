@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- СТАН: УВІМКНЕНО (Зелений) -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/accentColor"/>
+            <corners android:radius="100dp"/>
+            <size android:width="48dp" android:height="28dp"/>
+        </shape>
+    </item>
+
+    <!-- СТАН: ВИМКНЕНО (Червоний) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/dangerColor"/>
+            <corners android:radius="100dp"/>
+            <size android:width="48dp" android:height="28dp"/>
+        </shape>
+    </item>
+
+</selector>

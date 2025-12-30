@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_painting"
+        android:textColor="?attr/mainTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- СІТКА -->
+    <com.example.ledlamp.MatrixView
+        android:id="@+id/matrixView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"/>
+
+    <!-- ІНСТРУМЕНТИ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <!-- Олівець -->
+        <ImageButton
+            android:id="@+id/btnToolPencil"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_pencil"
+            android:background="@drawable/bg_panel"
+            android:backgroundTint="?attr/toolBtnColor"
+            android:padding="15dp"
+            app:tint="?attr/toolIconColor"/>
+
+        <View android:layout_width="20dp" android:layout_height="0dp"/>
+
+        <!-- Гумка -->
+        <ImageButton
+            android:id="@+id/btnToolEraser"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_eraser"
+            android:background="@drawable/bg_panel"
+            android:backgroundTint="?attr/toolBtnColor"
+            android:padding="15dp"
+            app:tint="?attr/toolIconColor"/>
+
+        <View android:layout_width="20dp" android:layout_height="0dp"/>
+
+        <!-- Очистити -->
+        <ImageButton
+            android:id="@+id/btnClear"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_wifi_reset"
+            android:background="@drawable/bg_panel"
+            android:backgroundTint="?attr/toolBtnColor"
+            android:padding="15dp"
+            app:tint="?attr/dangerColor"/>
+    </LinearLayout>
+
+    <!-- ПАЛІТРА -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Індикатор кольору -->
+        <View
+            android:id="@+id/viewColorPreview"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_panel"
+            android:backgroundTint="#FF0000"
+            android:layout_marginEnd="15dp"/>
+
+        <!-- Контейнер для спектру та курсору -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1">
+
+            <!-- Смуга вибору -->
+            <View
+                android:id="@+id/viewSpectrum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <!-- Курсор (початково невидимий або зліва) -->
+            <ImageView
+                android:id="@+id/imgCursor"
+                android:layout_width="12dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_cursor_spectrum"
+                app:tint="?attr/mainTextColor"
+                android:layout_gravity="start"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- НОВЕ: ЯСКРАВІСТЬ ПЕНЗЛЯ -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_brush_brightness"
+        android:textColor="?attr/subTextColor"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"/>
+
+    <SeekBar
+        android:id="@+id/seekBarBrushBrightness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="?attr/mainTextColor"
+        android:thumbTint="?attr/mainTextColor"
+        android:layout_marginBottom="10dp"/>
+
+    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="@string/btn_back"
+        android:backgroundTint="?attr/panelColor"
+        android:textColor="?attr/mainTextColor"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

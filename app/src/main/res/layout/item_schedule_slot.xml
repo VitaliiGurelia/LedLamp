@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:background="?attr/elementBackground"
+    android:layout_marginBottom="5dp">
+
+    <!-- Номер події (1., 2.) -->
+    <TextView
+        android:id="@+id/textSlotNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1."
+        android:textColor="?attr/subTextColor"
+        android:layout_marginEnd="10dp"/>
+
+    <!-- Час -->
+    <TextView
+        android:id="@+id/textSlotTime"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:text="--:--"
+        android:textColor="?attr/mainTextColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/bg_panel"
+        android:clickable="true"/>
+
+    <View android:layout_width="10dp" android:layout_height="0dp"/>
+
+    <!-- Дія (Спінер) -->
+    <!-- popupBackground видалено, щоб система сама обрала колір для теми -->
+    <Spinner
+        android:id="@+id/spinnerSlotAction"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_panel"/>
+
+</LinearLayout>

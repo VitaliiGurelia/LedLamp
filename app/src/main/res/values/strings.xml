@@ -1,0 +1,298 @@
+<resources>
+    <string name="app_name">LedLamp Control</string>
+
+    <!-- ГОЛОВНИЙ ЕКРАН -->
+    <string name="label_lamp">LAMP</string>
+    <string name="label_cycle">CYCLE</string>
+    <string name="label_brightness">BRIGHTNESS</string>
+    <string name="label_speed">SPEED</string>
+    <string name="label_scale">SCALE</string>
+    <string name="label_color">COLOR</string>
+    <string name="btn_reset">RESET</string>
+
+    <!-- МЕНЮ (НАЗВИ ПУНКТІВ) -->
+    <string name="menu_title">MENU</string>
+    <string name="menu_connection">CONNECTION</string>
+    <string name="menu_app_settings">APP SETTINGS</string>
+    <string name="menu_effects">EFFECTS MANAGER</string>
+    <string name="menu_matrix">MATRIX SETTINGS</string>
+    <string name="menu_cycle_mode">CYCLE MODE</string>
+    <string name="menu_dawn_alarm">SUNRISE</string>
+    <string name="menu_sleep_timer">SLEEP TIMER</string>
+    <string name="menu_schedule">POWER SCHEDULE</string>
+    <string name="menu_painting">PAINTING</string>
+    <string name="menu_language">LANGUAGE</string>
+    <string name="btn_back">BACK</string>
+
+    <!-- ЕКРАН З'ЄДНАННЯ -->
+    <string name="title_connection">CONNECTION SETUP</string>
+    <string name="label_ip_address">Lamp Address:</string>
+    <string name="btn_find_lamps">FIND LAMPS</string>
+    <string name="btn_check_connection">CHECK CONNECTION</string>
+    <string name="btn_save_exit">SAVE AND RETURN</string>
+    <string name="btn_clear_list">CLEAR LIST</string>
+    <string name="btn_reset_wifi">RESET LAMP WIFI</string>
+    <string name="info_ap">192.168.4.1 - Access Point IP</string>
+    <string name="info_pass">Password: 12345678</string>
+    <string name="hint_name">Name (e.g. Kitchen)</string>
+    <string name="btn_add_lamp">ADD LAMP TO LIST</string>
+    <string name="label_saved_lamps">Saved Lamps:</string>
+
+    <!-- ЕКРАН НАЛАШТУВАНЬ ДОДАТКУ -->
+    <string name="title_app_settings">APP SETTINGS</string>
+    <string name="label_vibration">Vibration on touch</string>
+    <string name="label_confirm_exit">Confirm exit</string>
+    <string name="label_slider_style">SLIDER STYLE</string>
+    <string name="style_neon">Neon (Standard)</string>
+    <string name="style_plasma">Plasma</string>
+    <string name="style_cyber">Cyber</string>
+    <string name="style_gradient">Gradient</string>
+
+    <!-- ЕКРАН МАТРИЦІ -->
+    <string name="title_matrix">MATRIX SETTINGS</string>
+    <string name="label_running_text">Running Text</string>
+    <string name="hint_enter_text">Enter text...</string>
+    <string name="btn_send_text">SEND TEXT</string>
+    <string name="label_draw_order">Swap Colors (RGB/GRB)</string>
+
+    <!-- ЕКРАН СПИСКУ ЕФЕКТІВ -->
+    <string name="title_effects">EFFECTS LIST</string>
+
+    <!-- ПОВІДОМЛЕННЯ ТА ДІАЛОГИ -->
+    <string name="msg_lamp_not_found">Lamp not responding!</string>
+    <string name="msg_saved">Saved!</string>
+    <string name="msg_reset_done">Reset to defaults!</string>
+    <string name="msg_hidden_effect">Playing hidden effect: %1$s</string>
+    <string name="msg_text_sent">Text sent!</string>
+
+    <!-- Нові рядки для ConnectionActivity -->
+    <string name="msg_ip_exists">IP already exists!</string>
+    <string name="msg_empty_fields">Error: Empty fields</string>
+    <string name="msg_scanning">Scanning...</string>
+    <string name="msg_pinging">Ping %1$s...</string>
+    <string name="msg_ping_ok">✅ %1$s OK!</string>
+    <string name="msg_reset_cmd_sent">Reset command sent</string>
+    <string name="msg_deleted">Deleted</string>
+    <string name="msg_found_lamp">Found: %1$s</string>
+    <string name="default_new_lamp_name">New Lamp</string>
+
+    <string name="dialog_delete_title">Delete</string>
+    <string name="dialog_delete_msg">Delete lamp "%1$s"?</string>
+
+    <string name="dialog_reset_title">Reset Wi-Fi</string>
+    <string name="dialog_reset_msg">Are you sure you want to reset Wi-Fi settings for "%1$s"?</string>
+
+    <string name="btn_yes">YES</string>
+    <string name="btn_no">NO</string>
+    <string name="btn_cancel">CANCEL</string>
+
+    <!-- CYCLE SETTINGS -->
+    <string name="title_cycle_settings">CYCLE SETTINGS</string>
+    <string name="label_keep_cycle">Don\'t turn off cycle when lamp is off</string>
+    <string name="label_interval">Change Interval</string>
+    <string name="btn_select_all">SELECT ALL</string>
+    <string name="btn_deselect_all">DESELECT ALL</string>
+    <string name="unit_sec">sec</string>
+    <string name="unit_min">min</string>
+    <!-- DAWN ALARM -->
+    <string name="title_dawn_alarm">DAWN ALARM</string>
+    <string name="label_dawn_duration">Dawn Duration</string>
+    <string name="label_lamp_time">Lamp Time: </string>
+    <string name="btn_sync_time">SYNC TIME</string>
+    <string name="day_mon">Monday</string>
+    <string name="day_tue">Tuesday</string>
+    <string name="day_wed">Wednesday</string>
+    <string name="day_thu">Thursday</string>
+    <string name="day_fri">Friday</string>
+    <string name="day_sat">Saturday</string>
+    <string name="day_sun">Sunday</string>
+
+    <!-- SLEEP TIMER -->
+    <string name="title_sleep_timer">SLEEP TIMER</string>
+    <string name="label_turn_off_in">Turn off lamp in</string>
+    <string name="label_countdown">Turning off in:</string>
+    <string name="timer_off">Don\'t turn off</string>
+    <string name="timer_min">min</string>
+    <string name="timer_not_active">Timer not active</string>
+
+    <!-- SCHEDULE ACTIVITY -->
+    <string name="title_schedule">SCHEDULE SETTINGS</string>
+    <string name="label_enable_schedule">Enable Schedule</string>
+    <string name="label_time_on">TURN ON TIME</string>
+    <string name="label_time_off">TURN OFF TIME</string>
+    <string name="btn_save_send">SAVE &amp; SEND</string>
+
+    <!-- WEEKLY SCHEDULE -->
+    <string name="title_weekly_schedule">WEEKLY SCHEDULE</string>
+    <string name="btn_send_to_lamp">SAVE &amp; SEND TO LAMP</string>
+    <string name="title_day_edit">EDIT: %1$s</string>
+    <string name="action_none">No Action</string>
+    <string name="action_on">TURN ON</string>
+    <string name="action_off">TURN OFF</string>
+    <string name="slot_label">Event %1$d</string>
+    <string name="msg_syncing">Syncing with lamp...</string>
+    <string name="msg_synced">Synchronized!</string>
+    <string name="short_day_mon">Mon</string>
+    <string name="short_day_tue">Tue</string>
+    <string name="short_day_wed">Wed</string>
+    <string name="short_day_thu">Thu</string>
+    <string name="short_day_fri">Fri</string>
+    <string name="short_day_sat">Sat</string>
+    <string name="short_day_sun">Sun</string>
+
+    <string name="title_painting">PAINTING</string>
+    <string name="btn_clear_matrix">CLEAR MATRIX</string>
+
+    <!-- TIME SETTINGS -->
+    <string name="label_timezone">Time Zone (GMT)</string>
+    <string name="label_auto_dst">Auto Daylight Saving Time</string>
+
+    <string name="label_brush_brightness">Brightness</string>
+
+    <string name="menu_text">RUNNING TEXT</string>
+
+    <!-- TEXT ACTIVITY HELP -->
+    <string name="btn_help">COMMANDS HELP</string>
+    <string name="title_help">TEXT CONTROL COMMANDS</string>
+    <string name="text_help_content"><![CDATA[
+        Enter these commands in the text field and click SEND.<br><br>
+        <b>SYSTEM:</b><br>
+        <b>TXT-reset=wifi</b><br>
+        — Reset Wi-Fi settings (Creates Access Point).<br><br>
+        <b>TXT-reset=effects</b><br>
+        — Reset all effects to defaults.<br><br>
+        <b>TXT-esp_mode=1</b><br>
+        — Switch to Router Mode (Client).<br><br>
+        <b>TXT-esp_mode=0</b><br>
+        — Switch to Access Point Mode.<br><br>
+        <b>RANDOMIZER:</b><br>
+        <b>TXT-random=on</b><br>
+        — Enable random settings in Cycle.<br><br>
+        <b>TXT-random=off</b><br>
+        — Disable randomizer.
+    ]]></string>
+    <string name="menu_manual">USER MANUAL</string>
+
+
+    <!-- SECTION HEADERS -->
+    <string name="title_manual_1">1. CONNECTION</string>
+    <string name="title_manual_2">2. APP USAGE</string>
+    <string name="title_manual_3">3. BUTTON CONTROL</string>
+    <string name="title_manual_4">4. MULTIPLE DEVICES</string>
+    <string name="title_manual_5">5. COMMANDS</string>
+
+    <!-- SECTION TEXTS -->
+
+    <!-- Section 1: Connection -->
+    <string name="text_manual_1"><![CDATA[
+        <b>FIRST CONNECTION:</b><br>
+        1. Turn on the lamp.<br>
+        2. Connect to Wi-Fi <b>LedLamp1</b> (password: <b>12345678</b>).<br>
+        3. The settings window will open (or enter address <b>192.168.4.1</b> in your browser).<br>
+        4. Enter your router name and password.<br>
+        5. The lamp will reboot into client mode and connect to your network.<br>
+        6. In the \"Connection\" menu, search for lamps. After the lamp IP address appears, give it a name and click \"Add Lamp\".<br><br>
+
+        <b>OPERATING MODES:</b><br>
+        1. <b>Access Point (AP):</b> The lamp creates its own network. No Internet.<br>
+        2. <b>Client (WLAN):</b> The lamp is connected to the router. Main mode.<br><br>
+
+        <i>If the lamp cannot connect to the router, it will create an Access Point again.</i>
+    ]]></string>
+
+    <!-- Section 2: App Usage -->
+    <string name="text_manual_2"><![CDATA[
+        <b><big>SECTION 2. APP USAGE</big></b><br><br>
+
+        <b>MAIN SCREEN:</b><br>
+        • <b>Lamp Selection:</b> Allows selecting the required lamp if there are several.<br>
+        • <b>Lamp:</b> Turns the lamp ON/OFF and shows current status.<br>
+        • <b>Cycle:</b> Enables automatic effect switching. Settings for interval and effect list are in the &quot;Cycle Mode&quot; menu.<br>
+        • <b>Effects List:</b> Allows selecting an effect from the list.<br>
+        • <b>Sliders:</b><br>
+        — <i>Brightness:</i> Brightness of the current effect.<br>
+        — <i>Speed:</i> Animation speed of the effect.<br>
+        — <i>Scale / Color:</i> For some effects changes element size, for others selects color (shown as a gradient).<br>
+        • <b>Reset:</b> Resets current effect settings to default.<br>
+        <br>
+        <i><b>SAVING SETTINGS:</b><br>
+        The app automatically remembers the last selected effect. The lamp remembers speed and brightness settings for each effect individually.</i><br>
+        <br>
+        --------------------------------<br>
+        <br>
+        <b><big>SETTINGS MENU</big></b><br><br>
+
+        <b>1. CONNECTION</b><br>
+        Search for lamps in the network, add new lamps by IP, edit saved lamps list.<br><br>
+
+        <b>2. APP SETTINGS</b><br>
+        Vibration control, slider style selection, lamp time settings. The lamp gets time from the Internet. If no Internet, time can be set via text command or &quot;Sync Time&quot; button. If lamp time differs from phone time, re-sync will adjust the offset. Internet sync always has priority.<br><br>
+
+        <b>3. EFFECTS MANAGER</b><br>
+        Sort effect list (drag up/down) and disable unwanted effects from the main screen.<br><br>
+
+        <b>4. CYCLE MODE</b><br>
+        Select effects to play in automatic mode and set switching interval.<br><br>
+
+        <b>5. DAWN ALARM</b><br>
+        Setup time and weekdays for smooth sunrise simulation before waking up.<br><br>
+
+        <b>6. SLEEP TIMER</b><br>
+        Set countdown for automatic lamp turn-off.<br><br>
+
+        <b>7. PAINTING</b><br>
+        Draw with pixels on the matrix in real-time. Tools: pencil, eraser, color picker, brush brightness. The drawing will be saved in the &quot;Drawing&quot; effect.<br><br>
+
+        <b>8. RUNNING TEXT</b><br>
+        Send text for &quot;Running Text&quot; effect. Also used for service commands.<br><br>
+
+        <b>9. POWER SCHEDULE</b><br>
+        Flexible ON/OFF schedule by weekdays (up to 5 events per day). Allows turning on one day and turning off on another.<br><br>
+
+        <b>10. LANGUAGE</b><br>
+        Change app interface language (Ukrainian, English, Dansk).
+    ]]></string>
+
+    <!-- Section 3: Button Control -->
+    <string name="text_manual_3"><![CDATA[
+        <b>BUTTON CONTROL:</b><br><br>
+        The lamp can be controlled using the touch button located on the top of the lamp. When pressed, the button lights up red.<br><br>
+        • <b>1 click</b> — Turn ON / OFF.<br>
+        • <b>2 clicks</b> — Next effect.<br>
+        • <b>3 clicks</b> — Previous effect.<br>
+        • <b>4 clicks</b> — OTA Firmware update mode (for developers).<br>
+        • <b>5 clicks</b> — Show IP address (running text).<br>
+        • <b>6 clicks</b> — Show current time.<br>
+        • <b>7 clicks</b> — Switch Wi-Fi mode (Access Point <-> Client).<br>
+        <br>
+        <b>HOLD ACTIONS:</b><br><br>
+        • <b>Hold</b> — Adjust Brightness.<br>
+        • <b>1 click + Hold</b> — Adjust Speed.<br>
+        • <b>2 clicks + Hold</b> — Adjust Scale.<br>
+        <br>
+        <i>Note: Each subsequent hold changes the adjustment direction (increase/decrease).</i>
+    ]]></string>
+
+    <!-- Section 4: Multiple Devices -->
+    <string name="text_manual_4"><![CDATA[
+        <b>MULTIPLE PHONES:</b><br>
+        You can control the lamp from different phones.<br><br>
+
+        <b>SYNCHRONIZATION:</b><br>
+        • <b>&quot;Cycle&quot; List:</b> Stored in the lamp. Shared for all. The list in the lamp updates upon the last change on any phone.<br>
+        • <b>Effect display order on main screen:</b> Stored in the phone. Individual for everyone.<br><br>
+
+        <b>MULTIPLE LAMPS:</b><br>
+        Add their IP addresses in the &quot;Connection&quot; menu and switch between them on the main screen. All commands are sent only to the lamp selected on the main screen.
+    ]]></string>
+    <string name="label_device_time">Device Time:</string>
+    <string name="error_connection">No Connection</string>
+    <string name="hint_dawn_description">Set wake-up time (max brightness). The effect will start earlier depending on duration.</string>
+    <string name="dialog_exit_title">Exit</string>
+    <string name="dialog_exit_msg">Exit the app?</string>
+
+    <string name="label_theme">THEME / ТЕМА</string>
+    <string name="theme_dark">Dark (Neon)</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_cyber">Cyberpunk</string>
+</resources>

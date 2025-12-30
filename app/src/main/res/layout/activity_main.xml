@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- РЯДОК 1: МЕНЮ та ВИБІР ЛАМПИ -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <!-- Кнопка МЕНЮ -->
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Menu"
+                app:tint="?attr/accentColor"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+
+            <!-- ВИБІР ЛАМПИ (SPINNER) -->
+            <Spinner
+                android:id="@+id/spinnerLamps"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
+                android:backgroundTint="?attr/accentColor"
+                android:minWidth="150dp"/>
+
+        </RelativeLayout>
+
+        <!-- РЯДОК 2: ПЕРЕМИКАЧІ (ЛАМПА та ЦИКЛ) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <!-- Група ЛАМПА (Зліва) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_lamp"
+                    android:textColor="?attr/mainTextColor"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+                <Switch
+                    android:id="@+id/switchPower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:minHeight="48dp"
+                    android:thumb="@drawable/thumb_round"
+                    android:track="@drawable/track_neon"
+                    />
+            </LinearLayout>
+
+            <!-- Розпірка -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <!-- Група ЦИКЛ (Справа) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <Switch
+                    android:id="@+id/switchCycle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:minHeight="48dp"
+                    android:thumb="@drawable/thumb_round"
+                    android:track="@drawable/track_neon"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_cycle"
+                    android:textColor="?attr/mainTextColor"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- СПИСОК ЕФЕКТІВ -->
+        <Spinner
+            android:id="@+id/spinnerEffects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:background="@drawable/bg_panel"
+            android:padding="5dp"/>
+
+        <!-- КНОПКИ ПЕРЕМИКАННЯ ЕФЕКТІВ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnPrevEffect"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:backgroundTint="?attr/panelColor"
+                android:text="&lt;&lt;"
+                android:textColor="?attr/accentColor"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <View android:layout_width="50dp" android:layout_height="0dp"/>
+
+            <Button
+                android:id="@+id/btnNextEffect"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:backgroundTint="?attr/panelColor"
+                android:text="&gt;&gt;"
+                android:textColor="?attr/accentColor"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- ЯСКРАВІСТЬ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_brightness"
+                android:textColor="?attr/mainTextColor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textBrightnessVal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="?attr/accentColor"
+                android:gravity="end"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBriMinus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+
+            <SeekBar
+                android:id="@+id/seekBarBrightness"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="100"
+                android:progressTint="?attr/accentColor"
+                android:thumbTint="?attr/mainTextColor"/>
+
+            <Button
+                android:id="@+id/btnBriPlus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+        </LinearLayout>
+
+        <!-- ШВИДКІСТЬ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_speed"
+                android:textColor="?attr/mainTextColor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textSpeedVal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="?attr/accentColor"
+                android:gravity="end"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSpdMinus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+
+            <SeekBar
+                android:id="@+id/seekBarSpeed"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="100"
+                android:progressTint="?attr/accentColor"
+                android:thumbTint="?attr/mainTextColor"/>
+
+            <Button
+                android:id="@+id/btnSpdPlus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+        </LinearLayout>
+
+        <!-- МАСШТАБ (КОЛІР) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/labelScale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_scale"
+                android:textColor="?attr/mainTextColor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textScaleVal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="?attr/accentColor"
+                android:gravity="end"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnScaMinus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+
+            <SeekBar
+                android:id="@+id/seekBarScale"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="100"
+                android:progressTint="?attr/accentColor"
+                android:thumbTint="?attr/mainTextColor"/>
+
+            <Button
+                android:id="@+id/btnScaPlus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textColor="?attr/accentColor"
+                android:backgroundTint="?attr/panelColor"
+                android:padding="0dp"
+                android:insetTop="0dp" android:insetBottom="0dp"/>
+        </LinearLayout>
+
+        <!-- КНОПКА СКИНУТИ -->
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="50dp"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="?attr/panelColor"
+            android:text="@string/btn_reset"
+            android:textColor="?attr/dangerColor"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</ScrollView>

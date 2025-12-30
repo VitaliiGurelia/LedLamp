@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="?attr/elementBackground"
+    android:layout_marginBottom="5dp">
+
+    <!-- Скорочена назва дня -->
+    <TextView
+        android:id="@+id/textDayShort"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="Mon"
+        android:textColor="?attr/mainTextColor"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <!-- Контейнер для часу (сюди ми будемо додавати час програмно) -->
+    <LinearLayout
+        android:id="@+id/containerTimes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"/>
+
+    <!-- Стрілочка -->
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_down"
+        android:rotation="-90"
+        android:alpha="0.5"
+        app:tint="?attr/mainTextColor"/>
+    <!-- rotation -90 робить стрілку "вправо" з нашої іконки "вниз" -->
+
+</LinearLayout>
