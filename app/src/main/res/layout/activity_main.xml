@@ -194,7 +194,8 @@
                 android:max="255"
                 android:progress="100"
                 android:progressTint="?attr/accentColor"
-                android:thumbTint="?attr/mainTextColor"/>
+                android:progressBackgroundTint="?attr/sliderTrackColor"
+                android:thumbTint="?attr/sliderThumbColor"/>
 
             <Button
                 android:id="@+id/btnBriPlus"
@@ -255,7 +256,8 @@
                 android:max="255"
                 android:progress="100"
                 android:progressTint="?attr/accentColor"
-                android:thumbTint="?attr/mainTextColor"/>
+                android:progressBackgroundTint="?attr/sliderTrackColor"
+                android:thumbTint="?attr/sliderThumbColor"/>
 
             <Button
                 android:id="@+id/btnSpdPlus"
@@ -317,7 +319,8 @@
                 android:max="255"
                 android:progress="100"
                 android:progressTint="?attr/accentColor"
-                android:thumbTint="?attr/mainTextColor"/>
+                android:progressBackgroundTint="?attr/sliderTrackColor"
+                android:thumbTint="?attr/sliderThumbColor"/>
 
             <Button
                 android:id="@+id/btnScaPlus"
