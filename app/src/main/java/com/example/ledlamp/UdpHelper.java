@@ -1,11 +1,13 @@
 package com.example.ledlamp;
 
+import android.util.Log;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
 public class UdpHelper {
+    private static final String TAG = "UdpHelper";
     private static final int LAMP_PORT = 8888;
     private boolean isListening = false;
     private Thread listenerThread;
@@ -37,7 +39,9 @@ public class UdpHelper {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending command: " + command, e);
+            }
         }).start();
     }
 
@@ -56,7 +60,11 @@ public class UdpHelper {
 
                 while (isListening) {
                     if (!currentIp.isEmpty() && address == null) {
-                        try { address = InetAddress.getByName(currentIp); } catch (Exception e) {}
+                        try {
+                            address = InetAddress.getByName(currentIp);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error resolving IP: " + currentIp, e);
+                        }
                     }
 
                     // 1. ПІНГ
@@ -67,7 +75,9 @@ public class UdpHelper {
                                 byte[] data = "GET".getBytes();
                                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                                 socket.send(packet);
-                            } catch (Exception e) {}
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error sending ping", e);
+                            }
                         }
                         lastPingTime = now;
                     }
@@ -86,11 +96,11 @@ public class UdpHelper {
                     } catch (SocketTimeoutException e) {
                         // Тиша - це ок
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "Error receiving packet", e);
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error in listener thread", e);
             } finally {
                 if (socket != null) socket.close();
             }

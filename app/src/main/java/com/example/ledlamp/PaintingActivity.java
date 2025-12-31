@@ -18,11 +18,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class PaintingActivity extends BaseActivity {
+    private static final String TAG = "PaintingActivity";
 
     MatrixView matrixView;
     ImageButton btnPencil, btnEraser, btnClear;
@@ -104,6 +107,7 @@ public class PaintingActivity extends BaseActivity {
     }
 
     private void setupUI() {
+        if (viewSpectrum == null) return;
         GradientDrawable rainbow = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[] { 0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000 }
@@ -116,6 +120,8 @@ public class PaintingActivity extends BaseActivity {
     }
 
     private void updateCalculatedColor() {
+        if (viewColorPreview == null || imgCursor == null || matrixView == null || viewSpectrum == null) return;
+
         selectedColor = Color.HSVToColor(new float[]{currentHue, 1f, currentBrightness});
 
         viewColorPreview.getBackground().setTint(selectedColor);
@@ -124,6 +130,7 @@ public class PaintingActivity extends BaseActivity {
         // Оновлюємо позицію курсора відповідно до Hue (0..360)
         // Ширина viewSpectrum може змінюватись, тому треба брати актуальну ширину
         viewSpectrum.post(() -> {
+            if (viewSpectrum == null || imgCursor == null) return;
             int width = viewSpectrum.getWidth();
             if (width > 0) {
                 // Hue 0..360 -> x 0..width
@@ -146,86 +153,118 @@ public class PaintingActivity extends BaseActivity {
     }
 
     private void setupListeners() {
-        btnPencil.setOnClickListener(v -> {
-            vibrate();
-            isEraser = false;
-            updateToolsUI();
-            matrixView.setCurrentColor(selectedColor);
-            sendColorCommand(selectedColor);
-        });
+        if (btnPencil != null) {
+            btnPencil.setOnClickListener(v -> {
+                vibrate();
+                isEraser = false;
+                updateToolsUI();
+                if (matrixView != null) matrixView.setCurrentColor(selectedColor);
+                sendColorCommand(selectedColor);
+            });
+        }
 
-        btnEraser.setOnClickListener(v -> {
-            vibrate();
-            isEraser = true;
-            updateToolsUI();
-            matrixView.setCurrentColor(Color.BLACK);
-            sendUdpCommand("COL;0;0;0");
-        });
+        if (btnEraser != null) {
+            btnEraser.setOnClickListener(v -> {
+                vibrate();
+                isEraser = true;
+                updateToolsUI();
+                if (matrixView != null) matrixView.setCurrentColor(Color.BLACK);
+                sendUdpCommand("COL;0;0;0");
+            });
+        }
 
-        btnClear.setOnClickListener(v -> {
-            vibrate();
-            matrixView.clear();
-            sendUdpCommand("CLR");
-        });
+        if (btnClear != null) {
+            btnClear.setOnClickListener(v -> {
+                vibrate();
+                if (matrixView != null) matrixView.clear();
+                sendUdpCommand("CLR");
+            });
+        }
 
         // Ми тепер слухаємо дотики на viewSpectrum, але обробляємо їх
         // так само. Тільки тепер ми будемо оновлювати UI курсора в updateCalculatedColor
-        viewSpectrum.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-                float x = event.getX();
-                float width = v.getWidth();
-                if (x < 0) x = 0; if (x > width) x = width;
+        if (viewSpectrum != null) {
+            viewSpectrum.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+                    float x = event.getX();
+                    float width = v.getWidth();
+                    if (x < 0) x = 0;
+                    if (x > width) x = width;
 
-                currentHue = (x / width) * 360f;
+                    currentHue = (x / width) * 360f;
 
-                if (isEraser) { isEraser = false; updateToolsUI(); }
+                    if (isEraser) {
+                        isEraser = false;
+                        updateToolsUI();
+                    }
 
-                // Курсор буде оновлено всередині updateCalculatedColor
-                if (System.currentTimeMillis() - lastSendTime > 100) {
-                    updateCalculatedColor();
-                    lastSendTime = System.currentTimeMillis();
-                } else {
-                    // Якщо ми пропускаємо відправку UDP, все одно оновимо UI (превью + курсор)
-                    // Для плавності краще оновлювати курсор завжди
-                    selectedColor = Color.HSVToColor(new float[]{currentHue, 1f, currentBrightness});
-                    viewColorPreview.getBackground().setTint(selectedColor);
-                    
-                    // Локальне оновлення позиції (дубляж логіки для швидкості UI)
-                    float cursorX = x - (imgCursor.getWidth() / 2f);
-                    imgCursor.setX(cursorX);
-                }
-            }
-            if (event.getAction() == MotionEvent.ACTION_UP) updateCalculatedColor();
-            return true;
-        });
-
-        seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    currentBrightness = progress / 100f;
-                    if (isEraser) { isEraser = false; updateToolsUI(); }
+                    // Курсор буде оновлено всередині updateCalculatedColor
                     if (System.currentTimeMillis() - lastSendTime > 100) {
                         updateCalculatedColor();
                         lastSendTime = System.currentTimeMillis();
+                    } else {
+                        // Якщо ми пропускаємо відправку UDP, все одно оновимо UI (превью + курсор)
+                        // Для плавності краще оновлювати курсор завжди
+                        selectedColor = Color.HSVToColor(new float[]{currentHue, 1f, currentBrightness});
+                        if (viewColorPreview != null)
+                            viewColorPreview.getBackground().setTint(selectedColor);
+
+                        // Локальне оновлення позиції (дубляж логіки для швидкості UI)
+                        if (imgCursor != null) {
+                            float cursorX = x - (imgCursor.getWidth() / 2f);
+                            imgCursor.setX(cursorX);
+                        }
                     }
                 }
-            }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {
-                updateCalculatedColor();
-            }
-        });
+                if (event.getAction() == MotionEvent.ACTION_UP) updateCalculatedColor();
+                return true;
+            });
+        }
 
-        matrixView.setOnPixelTouchListener((x, y, color) -> {
-            long now = System.currentTimeMillis();
-            if (now - lastSendTime > 25) {
-                sendUdpCommand("DRW;" + x + ";" + y);
-                lastSendTime = now;
-            }
-        });
+        if (seekBarBrightness != null) {
+            seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        currentBrightness = progress / 100f;
+                        if (isEraser) {
+                            isEraser = false;
+                            updateToolsUI();
+                        }
+                        if (System.currentTimeMillis() - lastSendTime > 100) {
+                            updateCalculatedColor();
+                            lastSendTime = System.currentTimeMillis();
+                        }
+                    }
+                }
 
-        btnBack.setOnClickListener(v -> { vibrate(); finish(); });
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    updateCalculatedColor();
+                }
+            });
+        }
+
+        if (matrixView != null) {
+            matrixView.setOnPixelTouchListener((x, y, color) -> {
+                long now = System.currentTimeMillis();
+                if (now - lastSendTime > 25) {
+                    sendUdpCommand("DRW;" + x + ";" + y);
+                    lastSendTime = now;
+                }
+            });
+        }
+
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     private void requestMatrixImage() {
@@ -253,10 +292,14 @@ public class PaintingActivity extends BaseActivity {
                 if (recv.getLength() >= 768) {
                     final byte[] matrixData = new byte[768];
                     System.arraycopy(recv.getData(), 0, matrixData, 0, 768);
-                    runOnUiThread(() -> matrixView.setFullImage(matrixData));
+                    runOnUiThread(() -> {
+                        if (matrixView != null) matrixView.setFullImage(matrixData);
+                    });
                 }
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error in matrix listener", e);
+            }
         }).start();
     }
 
@@ -281,26 +324,26 @@ public class PaintingActivity extends BaseActivity {
             dangerColor = Color.RED;
         }
 
-        if (btnPencil.getBackground() != null) {
+        if (btnPencil != null && btnPencil.getBackground() != null) {
             btnPencil.getBackground().mutate().setTint(colorToolBtn);
         }
         
-        if (btnEraser.getBackground() != null) {
+        if (btnEraser != null && btnEraser.getBackground() != null) {
             btnEraser.getBackground().mutate().setTint(colorToolBtn);
         }
 
-        if (btnClear.getBackground() != null) {
+        if (btnClear != null && btnClear.getBackground() != null) {
             btnClear.getBackground().mutate().setTint(colorToolBtn);
         }
         
-        btnClear.setColorFilter(dangerColor);
+        if (btnClear != null) btnClear.setColorFilter(dangerColor);
 
         if (isEraser) {
-            btnEraser.setColorFilter(colorAccent);
-            btnPencil.setColorFilter(colorToolIcon);
+            if (btnEraser != null) btnEraser.setColorFilter(colorAccent);
+            if (btnPencil != null) btnPencil.setColorFilter(colorToolIcon);
         } else {
-            btnPencil.setColorFilter(colorAccent);
-            btnEraser.setColorFilter(colorToolIcon);
+            if (btnPencil != null) btnPencil.setColorFilter(colorAccent);
+            if (btnEraser != null) btnEraser.setColorFilter(colorToolIcon);
         }
     }
 
@@ -325,7 +368,9 @@ public class PaintingActivity extends BaseActivity {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending UDP command", e);
+            }
         }).start();
     }
 

@@ -32,6 +32,9 @@ public class HelpActivity extends BaseActivity {
         }
 
         // Кнопка Назад
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        Button btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 }

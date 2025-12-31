@@ -14,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Locale;
 
 public class WeeklyScheduleActivity extends BaseActivity {
+    private static final String TAG = "WeeklyScheduleActivity";
 
     // [День][Слот][0=Год, 1=Хв, 2=Дія]
     public static int[][][] scheduleData = new int[7][5][3];
@@ -46,8 +49,18 @@ public class WeeklyScheduleActivity extends BaseActivity {
         // Завантаження при старті
         loadFromLamp();
 
-        btnSend.setOnClickListener(v -> { vibrate(); sendToLamp(); });
-        btnBack.setOnClickListener(v -> { vibrate(); finish(); });
+        if (btnSend != null) {
+            btnSend.setOnClickListener(v -> {
+                vibrate();
+                sendToLamp();
+            });
+        }
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     @Override
@@ -65,6 +78,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
     }
 
     private void generateDayRows() {
+        if (containerDays == null) return;
         containerDays.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
@@ -166,7 +180,9 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 }
                 socket.close();
                 runOnUiThread(() -> Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show());
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending schedule", e);
+            }
         }).start();
     }
 
@@ -215,6 +231,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 }
                 socket.close();
             } catch (Exception e) {
+                Log.e(TAG, "Error loading schedule", e);
                 runOnUiThread(() -> Toast.makeText(this, R.string.msg_lamp_not_found, Toast.LENGTH_SHORT).show());
             }
         }).start();

@@ -37,12 +37,16 @@ public class EffectsSettingsActivity extends BaseActivity {
 
         // Підключаємо адаптер
         adapter = new EffectsManagerAdapter(this, MainActivity.userEffectsList);
-        listView.setAdapter(adapter);
+        if (listView != null) {
+            listView.setAdapter(adapter);
+        }
 
-        btnBack.setOnClickListener(v -> {
-            saveOrder(); // Зберігаємо при виході
-            finish();
-        });
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                saveOrder(); // Зберігаємо при виході
+                finish();
+            });
+        }
     }
 
     @Override
@@ -90,37 +94,44 @@ public class EffectsSettingsActivity extends BaseActivity {
             // --- ВИПРАВЛЕННЯ ТУТ ---
             // Було: tvName.setText(item.nameUA);
             // Стало: Використовуємо метод, який сам обирає мову (UA/EN/DK)
-            tvName.setText(item.getLocalizedName());
+            if (tvName != null) {
+                tvName.setText(item.getLocalizedName());
+                tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
+            }
             // -----------------------
 
-            checkBox.setChecked(item.isVisible);
-
-            // Логіка галочки
-            checkBox.setOnClickListener(v -> {
-                item.isVisible = checkBox.isChecked();
-                tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
-            });
-            tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
+            if (checkBox != null) {
+                checkBox.setChecked(item.isVisible);
+                // Логіка галочки
+                checkBox.setOnClickListener(v -> {
+                    item.isVisible = checkBox.isChecked();
+                    if (tvName != null) {
+                        tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
+                    }
+                });
+            }
 
             // Логіка ВГОРУ
-            btnUp.setOnClickListener(v -> {
-                if (position > 0) {
-                    Collections.swap(MainActivity.userEffectsList, position, position - 1);
-                    notifyDataSetChanged();
-                }
-            });
+            if (btnUp != null) {
+                btnUp.setOnClickListener(v -> {
+                    if (position > 0) {
+                        Collections.swap(MainActivity.userEffectsList, position, position - 1);
+                        notifyDataSetChanged();
+                    }
+                });
+                btnUp.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
+            }
 
             // Логіка ВНИЗ
-            btnDown.setOnClickListener(v -> {
-                if (position < MainActivity.userEffectsList.size() - 1) {
-                    Collections.swap(MainActivity.userEffectsList, position, position + 1);
-                    notifyDataSetChanged();
-                }
-            });
-
-            // Ховаємо стрілки на краях
-            btnUp.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
-            btnDown.setVisibility(position == getCount() - 1 ? View.INVISIBLE : View.VISIBLE);
+            if (btnDown != null) {
+                btnDown.setOnClickListener(v -> {
+                    if (position < MainActivity.userEffectsList.size() - 1) {
+                        Collections.swap(MainActivity.userEffectsList, position, position + 1);
+                        notifyDataSetChanged();
+                    }
+                });
+                btnDown.setVisibility(position == getCount() - 1 ? View.INVISIBLE : View.VISIBLE);
+            }
 
             return convertView;
         }

@@ -1,5 +1,6 @@
 package com.example.ledlamp;
 
+import androidx.annotation.NonNull;
 import java.util.Locale;
 
 public class EffectEntity {
@@ -68,6 +69,7 @@ public class EffectEntity {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return getLocalizedName();

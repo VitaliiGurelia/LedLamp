@@ -24,10 +24,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
+    private static final String TAG = "MainActivity";
 
     // --- ЗМІННІ ІНТЕРФЕЙСУ ---
     Switch switchPower, switchCycle;
@@ -103,107 +105,132 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupListeners() {
-        btnMenu.setOnClickListener(v -> {
-            vibrate();
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        });
+        if (btnMenu != null) {
+            btnMenu.setOnClickListener(v -> {
+                vibrate();
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            });
+        }
 
         // Лампи
         lampAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, lampList);
         lampAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinnerLamps.setAdapter(lampAdapter);
+        if (spinnerLamps != null) {
+            spinnerLamps.setAdapter(lampAdapter);
 
-        spinnerLamps.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Lamp selectedLamp = lampList.get(position);
-                udpHelper.setIp(selectedLamp.ip);
+            spinnerLamps.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Lamp selectedLamp = lampList.get(position);
+                    udpHelper.setIp(selectedLamp.ip);
 
-                getSharedPreferences("LampSettings", MODE_PRIVATE)
-                        .edit().putString("LAST_LAMP_IP", selectedLamp.ip)
-                        .putString("LAMP_IP", selectedLamp.ip).apply();
+                    getSharedPreferences("LampSettings", MODE_PRIVATE)
+                            .edit().putString("LAST_LAMP_IP", selectedLamp.ip)
+                            .putString("LAMP_IP", selectedLamp.ip).apply();
 
-                udpHelper.sendCommand("GET");
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
+                    udpHelper.sendCommand("GET");
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
 
         // Ефекти
         effectsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, visibleEffects);
         effectsAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinnerEffects.setAdapter(effectsAdapter);
+        if (spinnerEffects != null) {
+            spinnerEffects.setAdapter(effectsAdapter);
 
-        spinnerEffects.setOnTouchListener((v, event) -> {
-            isUserAction = true;
-            v.performClick();
-            return false;
-        });
+            spinnerEffects.setOnTouchListener((v, event) -> {
+                isUserAction = true;
+                v.performClick();
+                return false;
+            });
 
-        spinnerEffects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isUserAction) {
-                    isUserAction = true;
-                    return;
+            spinnerEffects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (!isUserAction) {
+                        isUserAction = true;
+                        return;
+                    }
+                    EffectEntity effect = (EffectEntity) parent.getItemAtPosition(position);
+                    udpHelper.sendCommand("EFF " + effect.id);
+                    updateInterfaceForEffect(effect);
+
+                    if (effect.id != 88) { // Не зберігаємо малювання
+                        getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("LAST_EFFECT_ID", effect.id).apply();
+                    }
                 }
-                EffectEntity effect = (EffectEntity) parent.getItemAtPosition(position);
-                udpHelper.sendCommand("EFF " + effect.id);
-                updateInterfaceForEffect(effect);
 
-                if (effect.id != 88) { // Не зберігаємо малювання
-                    getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("LAST_EFFECT_ID", effect.id).apply();
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
                 }
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
+            });
+        }
 
         // Кнопки
-        btnPrev.setOnClickListener(v -> {
-            vibrate();
-            int current = spinnerEffects.getSelectedItemPosition();
-            if (current > 0) spinnerEffects.setSelection(current - 1);
-            else spinnerEffects.setSelection(visibleEffects.size() - 1);
-        });
+        if (btnPrev != null) {
+            btnPrev.setOnClickListener(v -> {
+                vibrate();
+                int current = spinnerEffects.getSelectedItemPosition();
+                if (current > 0) spinnerEffects.setSelection(current - 1);
+                else spinnerEffects.setSelection(visibleEffects.size() - 1);
+            });
+        }
 
-        btnNext.setOnClickListener(v -> {
-            vibrate();
-            int current = spinnerEffects.getSelectedItemPosition();
-            if (current < visibleEffects.size() - 1) spinnerEffects.setSelection(current + 1);
-            else spinnerEffects.setSelection(0);
-        });
+        if (btnNext != null) {
+            btnNext.setOnClickListener(v -> {
+                vibrate();
+                int current = spinnerEffects.getSelectedItemPosition();
+                if (current < visibleEffects.size() - 1) spinnerEffects.setSelection(current + 1);
+                else spinnerEffects.setSelection(0);
+            });
+        }
 
-        btnReset.setOnClickListener(v -> {
-            vibrate();
-            if (spinnerEffects.getSelectedItem() != null) {
-                EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
-                udpHelper.sendCommand("BRI " + currentEffect.defBright);
-                udpHelper.sendCommand("SPD " + currentEffect.defSpeed);
-                udpHelper.sendCommand("SCA " + currentEffect.defScale);
+        if (btnReset != null) {
+            btnReset.setOnClickListener(v -> {
+                vibrate();
+                if (spinnerEffects.getSelectedItem() != null) {
+                    EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
+                    udpHelper.sendCommand("BRI " + currentEffect.defBright);
+                    udpHelper.sendCommand("SPD " + currentEffect.defSpeed);
+                    udpHelper.sendCommand("SCA " + currentEffect.defScale);
 
-                seekBarBrightness.setProgress(currentEffect.defBright);
-                seekBarSpeed.setProgress(currentEffect.defSpeed);
-                seekBarScale.setProgress(currentEffect.defScale);
-                Toast.makeText(this, R.string.msg_reset_done, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    seekBarBrightness.setProgress(currentEffect.defBright);
+                    seekBarSpeed.setProgress(currentEffect.defSpeed);
+                    seekBarScale.setProgress(currentEffect.defScale);
+                    Toast.makeText(this, R.string.msg_reset_done, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         // Перемикачі
-        switchPower.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            if (isProgrammaticChange) { isProgrammaticChange = false; return; }
-            if (isChecked) {
-                udpHelper.sendCommand("P_ON");
-                // Перевірку статусу зробить слухач автоматично через 2 сек
-            } else {
-                udpHelper.sendCommand("P_OFF");
-            }
-        });
+        if (switchPower != null) {
+            switchPower.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                if (isProgrammaticChange) {
+                    isProgrammaticChange = false;
+                    return;
+                }
+                if (isChecked) {
+                    udpHelper.sendCommand("P_ON");
+                    // Перевірку статусу зробить слухач автоматично через 2 сек
+                } else {
+                    udpHelper.sendCommand("P_OFF");
+                }
+            });
+        }
 
-        switchCycle.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            udpHelper.sendCommand(isChecked ? "CYC 1" : "CYC 0");
-            updateEffectsSpinnerList();
-        });
+        if (switchCycle != null) {
+            switchCycle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                udpHelper.sendCommand(isChecked ? "CYC 1" : "CYC 0");
+                updateEffectsSpinnerList();
+            });
+        }
 
         // Слайдери
         setupSeekBar(seekBarBrightness, textBriVal, "BRI");
@@ -257,9 +284,10 @@ public class MainActivity extends BaseActivity {
     // --- ДОПОМІЖНІ МЕТОДИ ---
 
     private void setupSeekBar(SeekBar seekBar, TextView textView, String cmd) {
+        if (seekBar == null) return;
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar s, int p, boolean fromUser) {
-                textView.setText(String.valueOf(p));
+                if (textView != null) textView.setText(String.valueOf(p));
                 if (fromUser) {
                     long now = System.currentTimeMillis();
                     if (now - lastUpdate > 50) {
@@ -276,12 +304,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupPlusMinusButtons(Button btnMinus, Button btnPlus, SeekBar seekBar, String cmd) {
-        btnMinus.setOnClickListener(v -> changeSlider(seekBar, -1, cmd));
-        btnPlus.setOnClickListener(v -> changeSlider(seekBar, 1, cmd));
+        if (btnMinus != null) btnMinus.setOnClickListener(v -> changeSlider(seekBar, -1, cmd));
+        if (btnPlus != null) btnPlus.setOnClickListener(v -> changeSlider(seekBar, 1, cmd));
     }
 
     private void changeSlider(SeekBar seekBar, int delta, String cmd) {
-        if (!seekBar.isEnabled() || seekBar.getVisibility() != View.VISIBLE) return;
+        if (seekBar == null || !seekBar.isEnabled() || seekBar.getVisibility() != View.VISIBLE) return;
         vibrate();
         int val = Math.max(0, Math.min(seekBar.getMax(), seekBar.getProgress() + delta));
         seekBar.setProgress(val);
@@ -300,7 +328,9 @@ public class MainActivity extends BaseActivity {
                 org.json.JSONObject o = arr.getJSONObject(i);
                 lampList.add(new Lamp(o.getString("n"), o.getString("i")));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading lamps", e);
+        }
 
         if (lampList.isEmpty()) lampList.add(new Lamp("Demo Lamp", "192.168.0.105"));
         if (lampAdapter != null) lampAdapter.notifyDataSetChanged();
@@ -308,7 +338,7 @@ public class MainActivity extends BaseActivity {
         if (!lastIp.isEmpty()) {
             for (int i = 0; i < lampList.size(); i++) {
                 if (lampList.get(i).ip.equals(lastIp)) {
-                    spinnerLamps.setSelection(i);
+                    if (spinnerLamps != null) spinnerLamps.setSelection(i);
                     udpHelper.setIp(lastIp);
                     break;
                 }
@@ -335,12 +365,12 @@ public class MainActivity extends BaseActivity {
                     boolean finalCycle = isCycleOn;
 
                     runOnUiThread(() -> {
-                        if (switchPower.isChecked() != (state == 1)) {
+                        if (switchPower != null && switchPower.isChecked() != (state == 1)) {
                             isProgrammaticChange = true;
                             switchPower.setChecked(state == 1);
                         }
 
-                        if (switchCycle.isChecked() != finalCycle) {
+                        if (switchCycle != null && switchCycle.isChecked() != finalCycle) {
                             switchCycle.setOnCheckedChangeListener(null);
                             switchCycle.setChecked(finalCycle);
                             updateEffectsSpinnerList();
@@ -351,12 +381,12 @@ public class MainActivity extends BaseActivity {
                             });
                         }
 
-                        seekBarBrightness.setProgress(bri);
-                        seekBarSpeed.setProgress(spd);
-                        seekBarScale.setProgress(sca);
-                        textBriVal.setText(String.valueOf(bri));
-                        textSpeedVal.setText(String.valueOf(spd));
-                        textScaleVal.setText(String.valueOf(sca));
+                        if (seekBarBrightness != null) seekBarBrightness.setProgress(bri);
+                        if (seekBarSpeed != null) seekBarSpeed.setProgress(spd);
+                        if (seekBarScale != null) seekBarScale.setProgress(sca);
+                        if (textBriVal != null) textBriVal.setText(String.valueOf(bri));
+                        if (textSpeedVal != null) textSpeedVal.setText(String.valueOf(spd));
+                        if (textScaleVal != null) textScaleVal.setText(String.valueOf(sca));
 
                         // Синхронізація спінера
                         int foundPos = -1;
@@ -368,7 +398,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                         if (foundPos != -1) {
-                            if (spinnerEffects.getSelectedItemPosition() != foundPos) {
+                            if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
                                 isUserAction = false;
                                 spinnerEffects.setSelection(foundPos);
                             }
@@ -390,7 +420,9 @@ public class MainActivity extends BaseActivity {
                     });
                 }
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing CUR packet", e);
+        }
     }
 
     // --- ФУНКЦІЇ, ЯКІ МИ ВИКЛИКАЄМО ЗІ СТОРОННІХ ФАЙЛІВ ---
@@ -415,7 +447,9 @@ public class MainActivity extends BaseActivity {
                                 break;
                             }
                         }
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing hidden effect ID: " + idStr, e);
+                    }
                 } else {
                     try {
                         int id = Integer.parseInt(idStr);
@@ -426,7 +460,9 @@ public class MainActivity extends BaseActivity {
                                 break;
                             }
                         }
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing effect ID: " + idStr, e);
+                    }
                 }
             }
             // Додати нові
@@ -441,7 +477,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateEffectsSpinnerList() {
-        boolean isCycleMode = switchCycle.isChecked();
+        boolean isCycleMode = switchCycle != null && switchCycle.isChecked();
         visibleEffects.clear();
         for (EffectEntity eff : userEffectsList) {
             if (eff.isVisible) {
@@ -454,14 +490,16 @@ public class MainActivity extends BaseActivity {
         int lastId = prefs.getInt("LAST_EFFECT_ID", 0);
         for (int i = 0; i < visibleEffects.size(); i++) {
             if (visibleEffects.get(i).id == lastId) {
-                spinnerEffects.setSelection(i);
+                if (spinnerEffects != null) spinnerEffects.setSelection(i);
                 break;
             }
         }
     }
 
     private void updateInterfaceForEffect(EffectEntity effect) {
-        seekBarSpeed.setMax(effect.speedMax);
+        if (seekBarSpeed != null) seekBarSpeed.setMax(effect.speedMax);
+
+        if (seekBarScale == null || textScaleVal == null || labelScale == null || btnScaMinus == null || btnScaPlus == null) return;
 
         if (effect.scaleType == 2) {
             seekBarScale.setVisibility(View.INVISIBLE);
@@ -501,13 +539,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateScaleTextColor(int progress, boolean isRainbowMode) {
+        if (textScaleVal == null) return;
         textScaleVal.setText(String.valueOf(progress));
         if (isRainbowMode) {
             float max = seekBarScale.getMax() > 0 ? seekBarScale.getMax() : 255f;
             float hue = (progress / max) * 360.0f;
             textScaleVal.setTextColor(Color.HSVToColor(new float[]{hue, 1f, 1f}));
         } else {
-            textScaleVal.setTextColor(getResources().getColor(R.color.neon_green));
+            textScaleVal.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.neon_green));
         }
     }
 
@@ -515,7 +554,7 @@ public class MainActivity extends BaseActivity {
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         int style = prefs.getInt("slider_style", 0);
         SeekBar[] sliders = {seekBarBrightness, seekBarSpeed, seekBarScale};
-        int colorNeon = getResources().getColor(R.color.neon_green);
+        int colorNeon = androidx.core.content.ContextCompat.getColor(this, R.color.neon_green);
 
         for (SeekBar sb : sliders) {
             if (sb == null) continue;
@@ -527,7 +566,7 @@ public class MainActivity extends BaseActivity {
                 sb.setThumb(getResources().getDrawable(R.drawable.thumb_transparent));
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
             } else if (style == 2) { // Cyber
-                sb.setProgressDrawable(getResources().getDrawable(R.drawable.track_neon));
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_neon));
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTint(colorNeon);
                 sb.setThumb(getResources().getDrawable(R.drawable.thumb_cyber));
                 if (sb.getThumb() != null) sb.getThumb().setTint(colorNeon);
@@ -537,7 +576,7 @@ public class MainActivity extends BaseActivity {
                 sb.setThumb(getResources().getDrawable(R.drawable.thumb_cyber));
                 if (sb.getThumb() != null) sb.getThumb().setTint(getResources().getColor(R.color.white));
             } else { // Neon
-                sb.setProgressDrawable(getResources().getDrawable(R.drawable.track_neon));
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_neon));
                 sb.setThumb(getResources().getDrawable(R.drawable.thumb_round));
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);

@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class AppSettingsActivity extends BaseActivity {
+    private static final String TAG = "AppSettingsActivity";
 
     Switch switchVibration, switchExitConfirm, switchAutoDst, switchSwapColors;
     RadioGroup radioGroupSliders;
@@ -61,84 +63,101 @@ public class AppSettingsActivity extends BaseActivity {
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
 
         // Відновлення стану
-        switchVibration.setChecked(prefs.getBoolean("vibration", true));
-        switchExitConfirm.setChecked(prefs.getBoolean("exit_confirm", false));
-        switchAutoDst.setChecked(prefs.getBoolean("auto_dst", false));
-        switchSwapColors.setChecked(prefs.getBoolean("swap_colors", false));
+        if (switchVibration != null) switchVibration.setChecked(prefs.getBoolean("vibration", true));
+        if (switchExitConfirm != null) switchExitConfirm.setChecked(prefs.getBoolean("exit_confirm", false));
+        if (switchAutoDst != null) switchAutoDst.setChecked(prefs.getBoolean("auto_dst", false));
+        if (switchSwapColors != null) switchSwapColors.setChecked(prefs.getBoolean("swap_colors", false));
 
-        int currentStyle = prefs.getInt("slider_style", 0);
-        if (currentStyle == 1) radioGroupSliders.check(R.id.radioStylePlasma);
-        else if (currentStyle == 2) radioGroupSliders.check(R.id.radioStyleCyber);
-        else if (currentStyle == 3) radioGroupSliders.check(R.id.radioStyleGradient);
-        else radioGroupSliders.check(R.id.radioStyleNeon);
+        if (radioGroupSliders != null) {
+            int currentStyle = prefs.getInt("slider_style", 0);
+            if (currentStyle == 1) radioGroupSliders.check(R.id.radioStylePlasma);
+            else if (currentStyle == 2) radioGroupSliders.check(R.id.radioStyleCyber);
+            else if (currentStyle == 3) radioGroupSliders.check(R.id.radioStyleGradient);
+            else radioGroupSliders.check(R.id.radioStyleNeon);
+        }
 
         setupTimeZoneSpinner(prefs);
 
         // --- ОБРОБНИКИ ---
 
         radioGroupTheme = findViewById(R.id.radioGroupTheme);
+        if (radioGroupTheme != null) {
+            int savedTheme = prefs.getInt("app_theme", 0); // 0=Dark, 1=Light, 2=Cyber
+            if (savedTheme == 1) radioGroupTheme.check(R.id.radioThemeLight);
+            else if (savedTheme == 2) radioGroupTheme.check(R.id.radioThemeCyber);
+            else radioGroupTheme.check(R.id.radioThemeDark);
 
-        int savedTheme = prefs.getInt("app_theme", 0); // 0=Dark, 1=Light, 2=Cyber
-        if (savedTheme == 1) radioGroupTheme.check(R.id.radioThemeLight);
-        else if (savedTheme == 2) radioGroupTheme.check(R.id.radioThemeCyber);
-        else radioGroupTheme.check(R.id.radioThemeDark);
+            radioGroupTheme.setOnCheckedChangeListener((group, checkedId) -> {
+                vibrate();
+                int newTheme = 0;
+                if (checkedId == R.id.radioThemeLight) newTheme = 1;
+                else if (checkedId == R.id.radioThemeCyber) newTheme = 2;
 
-        radioGroupTheme.setOnCheckedChangeListener((group, checkedId) -> {
-            vibrate();
-            int newTheme = 0;
-            if (checkedId == R.id.radioThemeLight) newTheme = 1;
-            else if (checkedId == R.id.radioThemeCyber) newTheme = 2;
+                prefs.edit().putInt("app_theme", newTheme).apply();
 
-            prefs.edit().putInt("app_theme", newTheme).apply();
+                // Перезапуск для застосування теми
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
+        }
 
-            // Перезапуск для застосування теми
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
+        if (btnSyncTime != null) {
+            btnSyncTime.setOnClickListener(v -> {
+                vibrate();
+                syncTimeWithLamp();
+            });
+        }
 
-        btnSyncTime.setOnClickListener(v -> {
-            vibrate();
-            syncTimeWithLamp();
-        });
+        if (switchVibration != null) {
+            switchVibration.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                prefs.edit().putBoolean("vibration", isChecked).apply();
+            });
+        }
 
-        switchVibration.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            prefs.edit().putBoolean("vibration", isChecked).apply();
-        });
+        if (switchExitConfirm != null) {
+            switchExitConfirm.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                prefs.edit().putBoolean("exit_confirm", isChecked).apply();
+            });
+        }
 
-        switchExitConfirm.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            prefs.edit().putBoolean("exit_confirm", isChecked).apply();
-        });
+        if (radioGroupSliders != null) {
+            radioGroupSliders.setOnCheckedChangeListener((group, checkedId) -> {
+                vibrate();
+                int newStyle = 0;
+                if (checkedId == R.id.radioStylePlasma) newStyle = 1;
+                else if (checkedId == R.id.radioStyleCyber) newStyle = 2;
+                else if (checkedId == R.id.radioStyleGradient) newStyle = 3;
+                prefs.edit().putInt("slider_style", newStyle).apply();
+                Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        radioGroupSliders.setOnCheckedChangeListener((group, checkedId) -> {
-            vibrate();
-            int newStyle = 0;
-            if (checkedId == R.id.radioStylePlasma) newStyle = 1;
-            else if (checkedId == R.id.radioStyleCyber) newStyle = 2;
-            else if (checkedId == R.id.radioStyleGradient) newStyle = 3;
-            prefs.edit().putInt("slider_style", newStyle).apply();
-            Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
-        });
+        if (switchAutoDst != null) {
+            switchAutoDst.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                prefs.edit().putBoolean("auto_dst", isChecked).apply();
+                sendUdpCommand("DST " + (isChecked ? "1" : "0"));
+                Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        switchAutoDst.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            prefs.edit().putBoolean("auto_dst", isChecked).apply();
-            sendUdpCommand("DST " + (isChecked ? "1" : "0"));
-            Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
-        });
+        if (switchSwapColors != null) {
+            switchSwapColors.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                prefs.edit().putBoolean("swap_colors", isChecked).apply();
+                Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        switchSwapColors.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            prefs.edit().putBoolean("swap_colors", isChecked).apply();
-            Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
-        });
-
-        btnBack.setOnClickListener(v -> {
-            vibrate();
-            finish();
-        });
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     @Override
@@ -192,28 +211,29 @@ public class AppSettingsActivity extends BaseActivity {
                                     try {
                                         int dayNum = Integer.parseInt(dayStr);
                                         dayName = getDayNameByNumber(dayNum);
-                                    } catch (Exception e) {}
+                                    } catch (Exception e) {
+                                        // Ignore parse exception
+                                    }
 
                                     String finalStr = timeStr + "  " + dayName;
                                     runOnUiThread(() -> {
-                                        textDeviceTime.setText(finalStr);
-                                        // Замінив жорсткий колір на атрибут теми (але тут потрібен Context, тому поки залишу як є, або краще використати default text color)
-                                        // textDeviceTime.setTextColor(getResources().getColor(R.color.white)); // Видаляю, хай бере з теми
+                                        if (textDeviceTime != null) textDeviceTime.setText(finalStr);
                                     });
                                 }
                             }
                         }
                     } catch (SocketTimeoutException e) {
                         runOnUiThread(() -> {
-                            textDeviceTime.setText(R.string.error_connection);
-                            // textDeviceTime.setTextColor(getResources().getColor(R.color.neon_red)); // Видаляю
+                            if (textDeviceTime != null) textDeviceTime.setText(R.string.error_connection);
                         });
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error receiving time", e);
+                    }
 
                     Thread.sleep(1000);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error in time listener", e);
             } finally {
                 if (socket != null) socket.close();
             }
@@ -245,6 +265,7 @@ public class AppSettingsActivity extends BaseActivity {
     }
 
     private void setupTimeZoneSpinner(SharedPreferences prefs) {
+        if (spinnerTimeZone == null) return;
         ArrayList<String> gmtLabels = new ArrayList<>();
         int savedGmt = prefs.getInt("gmt_value", 1);
         int selectedIndex = 12;
@@ -259,7 +280,7 @@ public class AppSettingsActivity extends BaseActivity {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, gmtLabels);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // ВИПРАВЛЕНО!
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerTimeZone.setAdapter(adapter);
         spinnerTimeZone.setSelection(selectedIndex);
 
@@ -289,7 +310,9 @@ public class AppSettingsActivity extends BaseActivity {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, 8888);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending UDP command", e);
+            }
         }).start();
     }
 

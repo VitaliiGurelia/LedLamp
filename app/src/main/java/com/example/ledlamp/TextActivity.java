@@ -7,15 +7,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class TextActivity extends BaseActivity {
+    private static final String TAG = "TextActivity";
 
     EditText editRunningText;
     // Оголошуємо всі кнопки в одному рядку
@@ -94,7 +97,9 @@ public class TextActivity extends BaseActivity {
 
                 else baos.write(code);
             }
-        } catch (Exception e) {}
+        } catch (IOException e) {
+            Log.e(TAG, "Error encoding text to bytes", e);
+        }
         return baos.toByteArray();
     }
 
@@ -110,7 +115,9 @@ public class TextActivity extends BaseActivity {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending raw bytes", e);
+            }
         }).start();
     }
 

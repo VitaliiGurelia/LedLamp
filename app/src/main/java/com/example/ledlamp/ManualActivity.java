@@ -26,7 +26,10 @@ public class ManualActivity extends BaseActivity {
         // 5. КОМАНДИ (Використовуємо вже існуючий текст "text_help_content")
         setupButton(R.id.btnMan5, R.string.title_manual_5, R.string.text_help_content);
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        Button btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 
     // Метод, який запускає HelpActivity з потрібним текстом

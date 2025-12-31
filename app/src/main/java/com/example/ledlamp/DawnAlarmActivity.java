@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,7 +17,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DawnAlarmActivity extends BaseActivity {
+    private static final String TAG = "DawnAlarmActivity";
 
     LinearLayout containerDays;
     Spinner spinnerDuration;
@@ -61,8 +61,6 @@ public class DawnAlarmActivity extends BaseActivity {
         // 2. Генерація 7 днів
         generateDaysList();
 
-
-
         btnBack.setOnClickListener(v -> {
             vibrate();
             finish();
@@ -75,7 +73,7 @@ public class DawnAlarmActivity extends BaseActivity {
         for (int t : timeValues) list.add(t + " " + minStr);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, list);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // ВИПРАВЛЕНО!
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerDuration.setAdapter(adapter);
 
         // Відновлення
@@ -101,7 +99,6 @@ public class DawnAlarmActivity extends BaseActivity {
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
 
         for (int i = 0; i < 7; i++) {
-            final int dayIndex = i; // 0..6 (Mon..Sun)
             // У прошивці дні зазвичай 1..7 (1=Пн)
             final int lampDayId = i + 1;
 
@@ -203,7 +200,9 @@ public class DawnAlarmActivity extends BaseActivity {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to send UDP command: " + command, e);
+            }
         }).start();
     }
 

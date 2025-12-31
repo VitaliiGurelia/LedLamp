@@ -19,7 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CycleActivity extends BaseActivity {
+    private static final String TAG = "CycleActivity";
 
     Switch switchKeep;
     Spinner spinnerInterval;
@@ -65,48 +67,61 @@ public class CycleActivity extends BaseActivity {
         // --- ОБРОБНИКИ ---
 
         // Зміна часу -> відправляємо конфіг
-        spinnerInterval.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("cycle_interval_pos", position).apply();
-                // Не відправляємо при першому запуску (щоб не спамити), тільки якщо це дія користувача
-                // Але для простоти можна відправляти завжди, лампа витримає.
-                sendCycleConfig();
-            }
-            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
+        if (spinnerInterval != null) {
+            spinnerInterval.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                    getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("cycle_interval_pos", position).apply();
+                    // Не відправляємо при першому запуску (щоб не спамити), тільки якщо це дія користувача
+                    // Але для простоти можна відправляти завжди, лампа витримає.
+                    sendCycleConfig();
+                }
+
+                @Override
+                public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                }
+            });
+        }
 
         // Перемикач "Не вимикати цикл" -> відправляємо конфіг
-        switchKeep.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            vibrate();
-            // В оригіналі цей перемикач часто є просто налаштуванням "Увімкнути цикл зараз"
-            // Або "Use Saved" (зберігати після перезавантаження).
-            // Будемо використовувати його як "State" (Вкл/Викл) у команді FAV_SET
-            sendCycleConfig();
-        });
+        if (switchKeep != null) {
+            switchKeep.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                // В оригіналі цей перемикач часто є просто налаштуванням "Увімкнути цикл зараз"
+                // Або "Use Saved" (зберігати після перезавантаження).
+                // Будемо використовувати його як "State" (Вкл/Викл) у команді FAV_SET
+                sendCycleConfig();
+            });
+        }
 
         // Кнопка "Вибрати все"
-        btnSelectAll.setOnClickListener(v -> {
-            vibrate();
-            allSelected = !allSelected;
-            btnSelectAll.setText(allSelected ? R.string.btn_deselect_all : R.string.btn_select_all);
+        if (btnSelectAll != null) {
+            btnSelectAll.setOnClickListener(v -> {
+                vibrate();
+                allSelected = !allSelected;
+                btnSelectAll.setText(allSelected ? R.string.btn_deselect_all : R.string.btn_select_all);
 
-            for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                eff.useInCycle = allSelected;
-            }
-            adapter.notifyDataSetChanged();
-            sendCycleConfig(); // Відправляємо зміни
-            Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
-        });
+                for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
+                    eff.useInCycle = allSelected;
+                }
+                adapter.notifyDataSetChanged();
+                sendCycleConfig(); // Відправляємо зміни
+                Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        btnBack.setOnClickListener(v -> {
-            vibrate();
-            finish();
-        });
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     // --- ГОЛОВНА ФУНКЦІЯ: ЗБИРАЄ І ВІДПРАВЛЯЄ FAV_SET ---
     private void sendCycleConfig() {
+        if (switchKeep == null || spinnerInterval == null) return;
+
         // Формат: FAV_SET <State> <Interval> <Dispersion> <UseSaved> <e0> <e1> ... <eN>
 
         // 1. State (Вкл/Викл)
@@ -150,6 +165,7 @@ public class CycleActivity extends BaseActivity {
     }
 
     private void setupTimeSpinner() {
+        if (spinnerInterval == null) return;
         List<String> timeLabels = new ArrayList<>();
         String sec = getString(R.string.unit_sec);
         String min = getString(R.string.unit_min);
@@ -158,11 +174,12 @@ public class CycleActivity extends BaseActivity {
             else timeLabels.add((val / 60) + " " + min);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, timeLabels);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // ВИПРАВЛЕНО!
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerInterval.setAdapter(adapter);
     }
 
     private void loadSettings() {
+        if (spinnerInterval == null) return;
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
         int pos = prefs.getInt("cycle_interval_pos", 0);
         if (pos < timeValues.length) spinnerInterval.setSelection(pos);
@@ -211,7 +228,9 @@ public class CycleActivity extends BaseActivity {
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending UDP command", e);
+            }
         }).start();
     }
 

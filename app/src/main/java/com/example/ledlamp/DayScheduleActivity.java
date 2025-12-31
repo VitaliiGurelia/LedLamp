@@ -89,6 +89,8 @@ public class DayScheduleActivity extends BaseActivity {
             slotsContainer.addView(row);
         }
 
-        btnBack.setOnClickListener(v -> finish());
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 }

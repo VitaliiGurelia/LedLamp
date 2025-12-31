@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class TimerActivity extends BaseActivity { // Використовуємо BaseActivity для мови
+    private static final String TAG = "TimerActivity";
 
     Spinner spinnerTimer;
     TextView textCountdown, textCurrentTime;
@@ -47,22 +50,29 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
         setupSpinner();
         checkSavedTimer();
 
-        spinnerTimer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int minutes = timerValues[position];
-                // Відправляємо команду тільки якщо це вибір користувача
-                // (Для спрощення шлемо завжди, лампа обробить)
-                if (minutes > 0) startTimer(minutes);
-                else stopTimer();
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        if (spinnerTimer != null) {
+            spinnerTimer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    int minutes = timerValues[position];
+                    // Відправляємо команду тільки якщо це вибір користувача
+                    // (Для спрощення шлемо завжди, лампа обробить)
+                    if (minutes > 0) startTimer(minutes);
+                    else stopTimer();
+                }
 
-        btnBack.setOnClickListener(v -> {
-            vibrate();
-            finish();
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     // --- СИНХРОНІЗАЦІЯ ЧАСУ З ЛАМПОЮ ---
@@ -108,7 +118,9 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
                             String[] parts = msg.split(" ");
                             if (parts.length >= 10) {
                                 String lampTime = parts[parts.length - 1]; // Останній елемент
-                                runOnUiThread(() -> textCurrentTime.setText(lampTime));
+                                runOnUiThread(() -> {
+                                    if (textCurrentTime != null) textCurrentTime.setText(lampTime);
+                                });
                             }
                         }
                     } catch (Exception e) {
@@ -117,7 +129,7 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
                 }
                 socket.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error in UDP listener", e);
             }
         }).start();
     }
@@ -125,6 +137,7 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
     // --- ЛОГІКА ТАЙМЕРА ---
 
     private void setupSpinner() {
+        if (spinnerTimer == null) return;
         List<String> labels = new ArrayList<>();
         String minStr = getString(R.string.timer_min);
         for (int val : timerValues) {
@@ -148,21 +161,24 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
     private void stopTimer() {
         sendUdpCommand("TOFF 0");
         if (countDownTimer != null) countDownTimer.cancel();
-        textCountdown.setText(R.string.timer_not_active);
+        if (textCountdown != null) textCountdown.setText(R.string.timer_not_active);
         getSharedPreferences("LampSettings", MODE_PRIVATE).edit().remove("timer_end_time").apply();
     }
 
     private void startCountdownUI(long millisLeft) {
+        if (textCountdown == null) return;
         countDownTimer = new CountDownTimer(millisLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = millisUntilFinished / 1000;
-                textCountdown.setText(String.format(Locale.US, "%02d:%02d", seconds / 60, seconds % 60));
+                if (textCountdown != null) {
+                    textCountdown.setText(String.format(Locale.US, "%02d:%02d", seconds / 60, seconds % 60));
+                }
             }
             @Override
             public void onFinish() {
-                textCountdown.setText("00:00");
-                spinnerTimer.setSelection(0);
+                if (textCountdown != null) textCountdown.setText("00:00");
+                if (spinnerTimer != null) spinnerTimer.setSelection(0);
             }
         }.start();
     }
@@ -171,7 +187,7 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
         long endTime = getSharedPreferences("LampSettings", MODE_PRIVATE).getLong("timer_end_time", 0);
         long now = System.currentTimeMillis();
         if (endTime > now) startCountdownUI(endTime - now);
-        else textCountdown.setText(R.string.timer_not_active);
+        else if (textCountdown != null) textCountdown.setText(R.string.timer_not_active);
     }
 
     private void sendUdpCommand(String command) {
@@ -185,7 +201,9 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
                 DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ip), LAMP_PORT);
                 socket.send(packet);
                 socket.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending UDP command", e);
+            }
         }).start();
     }
 

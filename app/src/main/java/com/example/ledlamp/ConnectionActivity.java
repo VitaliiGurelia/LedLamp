@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class ConnectionActivity extends BaseActivity {
+    private static final String TAG = "ConnectionActivity";
 
     EditText editName, editIp;
     Button btnAdd, btnFind, btnBack;
@@ -58,33 +60,45 @@ public class ConnectionActivity extends BaseActivity {
         loadLamps();
 
         // ДОДАВАННЯ
-        btnAdd.setOnClickListener(v -> {
-            vibrate();
-            String name = editName.getText().toString();
-            String ip = editIp.getText().toString();
-            if (!name.isEmpty() && !ip.isEmpty()) {
-                for (Lamp l : lampList) {
-                    if (l.ip.equals(ip)) {
-                        Toast.makeText(this, R.string.msg_ip_exists, Toast.LENGTH_SHORT).show(); 
-                        return;
+        if (btnAdd != null) {
+            btnAdd.setOnClickListener(v -> {
+                vibrate();
+                String name = editName.getText().toString();
+                String ip = editIp.getText().toString();
+                if (!name.isEmpty() && !ip.isEmpty()) {
+                    for (Lamp l : lampList) {
+                        if (l.ip.equals(ip)) {
+                            Toast.makeText(this, R.string.msg_ip_exists, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
+                    lampList.add(new Lamp(name, ip));
+                    saveLamps();
+                    adapter.notifyDataSetChanged();
+                    editName.setText("");
+                    editIp.setText("");
+                    Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.msg_empty_fields, Toast.LENGTH_SHORT).show();
                 }
-                lampList.add(new Lamp(name, ip));
-                saveLamps();
-                adapter.notifyDataSetChanged();
-                editName.setText("");
-                editIp.setText("");
-                Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.msg_empty_fields, Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
 
         // ПОШУК
-        btnFind.setOnClickListener(v -> { vibrate(); findNewLamp(); });
+        if (btnFind != null) {
+            btnFind.setOnClickListener(v -> {
+                vibrate();
+                findNewLamp();
+            });
+        }
 
         // НАЗАД
-        btnBack.setOnClickListener(v -> { vibrate(); finish(); });
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                vibrate();
+                finish();
+            });
+        }
     }
 
     private void findNewLamp() {
@@ -122,8 +136,8 @@ public class ConnectionActivity extends BaseActivity {
                         if (!exists) {
                             foundNew = true;
                             runOnUiThread(() -> {
-                                editIp.setText(foundIp);
-                                editName.setText(R.string.default_new_lamp_name);
+                                if (editIp != null) editIp.setText(foundIp);
+                                if (editName != null) editName.setText(R.string.default_new_lamp_name);
                                 Toast.makeText(ConnectionActivity.this, getString(R.string.msg_found_lamp, foundIp), Toast.LENGTH_LONG).show();
                             });
                             break;
@@ -139,7 +153,7 @@ public class ConnectionActivity extends BaseActivity {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error finding lamp", e);
             } finally {
                 if (socket != null) socket.close();
             }
@@ -157,7 +171,7 @@ public class ConnectionActivity extends BaseActivity {
                 obj.put("i", l.ip);
                 jsonArray.put(obj);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error saving lamp to JSON", e);
             }
         }
         editor.putString("LAMPS_JSON", jsonArray.toString());
@@ -175,7 +189,7 @@ public class ConnectionActivity extends BaseActivity {
                 lampList.add(new Lamp(obj.getString("n"), obj.getString("i")));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error loading lamps from JSON", e);
         }
         if (adapter != null) adapter.notifyDataSetChanged();
     }
@@ -256,7 +270,7 @@ public class ConnectionActivity extends BaseActivity {
                                         s.close();
                                         runOnUiThread(() -> Toast.makeText(getContext(), R.string.msg_reset_cmd_sent, Toast.LENGTH_SHORT).show());
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+                                        Log.e(TAG, "Error sending reset command", e);
                                     }
                                 }).start();
                             })
