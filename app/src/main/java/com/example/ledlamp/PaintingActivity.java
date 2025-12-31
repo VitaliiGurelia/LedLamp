@@ -37,7 +37,7 @@ public class PaintingActivity extends BaseActivity {
     private int selectedColor = Color.RED;
 
     private float currentHue = 0f;
-    private float currentBrightness = 1f;
+    private float currentBrightness = 0.5f;
 
     private boolean isEraser = false;
     private static final int LAMP_PORT = 8888;
@@ -66,6 +66,7 @@ public class PaintingActivity extends BaseActivity {
         viewColorPreview = findViewById(R.id.viewColorPreview);
         imgCursor = findViewById(R.id.imgCursor);
         seekBarBrightness = findViewById(R.id.seekBarBrushBrightness);
+        if (seekBarBrightness != null) seekBarBrightness.setProgress(50);
 
         SharedPreferences appPrefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         swapColors = appPrefs.getBoolean("swap_colors", false);
@@ -122,7 +123,10 @@ public class PaintingActivity extends BaseActivity {
     private void updateCalculatedColor() {
         if (viewColorPreview == null || imgCursor == null || matrixView == null || viewSpectrum == null) return;
 
-        selectedColor = Color.HSVToColor(new float[]{currentHue, 1f, currentBrightness});
+        float saturation = (currentBrightness <= 0.5f) ? 1f : 2f * (1f - currentBrightness);
+        float value = (currentBrightness <= 0.5f) ? 2f * currentBrightness : 1f;
+
+        selectedColor = Color.HSVToColor(new float[]{currentHue, saturation, value});
 
         viewColorPreview.getBackground().setTint(selectedColor);
         matrixView.setCurrentColor(selectedColor);
@@ -205,7 +209,10 @@ public class PaintingActivity extends BaseActivity {
                     } else {
                         // Якщо ми пропускаємо відправку UDP, все одно оновимо UI (превью + курсор)
                         // Для плавності краще оновлювати курсор завжди
-                        selectedColor = Color.HSVToColor(new float[]{currentHue, 1f, currentBrightness});
+                        float saturation = (currentBrightness <= 0.5f) ? 1f : 2f * (1f - currentBrightness);
+                        float value = (currentBrightness <= 0.5f) ? 2f * currentBrightness : 1f;
+                        selectedColor = Color.HSVToColor(new float[]{currentHue, saturation, value});
+                        
                         if (viewColorPreview != null)
                             viewColorPreview.getBackground().setTint(selectedColor);
 

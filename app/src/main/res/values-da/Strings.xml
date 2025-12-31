@@ -282,4 +282,9 @@
     <string name="hint_dawn_description">Indstil vækningstid (maks lysstyrke). Effekten starter tidligere afhængigt af varigheden.</string>
     <string name="dialog_exit_title">Afslut</string>
     <string name="dialog_exit_msg">Afslut appen?</string>
+
+    <string name="label_theme">TEMA</string>
+    <string name="theme_dark">Mørk (Neon)</string>
+    <string name="theme_light">Lys</string>
+    <string name="theme_cyber">Cyberpunk</string>
 </resources>

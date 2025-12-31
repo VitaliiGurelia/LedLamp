@@ -641,9 +641,6 @@ public class MainActivity extends BaseActivity {
 
         SeekBar[] sliders = {seekBarBrightness, seekBarSpeed, seekBarScale};
 
-        // Колір для Кібер-стилю (залишаємо зеленим або беремо акцент)
-        int colorAccent = androidx.core.content.ContextCompat.getColor(this, R.color.neon_green);
-
         for (SeekBar sb : sliders) {
             if (sb == null) continue;
 
@@ -653,30 +650,47 @@ public class MainActivity extends BaseActivity {
             if (style == 1) { // --- PLASMA ---
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_plasma));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_transparent));
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
 
-            } else if (style == 2) { // --- CYBER ---
-                // Використовуємо стандартний трек, але фарбуємо його
-                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTint(colorAccent);
+                // Колір 146 (світло-синій) для активної частини
+                int plasmaBlueColor = 0xFF006EFF;
 
-                sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
-                if (sb.getThumb() != null) sb.getThumb().setTint(colorAccent);
+                // 1. Скидаємо загальне фарбування Drawable, щоб не заважало
+                if (sb.getProgressDrawable() != null) {
+                    sb.getProgressDrawable().setTintList(null);
+                }
+
+                // 2. Фарбуємо ТІЛЬКИ активну частину (зліва) у фірмовий синій
+                sb.setProgressTintList(android.content.res.ColorStateList.valueOf(plasmaBlueColor));
+
+                // 3. Фон (справа) скидаємо в null.
+                // Тоді Android автоматично візьме правильний сірий колір з поточної теми (Light/Dark),
+                // так само, як це працює в режимах Neon та Gradient.
+                sb.setProgressBackgroundTintList(null);
 
             } else if (style == 3) { // --- GRADIENT ---
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
+
+                // Тут ми очищаємо все, щоб кольори бралися з самого файлу drawable або теми
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
 
+                // Очищаємо специфічні тінти слайдера (щоб не залишився синій від Плазми, якщо перемикаємось)
+                sb.setProgressTintList(null);
+                sb.setProgressBackgroundTintList(null);
+
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
-                if (sb.getThumb() != null) sb.getThumb().setTintList(null); // Білий або як в xml
+                if (sb.getThumb() != null) sb.getThumb().setTintList(null);
 
             } else { // --- NEON (DEFAULT) ---
-                // ВИКОРИСТОВУЄМО НОВИЙ ФАЙЛ track_standard!
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_round));
 
-                // Очищаємо тінти, щоб кольори бралися з XML (через ?attr/...)
+                // Очищаємо всі накладені кольори, щоб працювали кольори з теми XML
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
+
+                // Важливо очистити ці два, інакше синій колір від Плазми залишиться висіти на слайдері
+                sb.setProgressTintList(null);
+                sb.setProgressBackgroundTintList(null);
+
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);
             }
         }

@@ -71,7 +71,6 @@ public class AppSettingsActivity extends BaseActivity {
         if (radioGroupSliders != null) {
             int currentStyle = prefs.getInt("slider_style", 0);
             if (currentStyle == 1) radioGroupSliders.check(R.id.radioStylePlasma);
-            else if (currentStyle == 2) radioGroupSliders.check(R.id.radioStyleCyber);
             else if (currentStyle == 3) radioGroupSliders.check(R.id.radioStyleGradient);
             else radioGroupSliders.check(R.id.radioStyleNeon);
         }
@@ -128,7 +127,6 @@ public class AppSettingsActivity extends BaseActivity {
                 vibrate();
                 int newStyle = 0;
                 if (checkedId == R.id.radioStylePlasma) newStyle = 1;
-                else if (checkedId == R.id.radioStyleCyber) newStyle = 2;
                 else if (checkedId == R.id.radioStyleGradient) newStyle = 3;
                 prefs.edit().putInt("slider_style", newStyle).apply();
                 Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();

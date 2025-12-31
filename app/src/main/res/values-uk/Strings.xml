@@ -291,4 +291,9 @@
     <string name="hint_dawn_description">Встановіть час пробудження (коли лампа світитиме на максимум). Ефект почнеться раніше, залежно від тривалості.</string>
     <string name="dialog_exit_title">Вихід</string>
     <string name="dialog_exit_msg">Вийти з програми?</string>
+
+    <string name="label_theme">ТЕМА</string>
+    <string name="theme_dark">Темна (Неон)</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_cyber">Кіберпанк</string>
 </resources>
