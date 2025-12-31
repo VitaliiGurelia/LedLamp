@@ -57,7 +57,7 @@ public class CycleActivity extends BaseActivity {
 
         setupTimeSpinner();
 
-        adapter = new CycleAdapter(this, MainActivity.EFFECTS_DB);
+        adapter = new CycleAdapter(this, EffectsRepository.EFFECTS_DB);
         listView.setAdapter(adapter);
 
         loadSettings();
@@ -91,7 +91,7 @@ public class CycleActivity extends BaseActivity {
             allSelected = !allSelected;
             btnSelectAll.setText(allSelected ? R.string.btn_deselect_all : R.string.btn_select_all);
 
-            for (EffectEntity eff : MainActivity.EFFECTS_DB) {
+            for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
                 eff.useInCycle = allSelected;
             }
             adapter.notifyDataSetChanged();
@@ -136,7 +136,7 @@ public class CycleActivity extends BaseActivity {
             int flag = 0; // За замовчуванням викл
 
             // Шукаємо ефект з таким ID у нашій базі
-            for (EffectEntity eff : MainActivity.EFFECTS_DB) {
+            for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
                 if (eff.id == i) {
                     if (eff.useInCycle) flag = 1;
                     break;
