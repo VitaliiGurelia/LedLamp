@@ -1,3 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="appBackground" format="color" />
+    <attr name="elementBackground" format="reference" />
+    <attr name="mainTextColor" format="color" />
+    <attr name="subTextColor" format="color" />
+    <attr name="accentColor" format="color" />
+    <attr name="dangerColor" format="color" />
+    
+    <attr name="panelColor" format="color" />
+
+    <attr name="toolBtnColor" format="color" />
+    <attr name="toolIconColor" format="color" />
+    
+    <!-- Нові атрибути для слайдерів (особливо для Plasma стилю) -->
+    <attr name="sliderTrackColor" format="color" />
+    <attr name="sliderThumbColor" format="color" />
 </resources>

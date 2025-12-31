@@ -1,10 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TextActivity">
+    android:background="?attr/appBackground"
+    android:orientation="vertical"
+    android:padding="20dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_text"
+        android:textColor="?attr/mainTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_running_text"
+        android:textColor="?attr/accentColor"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/editRunningText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_panel"
+        android:backgroundTint="?attr/panelColor"
+        android:hint="@string/hint_enter_text"
+        android:textColorHint="?attr/subTextColor"
+        android:textColor="?attr/mainTextColor"
+        android:padding="15dp"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/btnSendText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/btn_send_text"
+        android:backgroundTint="?attr/panelColor"
+        android:textColor="?attr/accentColor"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="@string/btn_back"
+        android:backgroundTint="?attr/panelColor"
+        android:textColor="?attr/mainTextColor"
+        android:layout_gravity="center"/>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/panelColor" android:layout_marginBottom="20dp"/>
+
+
+    <!-- КНОПКА ДОВІДКИ -->
+    <Button
+        android:id="@+id/btnHelp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/btn_help"
+        android:backgroundTint="?attr/panelColor"
+        android:textColor="?attr/accentColor"
+        android:textSize="12sp"
+        android:layout_marginBottom="20dp"/>
+
+</LinearLayout>

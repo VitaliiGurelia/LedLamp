@@ -3,10 +3,9 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textSize="16sp"
+    android:textSize="@dimen/spinner_item_text_size"
     android:textColor="?attr/mainTextColor"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
+    android:padding="@dimen/list_item_margin"
     android:gravity="center_vertical"
     android:ellipsize="marquee"
     android:singleLine="true"/>

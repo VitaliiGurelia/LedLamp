@@ -62,7 +62,7 @@
         <Spinner
             android:id="@+id/spinnerInterval"
             android:layout_width="150dp"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:background="@drawable/bg_panel"
             android:padding="5dp"/>
     </LinearLayout>

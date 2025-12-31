@@ -3,9 +3,9 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="18sp"
+    android:textSize="@dimen/spinner_dropdown_item_text_size"
     android:textColor="?attr/mainTextColor"
-    android:padding="12dp"
+    android:padding="@dimen/list_item_margin"
     android:gravity="center_vertical"
     android:singleLine="false"
     android:background="?attr/elementBackground"/>
