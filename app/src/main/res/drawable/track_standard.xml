@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- ФОН (Смужка праворуч) -->
+
+    <!-- 1. ФОН (Смужка праворуч) - Тепер змінюється від теми! -->
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="10dp"/>
-            <solid android:color="?attr/seekBarInactive"/> <!-- Змінна кольору -->
+            <solid android:color="?attr/seekBarInactive"/>
             <size android:height="6dp"/>
         </shape>
     </item>
 
-    <!-- ПРОГРЕС (Градієнт) -->
+    <!-- 2. ПРОГРЕС (Смужка ліворуч) - Акцентний колір -->
     <item android:id="@android:id/progress">
         <clip>
             <shape>
                 <corners android:radius="10dp"/>
-                <gradient
-                    android:startColor="#0000FF"
-                    android:centerColor="#FF00FF"
-                    android:endColor="#FF0000"
-                    android:angle="0"/>
+                <solid android:color="?attr/accentColor"/>
+                <size android:height="6dp"/>
             </shape>
         </clip>
     </item>

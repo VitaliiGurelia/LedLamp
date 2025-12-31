@@ -25,6 +25,8 @@
         <item name="colorControlNormal">#FFFFFF</item>
         <item name="android:statusBarColor">#000000</item>
         <item name="android:windowLightStatusBar">false</item>
+
+        <item name="seekBarInactive">#333333</item> <!-- Темно-сірий для темної теми -->
     </style>
 
     <!-- ============================================== -->
@@ -52,6 +54,7 @@
         <item name="colorControlNormal">#121212</item>
         <item name="android:statusBarColor">#E0E0E0</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="seekBarInactive">#E0E0E0</item> <!-- Світло-сірий для світлої теми! -->
     </style>
 
     <!-- ============================================== -->
@@ -79,5 +82,6 @@
         <item name="colorControlNormal">#00F0FF</item>
         <item name="android:statusBarColor">#020515</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="seekBarInactive">#1A237E</item> <!-- Темно-синій (наприклад) -->
     </style>
 </resources>

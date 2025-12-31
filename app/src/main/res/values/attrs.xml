@@ -15,4 +15,7 @@
     <!-- Нові атрибути для слайдерів (особливо для Plasma стилю) -->
     <attr name="sliderTrackColor" format="color" />
     <attr name="sliderThumbColor" format="color" />
+
+    <attr name="seekBarInactive" format="color" />
+
 </resources>

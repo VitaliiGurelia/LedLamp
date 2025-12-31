@@ -77,6 +77,41 @@ public class MainActivity extends BaseActivity {
         // Ініціалізація UI
         initViews();
         setupListeners();
+        // --- СПЕЦІАЛЬНИЙ ОБРОБНИК ДЛЯ ШКАЛИ МАСШТАБУ (КОЛЬОРУ) ---
+        // Цей код має йти ПІСЛЯ setupSeekBar, щоб перезаписати стандартну поведінку
+        seekBarScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // 1. Визначаємо, чи увімкнена зараз Веселка
+                boolean isRainbow = false;
+                if (spinnerEffects.getSelectedItem() != null) {
+                    try {
+                        EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
+                        isRainbow = (currentEffect.scaleType == 1);
+                    } catch (Exception e) {}
+                }
+
+                // 2. Викликаємо функцію, яка оновлює цифри І КОЛІР
+                updateScaleTextColor(progress, isRainbow);
+
+                // 3. Стандартна логіка відправки на лампу
+                if (fromUser) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastUpdate > 50) {
+                        sendUdpCommand("SCA " + progress);
+                        lastUpdate = currentTime;
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                sendUdpCommand("SCA " + seekBar.getProgress());
+            }
+        });
     }
 
     private void initViews() {
@@ -497,87 +532,150 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateInterfaceForEffect(EffectEntity effect) {
-        if (seekBarSpeed != null) seekBarSpeed.setMax(effect.speedMax);
+        // 1. Встановлюємо межі
+        seekBarSpeed.setMax(effect.speedMax);
 
-        if (seekBarScale == null || textScaleVal == null || labelScale == null || btnScaMinus == null || btnScaPlus == null) return;
-
+        // 2. Логіка МАСШТАБУ / КОЛЬОРУ
         if (effect.scaleType == 2) {
+            // ТИП 2: Приховати
             seekBarScale.setVisibility(View.INVISIBLE);
             textScaleVal.setVisibility(View.INVISIBLE);
             labelScale.setVisibility(View.INVISIBLE);
             btnScaMinus.setVisibility(View.INVISIBLE);
             btnScaPlus.setVisibility(View.INVISIBLE);
+
         } else {
+            // Показуємо
             seekBarScale.setVisibility(View.VISIBLE);
             textScaleVal.setVisibility(View.VISIBLE);
             labelScale.setVisibility(View.VISIBLE);
             btnScaMinus.setVisibility(View.VISIBLE);
             btnScaPlus.setVisibility(View.VISIBLE);
+
             seekBarScale.setMax(effect.scaleMax);
+            // Скидаємо відступи, які могли залишитися від стилю "Плазма"
+            seekBarScale.setPadding(0, 0, 0, 0);
 
-            if (effect.scaleType == 1) { // Веселка
+            if (effect.scaleType == 1) {
+                // --- ТИП 1: КОЛІР (ВЕСЕЛКА) ---
                 labelScale.setText(R.string.label_color);
-                updateScaleTextColor(seekBarScale.getProgress(), true);
 
-                int[] colors = {0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000};
+                // ВАЖЛИВО: Вимикаємо системне фарбування (Tint)
+                seekBarScale.setProgressTintList(null);
+                seekBarScale.setProgressBackgroundTintList(null);
+
+                // 1. Створюємо Веселку (для фону треку)
+                int[] colors = new int[] {
+                        0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF,
+                        0xFF0000FF, 0xFFFF00FF, 0xFFFF0000
+                };
                 GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
-                rainbow.setCornerRadius(20f);
+                rainbow.setCornerRadius(10f); // Радіус закруглення
 
-                ClipDrawable progress = new ClipDrawable(new ColorDrawable(Color.TRANSPARENT), Gravity.LEFT, ClipDrawable.HORIZONTAL);
-                LayerDrawable layers = new LayerDrawable(new Drawable[]{rainbow, progress});
+                // 2. Створюємо Прозорий шар (для прогресу)
+                // (Щоб прогрес не перекривав веселку кольором)
+                ClipDrawable transparentProgress = new ClipDrawable(
+                        new ColorDrawable(Color.TRANSPARENT),
+                        Gravity.START, // Gravity.START = зліва направо
+                        ClipDrawable.HORIZONTAL
+                );
+
+                // 3. Збираємо сендвіч: Фон=Веселка, Прогрес=Прозорий
+                LayerDrawable layers = new LayerDrawable(new Drawable[]{rainbow, transparentProgress});
                 layers.setId(0, android.R.id.background);
                 layers.setId(1, android.R.id.progress);
 
+                // Застосовуємо
                 seekBarScale.setProgressDrawable(layers);
+
+                // Робимо повзунок білим
+                seekBarScale.setThumb(getResources().getDrawable(R.drawable.thumb_round));
                 if (seekBarScale.getThumb() != null) seekBarScale.getThumb().setTint(0xFFFFFFFF);
+
+                // Оновлюємо колір цифр
+                updateScaleTextColor(seekBarScale.getProgress(), true);
+
             } else {
+                // --- ТИП 0: ЗВИЧАЙНИЙ МАСШТАБ ---
                 labelScale.setText(R.string.label_scale);
-                updateScaleTextColor(seekBarScale.getProgress(), false);
+
+                // Повертаємо стиль з налаштувань (Неон/Кібер/...)
                 applySliderStyle();
+
+                // Колір цифр - звичайний (зелений)
+                updateScaleTextColor(seekBarScale.getProgress(), false);
             }
         }
     }
 
+    // Функція, яка фарбує текст залежно від значення
     private void updateScaleTextColor(int progress, boolean isRainbowMode) {
-        if (textScaleVal == null) return;
         textScaleVal.setText(String.valueOf(progress));
+
         if (isRainbowMode) {
-            float max = seekBarScale.getMax() > 0 ? seekBarScale.getMax() : 255f;
+            // Режим "Веселка" (Колір)
+            float max = (float) seekBarScale.getMax();
+            if (max == 0) max = 255f;
             float hue = (progress / max) * 360.0f;
-            textScaleVal.setTextColor(Color.HSVToColor(new float[]{hue, 1f, 1f}));
+            int color = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
+            textScaleVal.setTextColor(color);
         } else {
-            textScaleVal.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.neon_green));
+            // Режим "Масштаб" (Стандартний)
+            // БЕРЕМО КОЛІР З ТЕМИ (attr/accentColor), щоб він збігався з іншими
+            android.util.TypedValue typedValue = new android.util.TypedValue();
+            // R.attr.accentColor - це наш атрибут з attrs.xml
+            boolean found = getTheme().resolveAttribute(R.attr.accentColor, typedValue, true);
+
+            if (found) {
+                textScaleVal.setTextColor(typedValue.data);
+            } else {
+                // Про запас, якщо тему не знайдено
+                textScaleVal.setTextColor(getResources().getColor(R.color.neon_green));
+            }
         }
     }
 
     private void applySliderStyle() {
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         int style = prefs.getInt("slider_style", 0);
+
         SeekBar[] sliders = {seekBarBrightness, seekBarSpeed, seekBarScale};
-        int colorNeon = androidx.core.content.ContextCompat.getColor(this, R.color.neon_green);
+
+        // Колір для Кібер-стилю (залишаємо зеленим або беремо акцент)
+        int colorAccent = androidx.core.content.ContextCompat.getColor(this, R.color.neon_green);
 
         for (SeekBar sb : sliders) {
             if (sb == null) continue;
+
             sb.setPadding(0, 0, 0, 0);
             sb.setThumbOffset(0);
 
-            if (style == 1) { // Plasma
-                sb.setProgressDrawable(getResources().getDrawable(R.drawable.track_plasma));
-                sb.setThumb(getResources().getDrawable(R.drawable.thumb_transparent));
+            if (style == 1) { // --- PLASMA ---
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_plasma));
+                sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_transparent));
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-            } else if (style == 2) { // Cyber
-                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_neon));
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTint(colorNeon);
-                sb.setThumb(getResources().getDrawable(R.drawable.thumb_cyber));
-                if (sb.getThumb() != null) sb.getThumb().setTint(colorNeon);
-            } else if (style == 3) { // Gradient
-                sb.setProgressDrawable(getResources().getDrawable(R.drawable.track_gradient));
+
+            } else if (style == 2) { // --- CYBER ---
+                // Використовуємо стандартний трек, але фарбуємо його
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
+                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTint(colorAccent);
+
+                sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
+                if (sb.getThumb() != null) sb.getThumb().setTint(colorAccent);
+
+            } else if (style == 3) { // --- GRADIENT ---
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-                sb.setThumb(getResources().getDrawable(R.drawable.thumb_cyber));
-                if (sb.getThumb() != null) sb.getThumb().setTint(getResources().getColor(R.color.white));
-            } else { // Neon
-                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_neon));
-                sb.setThumb(getResources().getDrawable(R.drawable.thumb_round));
+
+                sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
+                if (sb.getThumb() != null) sb.getThumb().setTintList(null); // Білий або як в xml
+
+            } else { // --- NEON (DEFAULT) ---
+                // ВИКОРИСТОВУЄМО НОВИЙ ФАЙЛ track_standard!
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
+                sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_round));
+
+                // Очищаємо тінти, щоб кольори бралися з XML (через ?attr/...)
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);
             }
@@ -593,6 +691,12 @@ public class MainActivity extends BaseActivity {
                     v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else { v.vibrate(50); }
             }
+        }
+    }
+    // Допоміжна функція для відправки команд через UdpHelper
+    private void sendUdpCommand(String command) {
+        if (udpHelper != null) {
+            udpHelper.sendCommand(command);
         }
     }
 }
