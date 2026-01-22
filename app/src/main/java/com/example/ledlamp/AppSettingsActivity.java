@@ -87,17 +87,15 @@ public class AppSettingsActivity extends BaseActivity {
             else radioGroupTheme.check(R.id.radioThemeDark);
 
             radioGroupTheme.setOnCheckedChangeListener((group, checkedId) -> {
-                vibrate();
                 int newTheme = 0;
                 if (checkedId == R.id.radioThemeLight) newTheme = 1;
                 else if (checkedId == R.id.radioThemeCyber) newTheme = 2;
 
-                prefs.edit().putInt("app_theme", newTheme).apply();
-
-                // Перезапуск для застосування теми
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (newTheme != prefs.getInt("app_theme", 0)) {
+                    vibrate();
+                    prefs.edit().putInt("app_theme", newTheme).apply();
+                    recreate(); // Оновлюємо поточний екран
+                }
             });
         }
 

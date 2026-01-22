@@ -6,11 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity {
+    private int mCurrentTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Цей код виконається ПЕРЕД запуском будь-якого екрану
         applyLanguage();
-        applyTheme();
+        
+        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
+        mCurrentTheme = prefs.getInt("app_theme", 0);
+        applyTheme(mCurrentTheme);
+        
         super.onCreate(savedInstanceState);
     }
 
@@ -27,10 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void applyTheme() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        int theme = prefs.getInt("app_theme", 0);
-
+    public void applyTheme(int theme) {
         if (theme == 1) {
             setTheme(R.style.Theme_LedLamp_Light);
         } else if (theme == 2) {
@@ -40,10 +43,16 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // Оновлюємо також при відновленні (на випадок, якщо змінили в налаштуваннях і повернулись)
     @Override
     protected void onResume() {
         super.onResume();
         applyLanguage();
+        
+        // Перевіряємо чи не змінилась тема (наприклад, в іншому вікні)
+        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
+        int theme = prefs.getInt("app_theme", 0);
+        if (theme != mCurrentTheme) {
+            recreate();
+        }
     }
 }

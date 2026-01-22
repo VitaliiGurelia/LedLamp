@@ -654,7 +654,7 @@ public class MainActivity extends BaseActivity {
                 // Колір 146 (світло-синій) для активної частини
                 int plasmaBlueColor = 0xFF006EFF;
 
-                // 1. Скидаємо загальне фарбування Drawable, щоб не заважало
+                // 1. Скидаємо загальне фарбування Drawable
                 if (sb.getProgressDrawable() != null) {
                     sb.getProgressDrawable().setTintList(null);
                 }
@@ -662,21 +662,20 @@ public class MainActivity extends BaseActivity {
                 // 2. Фарбуємо ТІЛЬКИ активну частину (зліва) у фірмовий синій
                 sb.setProgressTintList(android.content.res.ColorStateList.valueOf(plasmaBlueColor));
 
-                // 3. Фон (справа) скидаємо в null.
-                // Тоді Android автоматично візьме правильний сірий колір з поточної теми (Light/Dark),
-                // так само, як це працює в режимах Neon та Gradient.
+                // 3. Фон (справа) скидаємо в null (система сама підбере сірий залежно від теми Light/Dark)
                 sb.setProgressBackgroundTintList(null);
 
             } else if (style == 3) { // --- GRADIENT ---
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
 
-                // Тут ми очищаємо все, щоб кольори бралися з самого файлу drawable або теми
+                // Очищаємо, щоб кольори бралися з файлу drawable
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
 
-                // Очищаємо специфічні тінти слайдера (щоб не залишився синій від Плазми, якщо перемикаємось)
+                // Очищаємо специфічні тінти слайдера
                 sb.setProgressTintList(null);
                 sb.setProgressBackgroundTintList(null);
 
+                // Тут використовуємо thumb_cyber (не видаляти файл xml!)
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);
 
@@ -684,10 +683,9 @@ public class MainActivity extends BaseActivity {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_round));
 
-                // Очищаємо всі накладені кольори, щоб працювали кольори з теми XML
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
 
-                // Важливо очистити ці два, інакше синій колір від Плазми залишиться висіти на слайдері
+                // Важливо очистити ці два, щоб не залишився колір від інших стилів
                 sb.setProgressTintList(null);
                 sb.setProgressBackgroundTintList(null);
 
