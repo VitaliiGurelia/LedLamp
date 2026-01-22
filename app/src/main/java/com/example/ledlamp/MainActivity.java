@@ -77,12 +77,11 @@ public class MainActivity extends BaseActivity {
         // Ініціалізація UI
         initViews();
         setupListeners();
+        
         // --- СПЕЦІАЛЬНИЙ ОБРОБНИК ДЛЯ ШКАЛИ МАСШТАБУ (КОЛЬОРУ) ---
-        // Цей код має йти ПІСЛЯ setupSeekBar, щоб перезаписати стандартну поведінку
         seekBarScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // 1. Визначаємо, чи увімкнена зараз Веселка
                 boolean isRainbow = false;
                 if (spinnerEffects.getSelectedItem() != null) {
                     try {
@@ -90,11 +89,7 @@ public class MainActivity extends BaseActivity {
                         isRainbow = (currentEffect.scaleType == 1);
                     } catch (Exception e) {}
                 }
-
-                // 2. Викликаємо функцію, яка оновлює цифри І КОЛІР
                 updateScaleTextColor(progress, isRainbow);
-
-                // 3. Стандартна логіка відправки на лампу
                 if (fromUser) {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastUpdate > 50) {
@@ -103,12 +98,8 @@ public class MainActivity extends BaseActivity {
                     }
                 }
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
                 sendUdpCommand("SCA " + seekBar.getProgress());
             }
         });
@@ -165,10 +156,7 @@ public class MainActivity extends BaseActivity {
 
                     udpHelper.sendCommand("GET");
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
 
@@ -199,14 +187,10 @@ public class MainActivity extends BaseActivity {
                         getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("LAST_EFFECT_ID", effect.id).apply();
                     }
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
 
-        // Кнопки
         if (btnPrev != null) {
             btnPrev.setOnClickListener(v -> {
                 vibrate();
@@ -242,7 +226,6 @@ public class MainActivity extends BaseActivity {
             });
         }
 
-        // Перемикачі
         if (switchPower != null) {
             switchPower.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 vibrate();
@@ -252,7 +235,6 @@ public class MainActivity extends BaseActivity {
                 }
                 if (isChecked) {
                     udpHelper.sendCommand("P_ON");
-                    // Перевірку статусу зробить слухач автоматично через 2 сек
                 } else {
                     udpHelper.sendCommand("P_OFF");
                 }
@@ -267,7 +249,6 @@ public class MainActivity extends BaseActivity {
             });
         }
 
-        // Слайдери
         setupSeekBar(seekBarBrightness, textBriVal, "BRI");
         setupSeekBar(seekBarSpeed, textSpeedVal, "SPD");
         setupSeekBar(seekBarScale, textScaleVal, "SCA");
@@ -276,7 +257,6 @@ public class MainActivity extends BaseActivity {
         setupPlusMinusButtons(btnSpdMinus, btnSpdPlus, seekBarSpeed, "SPD");
         setupPlusMinusButtons(btnScaMinus, btnScaPlus, seekBarScale, "SCA");
 
-        // Вихід
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
                 if (getSharedPreferences("LampAppPrefs", MODE_PRIVATE).getBoolean("exit_confirm", false)) {
@@ -296,18 +276,15 @@ public class MainActivity extends BaseActivity {
         loadLamps();
         applySliderStyle();
 
-        // Оновлюємо IP в хелпері
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
         String ip = prefs.getString("LAMP_IP", "");
         udpHelper.setIp(ip);
 
-        // Завантаження списку
         reloadUserList(this);
         updateEffectsSpinnerList();
 
-        // Старт слухача
         udpHelper.startListening();
-        udpHelper.sendCommand("GET"); // Примусовий пінг
+        udpHelper.sendCommand("GET"); 
     }
 
     @Override
@@ -315,8 +292,6 @@ public class MainActivity extends BaseActivity {
         super.onPause();
         udpHelper.stopListening();
     }
-
-    // --- ДОПОМІЖНІ МЕТОДИ ---
 
     private void setupSeekBar(SeekBar seekBar, TextView textView, String cmd) {
         if (seekBar == null) return;
@@ -367,7 +342,20 @@ public class MainActivity extends BaseActivity {
             Log.e(TAG, "Error loading lamps", e);
         }
 
-        if (lampList.isEmpty()) lampList.add(new Lamp("Demo Lamp", "192.168.0.105"));
+        if (lampList.isEmpty()) {
+            String currentIp = prefs.getString("LAMP_IP", "");
+            if (!currentIp.isEmpty()) lampList.add(new Lamp("Default Lamp", currentIp));
+        }
+
+        // --- ЛОГІКА ПРИХОВУВАННЯ ---
+        if (spinnerLamps != null) {
+            if (lampList.size() < 2) {
+                spinnerLamps.setVisibility(View.GONE);
+            } else {
+                spinnerLamps.setVisibility(View.VISIBLE);
+            }
+        }
+
         if (lampAdapter != null) lampAdapter.notifyDataSetChanged();
 
         if (!lastIp.isEmpty()) {
@@ -396,7 +384,6 @@ public class MainActivity extends BaseActivity {
                     int state = Integer.parseInt(parts[5]);
                     boolean isCycleOn = false;
                     if (parts.length >= 11) isCycleOn = Integer.parseInt(parts[10]) == 1;
-
                     boolean finalCycle = isCycleOn;
 
                     runOnUiThread(() -> {
@@ -404,7 +391,6 @@ public class MainActivity extends BaseActivity {
                             isProgrammaticChange = true;
                             switchPower.setChecked(state == 1);
                         }
-
                         if (switchCycle != null && switchCycle.isChecked() != finalCycle) {
                             switchCycle.setOnCheckedChangeListener(null);
                             switchCycle.setChecked(finalCycle);
@@ -415,7 +401,6 @@ public class MainActivity extends BaseActivity {
                                 updateEffectsSpinnerList();
                             });
                         }
-
                         if (seekBarBrightness != null) seekBarBrightness.setProgress(bri);
                         if (seekBarSpeed != null) seekBarSpeed.setProgress(spd);
                         if (seekBarScale != null) seekBarScale.setProgress(sca);
@@ -423,15 +408,12 @@ public class MainActivity extends BaseActivity {
                         if (textSpeedVal != null) textSpeedVal.setText(String.valueOf(spd));
                         if (textScaleVal != null) textScaleVal.setText(String.valueOf(sca));
 
-                        // Синхронізація спінера
                         int foundPos = -1;
                         for (int i = 0; i < visibleEffects.size(); i++) {
                             if (visibleEffects.get(i).id == modeId) {
-                                foundPos = i;
-                                break;
+                                foundPos = i; break;
                             }
                         }
-
                         if (foundPos != -1) {
                             if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
                                 isUserAction = false;
@@ -440,7 +422,6 @@ public class MainActivity extends BaseActivity {
                             updateInterfaceForEffect(visibleEffects.get(foundPos));
                             lastReportedHiddenId = -1;
                         } else {
-                            // Прихований ефект
                             for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
                                 if (eff.id == modeId) {
                                     updateInterfaceForEffect(eff);
@@ -460,13 +441,10 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    // --- ФУНКЦІЇ, ЯКІ МИ ВИКЛИКАЄМО ЗІ СТОРОННІХ ФАЙЛІВ ---
-
     public static void reloadUserList(Context context) {
         userEffectsList.clear();
         SharedPreferences prefs = context.getSharedPreferences("LampAppPrefs", Context.MODE_PRIVATE);
         String json = prefs.getString("USER_EFFECTS_ORDER", "");
-
         if (json.isEmpty()) {
             userEffectsList.addAll(EffectsRepository.EFFECTS_DB);
         } else {
@@ -476,31 +454,18 @@ public class MainActivity extends BaseActivity {
                     try {
                         int id = Integer.parseInt(idStr.replace("HIDDEN_", ""));
                         for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                            if (eff.id == id) {
-                                eff.isVisible = false;
-                                userEffectsList.add(eff);
-                                break;
-                            }
+                            if (eff.id == id) { eff.isVisible = false; userEffectsList.add(eff); break; }
                         }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error parsing hidden effect ID: " + idStr, e);
-                    }
+                    } catch (Exception e) {}
                 } else {
                     try {
                         int id = Integer.parseInt(idStr);
                         for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                            if (eff.id == id) {
-                                eff.isVisible = true;
-                                userEffectsList.add(eff);
-                                break;
-                            }
+                            if (eff.id == id) { eff.isVisible = true; userEffectsList.add(eff); break; }
                         }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error parsing effect ID: " + idStr, e);
-                    }
+                    } catch (Exception e) {}
                 }
             }
-            // Додати нові
             for (EffectEntity dbEff : EffectsRepository.EFFECTS_DB) {
                 boolean found = false;
                 for (EffectEntity userEff : userEffectsList) {
@@ -520,7 +485,6 @@ public class MainActivity extends BaseActivity {
             }
         }
         if (effectsAdapter != null) effectsAdapter.notifyDataSetChanged();
-
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
         int lastId = prefs.getInt("LAST_EFFECT_ID", 0);
         for (int i = 0; i < visibleEffects.size(); i++) {
@@ -532,163 +496,88 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateInterfaceForEffect(EffectEntity effect) {
-        // 1. Встановлюємо межі
         seekBarSpeed.setMax(effect.speedMax);
-
-        // 2. Логіка МАСШТАБУ / КОЛЬОРУ
         if (effect.scaleType == 2) {
-            // ТИП 2: Приховати
             seekBarScale.setVisibility(View.INVISIBLE);
             textScaleVal.setVisibility(View.INVISIBLE);
             labelScale.setVisibility(View.INVISIBLE);
             btnScaMinus.setVisibility(View.INVISIBLE);
             btnScaPlus.setVisibility(View.INVISIBLE);
-
         } else {
-            // Показуємо
             seekBarScale.setVisibility(View.VISIBLE);
             textScaleVal.setVisibility(View.VISIBLE);
             labelScale.setVisibility(View.VISIBLE);
             btnScaMinus.setVisibility(View.VISIBLE);
             btnScaPlus.setVisibility(View.VISIBLE);
-
             seekBarScale.setMax(effect.scaleMax);
-            // Скидаємо відступи, які могли залишитися від стилю "Плазма"
             seekBarScale.setPadding(0, 0, 0, 0);
 
             if (effect.scaleType == 1) {
-                // --- ТИП 1: КОЛІР (ВЕСЕЛКА) ---
                 labelScale.setText(R.string.label_color);
-
-                // ВАЖЛИВО: Вимикаємо системне фарбування (Tint)
                 seekBarScale.setProgressTintList(null);
                 seekBarScale.setProgressBackgroundTintList(null);
-
-                // 1. Створюємо Веселку (для фону треку)
-                int[] colors = new int[] {
-                        0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF,
-                        0xFF0000FF, 0xFFFF00FF, 0xFFFF0000
-                };
+                int[] colors = new int[] { 0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000 };
                 GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
-                rainbow.setCornerRadius(10f); // Радіус закруглення
-
-                // 2. Створюємо Прозорий шар (для прогресу)
-                // (Щоб прогрес не перекривав веселку кольором)
-                ClipDrawable transparentProgress = new ClipDrawable(
-                        new ColorDrawable(Color.TRANSPARENT),
-                        Gravity.START, // Gravity.START = зліва направо
-                        ClipDrawable.HORIZONTAL
-                );
-
-                // 3. Збираємо сендвіч: Фон=Веселка, Прогрес=Прозорий
+                rainbow.setCornerRadius(10f);
+                ClipDrawable transparentProgress = new ClipDrawable(new ColorDrawable(Color.TRANSPARENT), Gravity.START, ClipDrawable.HORIZONTAL);
                 LayerDrawable layers = new LayerDrawable(new Drawable[]{rainbow, transparentProgress});
                 layers.setId(0, android.R.id.background);
                 layers.setId(1, android.R.id.progress);
-
-                // Застосовуємо
                 seekBarScale.setProgressDrawable(layers);
-
-                // Робимо повзунок білим
                 seekBarScale.setThumb(getResources().getDrawable(R.drawable.thumb_round));
                 if (seekBarScale.getThumb() != null) seekBarScale.getThumb().setTint(0xFFFFFFFF);
-
-                // Оновлюємо колір цифр
                 updateScaleTextColor(seekBarScale.getProgress(), true);
-
             } else {
-                // --- ТИП 0: ЗВИЧАЙНИЙ МАСШТАБ ---
                 labelScale.setText(R.string.label_scale);
-
-                // Повертаємо стиль з налаштувань (Неон/Кібер/...)
                 applySliderStyle();
-
-                // Колір цифр - звичайний (зелений)
                 updateScaleTextColor(seekBarScale.getProgress(), false);
             }
         }
     }
 
-    // Функція, яка фарбує текст залежно від значення
     private void updateScaleTextColor(int progress, boolean isRainbowMode) {
         textScaleVal.setText(String.valueOf(progress));
-
         if (isRainbowMode) {
-            // Режим "Веселка" (Колір)
             float max = (float) seekBarScale.getMax();
             if (max == 0) max = 255f;
             float hue = (progress / max) * 360.0f;
             int color = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
             textScaleVal.setTextColor(color);
         } else {
-            // Режим "Масштаб" (Стандартний)
-            // БЕРЕМО КОЛІР З ТЕМИ (attr/accentColor), щоб він збігався з іншими
             android.util.TypedValue typedValue = new android.util.TypedValue();
-            // R.attr.accentColor - це наш атрибут з attrs.xml
             boolean found = getTheme().resolveAttribute(R.attr.accentColor, typedValue, true);
-
-            if (found) {
-                textScaleVal.setTextColor(typedValue.data);
-            } else {
-                // Про запас, якщо тему не знайдено
-                textScaleVal.setTextColor(getResources().getColor(R.color.neon_green));
-            }
+            textScaleVal.setTextColor(found ? typedValue.data : getResources().getColor(R.color.neon_green));
         }
     }
 
     private void applySliderStyle() {
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         int style = prefs.getInt("slider_style", 0);
-
         SeekBar[] sliders = {seekBarBrightness, seekBarSpeed, seekBarScale};
-
         for (SeekBar sb : sliders) {
             if (sb == null) continue;
-
             sb.setPadding(0, 0, 0, 0);
             sb.setThumbOffset(0);
-
-            if (style == 1) { // --- PLASMA ---
+            if (style == 1) {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_plasma));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_transparent));
-
-                // Колір 146 (світло-синій) для активної частини
                 int plasmaBlueColor = 0xFF006EFF;
-
-                // 1. Скидаємо загальне фарбування Drawable
-                if (sb.getProgressDrawable() != null) {
-                    sb.getProgressDrawable().setTintList(null);
-                }
-
-                // 2. Фарбуємо ТІЛЬКИ активну частину (зліва) у фірмовий синій
-                sb.setProgressTintList(android.content.res.ColorStateList.valueOf(plasmaBlueColor));
-
-                // 3. Фон (справа) скидаємо в null (система сама підбере сірий залежно від теми Light/Dark)
-                sb.setProgressBackgroundTintList(null);
-
-            } else if (style == 3) { // --- GRADIENT ---
-                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
-
-                // Очищаємо, щоб кольори бралися з файлу drawable
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-
-                // Очищаємо специфічні тінти слайдера
+                sb.setProgressTintList(android.content.res.ColorStateList.valueOf(plasmaBlueColor));
+                sb.setProgressBackgroundTintList(null);
+            } else if (style == 3) {
+                sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
+                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
                 sb.setProgressTintList(null);
                 sb.setProgressBackgroundTintList(null);
-
-                // Тут використовуємо thumb_cyber (не видаляти файл xml!)
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);
-
-            } else { // --- NEON (DEFAULT) ---
+            } else {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_round));
-
                 if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-
-                // Важливо очистити ці два, щоб не залишився колір від інших стилів
                 sb.setProgressTintList(null);
                 sb.setProgressBackgroundTintList(null);
-
                 if (sb.getThumb() != null) sb.getThumb().setTintList(null);
             }
         }
@@ -705,10 +594,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-    // Допоміжна функція для відправки команд через UdpHelper
     private void sendUdpCommand(String command) {
-        if (udpHelper != null) {
-            udpHelper.sendCommand(command);
-        }
+        if (udpHelper != null) udpHelper.sendCommand(command);
     }
 }

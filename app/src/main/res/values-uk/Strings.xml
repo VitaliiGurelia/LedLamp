@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LedLamp Control</string>
 
@@ -73,7 +74,7 @@
     <string name="msg_syncing">Синхронізація...</string>
     <string name="msg_synced">Синхронізовано!</string>
 
-    <!-- Нові переклади для ConnectionActivity -->
+    <!-- Нові переклади -->
     <string name="msg_ip_exists">IP вже існує!</string>
     <string name="msg_empty_fields">Помилка: Порожні поля</string>
     <string name="msg_scanning">Сканування...</string>
@@ -83,6 +84,8 @@
     <string name="msg_deleted">Видалено</string>
     <string name="msg_found_lamp">Знайдено: %1$s</string>
     <string name="default_new_lamp_name">Нова Лампа</string>
+    <string name="label_select_lamp_edit">ВИБЕРІТЬ ЛАМПУ ДЛЯ РЕДАГУВАННЯ:</string>
+    <string name="error_no_ip">Помилка: IP не вибрано</string>
 
     <string name="dialog_delete_title">Видалення</string>
     <string name="dialog_delete_msg">Видалити лампу \"%1$s\"?</string>
@@ -178,12 +181,7 @@
     <string name="title_manual_4">4. БАГАТО ПРИСТРОЇВ</string>
     <string name="title_manual_5">5. КОМАНДИ</string>
 
-    <!-- ТЕКСТИ ІНСТРУКЦІЙ (ТИМЧАСОВО АНГЛІЙСЬКОЮ, ЩОБ ЗАПУСТИЛОСЬ) -->
-    <!-- Ми не можемо видалити ці ключі, бо Java код їх використовує -->
-
-    <!-- ТЕКСТИ РОЗДІЛІВ -->
-
-    <!-- Розділ 1: Підключення -->
+    <!-- ТЕКСТИ ІНСТРУКЦІЙ -->
     <string name="text_manual_1"><![CDATA[
         <b>ПЕРШЕ ПІДКЛЮЧЕННЯ:</b><br>
         1. Увімкніть лампу.<br>
@@ -200,7 +198,6 @@
         <i>Якщо лампа не може підключитися до роутера, вона знову створить точку доступу.</i>
     ]]></string>
 
-    <!-- Розділ 2: Додаток (Твій текст) -->
     <string name="text_manual_2"><![CDATA[
         <b><big>РОЗДІЛ 2. РОБОТА З ДОДАТКОМ</big></b><br><br>
 
@@ -274,7 +271,6 @@
     ]]></string>
 
 
-    <!-- Розділ 4: Багато пристроїв -->
     <string name="text_manual_4"><![CDATA[
         <b>ДЕКІЛЬКА ТЕЛЕФОНІВ:</b><br>
         Ви можете керувати лампою з різних телефонів.<br><br>

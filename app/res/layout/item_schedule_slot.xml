@@ -5,35 +5,43 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="6dp"
+    android:padding="8dp"
     android:background="@drawable/bg_item_slot_none"
-    android:layout_marginBottom="6dp">
+    android:layout_marginBottom="8dp">
 
-    <!-- Галочка активації. Додав фіксований колір для видимості -->
+    <!-- Галочка активації -->
     <CheckBox
         android:id="@+id/checkSlotEnable"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:buttonTint="#FF4081"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="?attr/colorPrimary"
         android:layout_marginEnd="4dp"/>
 
-    <!-- Час (трохи компактніше) -->
+    <TextView
+        android:id="@+id/textSlotNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1."
+        android:textColor="?attr/subTextColor"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Час -->
     <TextView
         android:id="@+id/textSlotTime"
-        android:layout_width="70dp"
+        android:layout_width="75dp"
         android:layout_height="40dp"
-        android:text="00:00"
+        android:text="--:--"
         android:textColor="?attr/mainTextColor"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_panel"
         android:clickable="true"
         android:focusable="true"/>
 
-    <View android:layout_width="8dp" android:layout_height="0dp"/>
+    <View android:layout_width="12dp" android:layout_height="0dp"/>
 
-    <!-- Перемикач On/Off (тепер займає більше місця) -->
+    <!-- Перемикач On/Off -->
     <RadioGroup
         android:id="@+id/radioGroupAction"
         android:layout_width="match_parent"

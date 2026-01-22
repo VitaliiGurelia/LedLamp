@@ -64,6 +64,10 @@
     <string name="msg_reset_done">Reset to defaults!</string>
     <string name="msg_hidden_effect">Playing hidden effect: %1$s</string>
     <string name="msg_text_sent">Text sent!</string>
+    <string name="msg_syncing">Syncing...</string>
+    <string name="msg_synced">Synchronized!</string>
+    <string name="label_select_lamp_edit">SELECT LAMP FOR EDITING:</string>
+    <string name="error_no_ip">Error: IP not selected</string>
 
     <!-- Нові рядки для ConnectionActivity -->
     <string name="msg_ip_exists">IP already exists!</string>
@@ -130,8 +134,7 @@
     <string name="action_on">TURN ON</string>
     <string name="action_off">TURN OFF</string>
     <string name="slot_label">Event %1$d</string>
-    <string name="msg_syncing">Syncing with lamp...</string>
-    <string name="msg_synced">Synchronized!</string>
+
     <string name="short_day_mon">Mon</string>
     <string name="short_day_tue">Tue</string>
     <string name="short_day_wed">Wed</string>

@@ -9,19 +9,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
+
+        <!-- Блок вибору лампи (буде прихований, якщо лампа одна) -->
+        <LinearLayout
+            android:id="@+id/layoutLampSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_select_lamp_edit"
+                android:textColor="?attr/subTextColor"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerLamps"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/bg_panel"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_weekly_schedule"
             android:textColor="?attr/mainTextColor"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Контейнер для кнопок днів (Пн-Нд) -->
         <LinearLayout
             android:id="@+id/containerDays"
             android:layout_width="match_parent"
@@ -29,7 +52,6 @@
             android:orientation="vertical"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Велика кнопка відправки -->
         <Button
             android:id="@+id/btnSend"
             android:layout_width="match_parent"

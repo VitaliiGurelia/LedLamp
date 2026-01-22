@@ -22,7 +22,6 @@
             android:gravity="center"
             android:layout_marginBottom="30dp"/>
 
-        <!-- Контейнер для 5 слотів -->
         <LinearLayout
             android:id="@+id/slotsContainer"
             android:layout_width="match_parent"

@@ -14,16 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+import androidx.appcompat.widget.SwitchCompat;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class DawnAlarmActivity extends BaseActivity {
@@ -31,7 +27,6 @@ public class DawnAlarmActivity extends BaseActivity {
 
     LinearLayout containerDays;
     Spinner spinnerDuration;
-    TextView textLampTime;
     Button btnBack;
 
     private static final int LAMP_PORT = 8888;
@@ -105,7 +100,7 @@ public class DawnAlarmActivity extends BaseActivity {
             View row = inflater.inflate(R.layout.item_alarm_day, containerDays, false);
 
             TextView tvName = row.findViewById(R.id.textDayName);
-            Switch swEnable = row.findViewById(R.id.switchDayEnable);
+            SwitchCompat swEnable = row.findViewById(R.id.switchDayEnable);
             TextView tvTime = row.findViewById(R.id.textDayTime);
 
             // Назва дня
@@ -163,28 +158,6 @@ public class DawnAlarmActivity extends BaseActivity {
         // Протокол Gunner/SottNick: ALM_SET 1 1 07 30 (Пн Вкл 07:30)
         String cmd = String.format(Locale.US, "ALM_SET %d %d %d %d", day, state ? 1 : 0, h, m);
         sendUdpCommand(cmd);
-    }
-
-    // Синхронізація часу
-    private void syncTimeWithLamp() {
-        // Беремо час телефону
-        Calendar cal = Calendar.getInstance();
-        int h = cal.get(Calendar.HOUR_OF_DAY);
-        int m = cal.get(Calendar.MINUTE);
-        int s = cal.get(Calendar.SECOND);
-
-        // Команда TME (Time)
-        // Формат: TME 12 30 00
-        String cmd = String.format(Locale.US, "TME %d %d %d", h, m, s);
-        sendUdpCommand(cmd);
-
-        updateCurrentTimeLabel();
-        Toast.makeText(this, "Час синхронізовано!", Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateCurrentTimeLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        textLampTime.setText(sdf.format(new Date()));
     }
 
     private void sendUdpCommand(String command) {
