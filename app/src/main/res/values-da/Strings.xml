@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LedLamp Control</string>
 
@@ -9,6 +10,8 @@
     <string name="label_scale">SKALA</string>
     <string name="label_color">FARVE</string>
     <string name="btn_reset">NULSTIL</string>
+    <string name="btn_prev_label">&lt;&lt;</string>
+    <string name="btn_next_label">&gt;&gt;</string>
 
     <!-- MENUS -->
     <string name="menu_title">MENU</string>
@@ -40,7 +43,7 @@
 
     <!-- APP SETTINGS -->
     <string name="title_app_settings">PROGRAM INDSTILLINGER</string>
-    <string name="label_vibration">Vibration ved tryk</string>
+    <string name="label_vibration">Vibration ved tryк</string>
     <string name="label_confirm_exit">Bekræft afslutning</string>
     <string name="label_slider_style">SKYDER STIL</string>
     <string name="style_neon">Neon (Standard)</string>
@@ -63,7 +66,11 @@
     <string name="msg_saved">Gemt!</string>
     <string name="msg_reset_done">Nulstillet!</string>
     <string name="msg_hidden_effect">Spiller skjult effekt: %1$s</string>
-    <string name="msg_text_sent">Tekst sendt!</string>
+    <string name="msg_text_sent">Tekст sendt!</string>
+    <string name="msg_syncing">Synkronisering...</string>
+    <string name="msg_synced">Synkroniseret!</string>
+    <string name="label_select_lamp_edit">VÆLG LAMPE TIL REDIGERING:</string>
+    <string name="error_no_ip">Fejl: IP er ikke valgt</string>
 
     <!-- Nye oversættelser for ConnectionActivity -->
     <string name="msg_ip_exists">IP findes allerede!</string>
@@ -93,6 +100,8 @@
     <string name="btn_deselect_all">FRAVÆLG ALLE</string>
     <string name="unit_sec">sek</string>
     <string name="unit_min">min</string>
+    <string name="label_shuffle">Tilfældig rækkefølge</string>
+    <string name="label_drag_hint">Hold for at trække og omarrangere</string>
 
     <string name="title_dawn_alarm">LYS VÆKKEUR</string>
     <string name="label_dawn_duration">Solopgang varighed</string>
@@ -103,7 +112,7 @@
     <string name="day_wed">Onsdag</string>
     <string name="day_thu">Torsdag</string>
     <string name="day_fri">Fredag</string>
-    <string name="day_sat">Lørdag</string>
+    <string name="day_sat">Lørdaг</string>
     <string name="day_sun">Søndag</string>
 
     <string name="title_sleep_timer">SLUK TIMER</string>
@@ -142,7 +151,7 @@
     <string name="label_timezone">Tidszone (GMT)</string>
     <string name="label_auto_dst">Automatisk sommertid</string>
 
-    <string name="label_brush_brightness">Lysstyrke</string>
+    <string name="label_brush_brightness">Lysstyrке</string>
 
     <string name="menu_text">LØBENDE TEKST</string>
 
@@ -182,11 +191,11 @@
         2. Opret forbindelse til Wi-Fi <b>LedLamp 1</b> (adgangskode: <b>12345678</b>).<br>
         3. Indstillingsvinduet åbnes (eller indtast adressen <b>192.168.4.1</b> i browseren).<br>
         4. Indtast navn og adgangskode til din router.<br>
-        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværk.<br>
+        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværк.<br>
         6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn og tryk på \"Tilføj lampe\".<br><br>
 
         <b>DRIFTSTILSTANDE:</b><br>
-        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværk. Intet internet.<br>
+        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværк. Intet internet.<br>
         2. <b>Klient (WLAN):</b> Lampen er forbundet til routeren. Hovedtilstand.<br><br>
 
         <i>Hvis lampen ikke kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
@@ -215,7 +224,7 @@
         <b><big>INDSTILLINGSMENU</big></b><br><br>
 
         <b>1. FORBINDELSE</b><br>
-        Søg efter lamper på netværket, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
+        Søg efter lamper på netværкет, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
 
         <b>2. APP INDSTILLINGER</b><br>
         Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller knappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
@@ -239,7 +248,7 @@
         Send tekst til effekten &quot;Løbende tekst&quot;. Bruges også til servicekommandoer.<br><br>
 
         <b>9. TÆNDINGSPLAN</b><br>
-        Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag og slukke en anden.<br><br>
+        Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag och slukke en anden.<br><br>
 
         <b>10. SPROG</b><br>
         Skift app-grænsefladesprog (Ukrainsk, Engelsk, Dansk).
@@ -268,11 +277,11 @@
     <!-- Afsnit 4: Flere Enheder -->
     <string name="text_manual_4"><![CDATA[
         <b>FLERE TELEFONER:</b><br>
-        Du kan styre lampen fra forskellige telefoner.<br><br>
+        Du kan styre lampen fra forskellige телефоner.<br><br>
 
         <b>SYNKRONISERING:</b><br>
-        • <b>&quot;Cyklus&quot; liste:</b> Gemmes i lampen. Fælles for alle. Listen i lampen opdateres ved den seneste ændring på enhver telefon.<br>
-        • <b>Visningsrækkefølge af effekter på hovedskærmen:</b> Gemmes i telefonen. Individuel for hver.<br><br>
+        • <b>&quot;Cyklus&quot; liste:</b> Gemmes i lampen. Fælles for alle. Listen i lampen opdateres ved den seneste ændring på enhver телефон.<br>
+        • <b>Visningsrækkefølge af effekter på hovedskærmen:</b> Gemmes i телефоnen. Individuel for hver.<br><br>
 
         <b>FLERE LAMPER:</b><br>
         Tilføj deres IP-adresser i menuen &quot;Forbindelse&quot; og skift mellem dem på hovedskærmen. Alle kommandoer sendes kun til den lampe, der er valgt på hovedskærmen.
@@ -287,4 +296,5 @@
     <string name="theme_dark">Mørk (Neon)</string>
     <string name="theme_light">Lys</string>
     <string name="theme_cyber">Cyberpunk</string>
+    <string name="effect_no_change">Ingen ændring</string>
 </resources>

@@ -9,6 +9,8 @@
     <string name="label_scale">SCALE</string>
     <string name="label_color">COLOR</string>
     <string name="btn_reset">RESET</string>
+    <string name="btn_prev_label">&lt;&lt;</string>
+    <string name="btn_next_label">&gt;&gt;</string>
 
     <!-- МЕНЮ (НАЗВИ ПУНКТІВ) -->
     <string name="menu_title">MENU</string>
@@ -98,6 +100,9 @@
     <string name="btn_deselect_all">DESELECT ALL</string>
     <string name="unit_sec">sec</string>
     <string name="unit_min">min</string>
+    <string name="label_shuffle">Random Order</string>
+    <string name="label_drag_hint">Hold to drag and reorder</string>
+
     <!-- DAWN ALARM -->
     <string name="title_dawn_alarm">DAWN ALARM</string>
     <string name="label_dawn_duration">Dawn Duration</string>
@@ -298,4 +303,5 @@
     <string name="theme_dark">Dark (Neon)</string>
     <string name="theme_light">Light</string>
     <string name="theme_cyber">Cyberpunk</string>
+    <string name="effect_no_change">No Change</string>
 </resources>

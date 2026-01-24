@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:layout_width="0dp"
@@ -36,6 +36,31 @@
 
         <Switch
             android:id="@+id/switchKeepCycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb_round"
+            android:track="@drawable/track_neon"
+            />
+    </LinearLayout>
+
+    <!-- ВИПАДКОВИЙ ПОРЯДОК -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="15dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_shuffle"
+            android:textColor="?attr/mainTextColor"
+            android:textSize="14sp"/>
+
+        <Switch
+            android:id="@+id/switchShuffle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:thumb="@drawable/thumb_round"
@@ -67,25 +92,6 @@
             android:padding="5dp"/>
     </LinearLayout>
 
-    <!-- ЗАГАЛЬНА ЯСКРАВІСТЬ (Опціонально) -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_brightness"
-        android:textColor="?attr/mainTextColor"
-        android:textStyle="bold"
-        android:layout_marginBottom="5dp"/>
-
-    <SeekBar
-        android:id="@+id/seekBarGlobalBri"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="255"
-        android:progress="100"
-        android:progressTint="?attr/accentColor"
-        android:thumbTint="?attr/mainTextColor"
-        android:layout_marginBottom="20dp"/>
-
     <!-- КНОПКА ВИБРАТИ ВСЕ -->
     <Button
         android:id="@+id/btnSelectAll"
@@ -96,7 +102,7 @@
         android:textColor="?attr/accentColor"
         android:layout_marginBottom="10dp"/>
 
-    <!-- СПИСОК (Займає решту місця) -->
+    <!-- СПИСОК -->
     <ListView
         android:id="@+id/listCycleEffects"
         android:layout_width="match_parent"

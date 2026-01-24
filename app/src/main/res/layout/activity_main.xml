@@ -25,7 +25,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_menu"
-                android:contentDescription="Menu"
+                android:contentDescription="@string/menu_title"
                 app:tint="?attr/accentColor"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
@@ -128,7 +128,7 @@
                 android:layout_width="70dp"
                 android:layout_height="50dp"
                 android:backgroundTint="?attr/panelColor"
-                android:text="&lt;&lt;"
+                android:text="@string/btn_prev_label"
                 android:textColor="?attr/accentColor"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -140,7 +140,7 @@
                 android:layout_width="70dp"
                 android:layout_height="50dp"
                 android:backgroundTint="?attr/panelColor"
-                android:text="&gt;&gt;"
+                android:text="@string/btn_next_label"
                 android:textColor="?attr/accentColor"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -164,7 +164,7 @@
                 android:id="@+id/textBrightnessVal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="--"
                 android:textColor="?attr/accentColor"
                 android:gravity="end"
                 android:textStyle="bold"/>
@@ -226,7 +226,7 @@
                 android:id="@+id/textSpeedVal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="--"
                 android:textColor="?attr/accentColor"
                 android:gravity="end"
                 android:textStyle="bold"/>
@@ -289,7 +289,7 @@
                 android:id="@+id/textScaleVal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="--"
                 android:textColor="?attr/accentColor"
                 android:gravity="end"
                 android:textStyle="bold"/>

@@ -9,7 +9,7 @@
     android:background="@drawable/bg_item_slot_none"
     android:layout_marginBottom="6dp">
 
-    <!-- Галочка активації. Додав фіксований колір для видимості -->
+    <!-- Галочка активації -->
     <CheckBox
         android:id="@+id/checkSlotEnable"
         android:layout_width="32dp"
@@ -17,7 +17,7 @@
         android:buttonTint="#FF4081"
         android:layout_marginEnd="4dp"/>
 
-    <!-- Час (трохи компактніше) -->
+    <!-- Час -->
     <TextView
         android:id="@+id/textSlotTime"
         android:layout_width="70dp"
@@ -33,13 +33,12 @@
 
     <View android:layout_width="8dp" android:layout_height="0dp"/>
 
-    <!-- Перемикач On/Off (тепер займає більше місця) -->
+    <!-- Перемикач On/Off -->
     <RadioGroup
         android:id="@+id/radioGroupAction"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioOn"
@@ -65,5 +64,16 @@
             android:textStyle="bold"
             android:background="@drawable/bg_selector_off"/>
     </RadioGroup>
+
+    <View android:layout_width="8dp" android:layout_height="0dp"/>
+
+    <!-- Вибір ефекту -->
+    <Spinner
+        android:id="@+id/spinnerSlotEffect"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_panel"
+        android:visibility="gone"/>
 
 </LinearLayout>

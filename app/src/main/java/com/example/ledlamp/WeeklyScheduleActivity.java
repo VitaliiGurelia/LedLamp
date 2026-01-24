@@ -29,7 +29,8 @@ import java.util.Locale;
 public class WeeklyScheduleActivity extends BaseActivity {
     private static final String TAG = "WeeklyScheduleActivity";
 
-    public static int[][][] scheduleData = new int[7][5][3];
+    // [День][Слот][0=Год, 1=Хв, 2=Дія, 3=Ефект]
+    public static int[][][] scheduleData = new int[7][5][4];
 
     LinearLayout containerDays;
     Button btnSend, btnBack;
@@ -216,7 +217,8 @@ public class WeeklyScheduleActivity extends BaseActivity {
                         String cmd = "SCH_SET " + d + " " + s + " " +
                                 scheduleData[d][s][0] + " " +
                                 scheduleData[d][s][1] + " " +
-                                scheduleData[d][s][2];
+                                scheduleData[d][s][2] + " " +
+                                scheduleData[d][s][3];
                         byte[] data = cmd.getBytes();
                         socket.send(new DatagramPacket(data, data.length, address, LAMP_PORT));
                         Thread.sleep(40);
@@ -249,20 +251,32 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 String data = new String(recv.getData(), 0, recv.getLength());
                 if (data.startsWith("SCH_DAT")) {
                     String[] items = data.substring(7).trim().split(" ");
-                    for (int d_i = 0; d_i < 7; d_i++) for (int s_i = 0; s_i < 5; s_i++) scheduleData[d_i][s_i][2] = 0;
+                    // Очистка перед завантаженням
+                    for (int d_i = 0; d_i < 7; d_i++) {
+                        for (int s_i = 0; s_i < 5; s_i++) {
+                            scheduleData[d_i][s_i][2] = 0;
+                            scheduleData[d_i][s_i][3] = 0;
+                        }
+                    }
 
                     for (String item : items) {
                         String[] parts = item.split(":");
-                        if (parts.length == 5) {
+                        if (parts.length >= 5) {
                             int d = Integer.parseInt(parts[0]);
                             int s = Integer.parseInt(parts[1]);
                             int h = Integer.parseInt(parts[2]);
                             int m = Integer.parseInt(parts[3]);
                             int a = Integer.parseInt(parts[4]);
+                            int e = 0;
+                            if (parts.length >= 6) {
+                                e = Integer.parseInt(parts[5]);
+                            }
+                            
                             if (d < 7 && s < 5) {
                                 scheduleData[d][s][0] = h;
                                 scheduleData[d][s][1] = m;
                                 scheduleData[d][s][2] = a;
+                                scheduleData[d][s][3] = e;
                             }
                         }
                     }

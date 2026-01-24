@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="list_item_margin">4dp</dimen>
-    <dimen name="spinner_item_text_size">16sp</dimen>
-    <dimen name="spinner_dropdown_item_text_size">18sp</dimen>
+    <dimen name="spinner_item_text_size">18sp</dimen>
+    <dimen name="spinner_dropdown_item_text_size">20sp</dimen>
 </resources>

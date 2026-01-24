@@ -30,15 +30,13 @@ import java.util.List;
 public class CycleActivity extends BaseActivity {
     private static final String TAG = "CycleActivity";
 
-    Switch switchKeep;
+    Switch switchKeep, switchShuffle;
     Spinner spinnerInterval;
     Button btnSelectAll, btnBack;
     ListView listView;
 
     CycleAdapter adapter;
     private static final int LAMP_PORT = 8888;
-
-    // Максимальна кількість ефектів у прошивці (перевірте Constants.h, там 89 або 90)
     private static final int MAX_MODES = 90;
 
     private final int[] timeValues = {5, 10, 15, 30, 45, 60, 120, 180, 300, 600, 900, 1800, 3600};
@@ -50,12 +48,11 @@ public class CycleActivity extends BaseActivity {
         setContentView(R.layout.activity_cycle);
 
         switchKeep = findViewById(R.id.switchKeepCycle);
+        switchShuffle = findViewById(R.id.switchShuffle);
         spinnerInterval = findViewById(R.id.spinnerInterval);
         btnSelectAll = findViewById(R.id.btnSelectAll);
         btnBack = findViewById(R.id.btnBack);
         listView = findViewById(R.id.listCycleEffects);
-
-        // (SeekBar яскравості прибрали, бо він не є частиною команди FAV_SET)
 
         setupTimeSpinner();
 
@@ -66,35 +63,32 @@ public class CycleActivity extends BaseActivity {
 
         // --- ОБРОБНИКИ ---
 
-        // Зміна часу -> відправляємо конфіг
         if (spinnerInterval != null) {
             spinnerInterval.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
                     getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("cycle_interval_pos", position).apply();
-                    // Не відправляємо при першому запуску (щоб не спамити), тільки якщо це дія користувача
-                    // Але для простоти можна відправляти завжди, лампа витримає.
                     sendCycleConfig();
                 }
-
-                @Override
-                public void onNothingSelected(android.widget.AdapterView<?> parent) {
-                }
+                @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
             });
         }
 
-        // Перемикач "Не вимикати цикл" -> відправляємо конфіг
         if (switchKeep != null) {
             switchKeep.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 vibrate();
-                // В оригіналі цей перемикач часто є просто налаштуванням "Увімкнути цикл зараз"
-                // Або "Use Saved" (зберігати після перезавантаження).
-                // Будемо використовувати його як "State" (Вкл/Викл) у команді FAV_SET
                 sendCycleConfig();
             });
         }
 
-        // Кнопка "Вибрати все"
+        if (switchShuffle != null) {
+            switchShuffle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                vibrate();
+                getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putBoolean("cycle_shuffle", isChecked).apply();
+                sendCycleConfig();
+            });
+        }
+
         if (btnSelectAll != null) {
             btnSelectAll.setOnClickListener(v -> {
                 vibrate();
@@ -105,52 +99,39 @@ public class CycleActivity extends BaseActivity {
                     eff.useInCycle = allSelected;
                 }
                 adapter.notifyDataSetChanged();
-                sendCycleConfig(); // Відправляємо зміни
+                sendCycleConfig();
                 Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
             });
         }
 
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
-                vibrate();
+                sendCycleConfig(); // На всякий випадок зберігаємо при виході
                 finish();
             });
         }
     }
 
-    // --- ГОЛОВНА ФУНКЦІЯ: ЗБИРАЄ І ВІДПРАВЛЯЄ FAV_SET ---
     private void sendCycleConfig() {
-        if (switchKeep == null || spinnerInterval == null) return;
+        if (switchKeep == null || spinnerInterval == null || switchShuffle == null) return;
 
-        // Формат: FAV_SET <State> <Interval> <Dispersion> <UseSaved> <e0> <e1> ... <eN>
-
-        // 1. State (Вкл/Викл)
+        // Новий Формат: FAV_SET <State> <Interval> <Dispersion> <UseSaved> <SHUFFLE> <e0> <e1> ...
         int state = switchKeep.isChecked() ? 1 : 0;
-
-        // 2. Interval (сек)
         int intervalPos = spinnerInterval.getSelectedItemPosition();
-        if (intervalPos < 0) intervalPos = 0;
-        int interval = timeValues[intervalPos];
-
-        // 3. Dispersion (Розкид) - не використовуємо, ставимо 0
+        int interval = timeValues[intervalPos >= 0 ? intervalPos : 0];
         int dispersion = 0;
-
-        // 4. UseSaved (Зберігати стан) - ставимо 1
         int useSaved = 1;
+        int shuffle = switchShuffle.isChecked() ? 1 : 0;
 
         StringBuilder sb = new StringBuilder();
         sb.append("FAV_SET ").append(state).append(" ")
                 .append(interval).append(" ")
                 .append(dispersion).append(" ")
-                .append(useSaved);
-
-        // 5. Прапорці ефектів (0 або 1 для кожного ID від 0 до MAX_MODES)
-        // Нам треба пройтися по всіх можливих ID і знайти їх у нашому списку
+                .append(useSaved).append(" ")
+                .append(shuffle);
 
         for (int i = 0; i < MAX_MODES; i++) {
-            int flag = 0; // За замовчуванням викл
-
-            // Шукаємо ефект з таким ID у нашій базі
+            int flag = 0;
             for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
                 if (eff.id == i) {
                     if (eff.useInCycle) flag = 1;
@@ -160,7 +141,6 @@ public class CycleActivity extends BaseActivity {
             sb.append(" ").append(flag);
         }
 
-        // Відправляємо
         sendUdpCommand(sb.toString());
     }
 
@@ -179,19 +159,20 @@ public class CycleActivity extends BaseActivity {
     }
 
     private void loadSettings() {
-        if (spinnerInterval == null) return;
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
-        int pos = prefs.getInt("cycle_interval_pos", 0);
-        if (pos < timeValues.length) spinnerInterval.setSelection(pos);
-        // Тут ми не зберігаємо стан switchKeep, бо він приходить з лампи (CUR пакет),
-        // але поки що читаємо локально для ініціалізації
+        if (spinnerInterval != null) {
+            int pos = prefs.getInt("cycle_interval_pos", 0);
+            if (pos < timeValues.length) spinnerInterval.setSelection(pos);
+        }
+        if (switchShuffle != null) {
+            switchShuffle.setChecked(prefs.getBoolean("cycle_shuffle", false));
+        }
     }
 
     class CycleAdapter extends ArrayAdapter<EffectEntity> {
         public CycleAdapter(Context context, ArrayList<EffectEntity> list) {
             super(context, 0, list);
         }
-
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -202,15 +183,16 @@ public class CycleActivity extends BaseActivity {
             TextView tvName = convertView.findViewById(R.id.textEffectName);
             CheckBox checkBox = convertView.findViewById(R.id.checkInclude);
 
-            tvName.setText(item.getLocalizedName());
-            checkBox.setOnCheckedChangeListener(null);
-            checkBox.setChecked(item.useInCycle);
-
-            checkBox.setOnClickListener(v -> {
-                vibrate();
-                item.useInCycle = checkBox.isChecked();
-                sendCycleConfig(); // Відправляємо оновлений список відразу
-            });
+            if (item != null) {
+                tvName.setText(item.getLocalizedName());
+                checkBox.setOnCheckedChangeListener(null);
+                checkBox.setChecked(item.useInCycle);
+                checkBox.setOnClickListener(v -> {
+                    vibrate();
+                    item.useInCycle = checkBox.isChecked();
+                    sendCycleConfig();
+                });
+            }
             return convertView;
         }
     }
