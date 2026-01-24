@@ -43,18 +43,20 @@
 
     <!-- APP SETTINGS -->
     <string name="title_app_settings">PROGRAM INDSTILLINGER</string>
-    <string name="label_vibration">Vibration ved tryк</string>
+    <string name="label_vibration">Vibration ved tryk</string>
     <string name="label_confirm_exit">Bekræft afslutning</string>
     <string name="label_slider_style">SKYDER STIL</string>
     <string name="style_neon">Neon (Standard)</string>
     <string name="style_plasma">Plasma</string>
     <string name="style_cyber">Cyber</string>
     <string name="style_gradient">Gradient</string>
+    <string name="label_timezone">Tidszone (GMT)</string>
+    <string name="label_auto_dst">Automatisk sommertid</string>
 
     <!-- MATRIX -->
     <string name="title_matrix">MATRIX INDSTILLINGER</string>
     <string name="label_running_text">Løbende tekst</string>
-    <string name="hint_enter_text">Indtast tekst...</string>
+    <string name="hint_enter_text">Indtast tekst…</string>
     <string name="btn_send_text">SEND TEKST</string>
     <string name="label_draw_order">Farverækkefølge (RGB/GRB)</string>
 
@@ -66,8 +68,8 @@
     <string name="msg_saved">Gemt!</string>
     <string name="msg_reset_done">Nulstillet!</string>
     <string name="msg_hidden_effect">Spiller skjult effekt: %1$s</string>
-    <string name="msg_text_sent">Tekст sendt!</string>
-    <string name="msg_syncing">Synkronisering...</string>
+    <string name="msg_text_sent">Tekst sendt!</string>
+    <string name="msg_syncing">Synkronisering…</string>
     <string name="msg_synced">Synkroniseret!</string>
     <string name="label_select_lamp_edit">VÆLG LAMPE TIL REDIGERING:</string>
     <string name="error_no_ip">Fejl: IP er ikke valgt</string>
@@ -75,8 +77,8 @@
     <!-- Nye oversættelser for ConnectionActivity -->
     <string name="msg_ip_exists">IP findes allerede!</string>
     <string name="msg_empty_fields">Fejl: Tomme felter</string>
-    <string name="msg_scanning">Skanner...</string>
-    <string name="msg_pinging">Pinger %1$s...</string>
+    <string name="msg_scanning">Skanner…</string>
+    <string name="msg_pinging">Pinger %1$s…</string>
     <string name="msg_ping_ok">✅ %1$s OK!</string>
     <string name="msg_reset_cmd_sent">Nulstillingskommando sendt</string>
     <string name="msg_deleted">Slettet</string>
@@ -112,7 +114,7 @@
     <string name="day_wed">Onsdag</string>
     <string name="day_thu">Torsdag</string>
     <string name="day_fri">Fredag</string>
-    <string name="day_sat">Lørdaг</string>
+    <string name="day_sat">Lørdag</string>
     <string name="day_sun">Søndag</string>
 
     <string name="title_sleep_timer">SLUK TIMER</string>
@@ -135,8 +137,6 @@
     <string name="action_on">TÆND</string>
     <string name="action_off">SLUK</string>
     <string name="slot_label">Begivenhed %1$d</string>
-    <string name="msg_syncing">Synkronisering...</string>
-    <string name="msg_synced">Synkroniseret!</string>
     <string name="short_day_mon">Man</string>
     <string name="short_day_tue">Tir</string>
     <string name="short_day_wed">Ons</string>
@@ -148,17 +148,14 @@
     <string name="title_painting">TEGNING</string>
     <string name="btn_clear_matrix">RYD MATRIX</string>
 
-    <string name="label_timezone">Tidszone (GMT)</string>
-    <string name="label_auto_dst">Automatisk sommertid</string>
-
-    <string name="label_brush_brightness">Lysstyrке</string>
+    <string name="label_brush_brightness">Lysstyrke</string>
 
     <string name="menu_text">LØBENDE TEKST</string>
 
     <string name="btn_help">KOMMANDO HJÆLP</string>
     <string name="title_help">TEKSTKOMMANDOER</string>
     <string name="text_help_content"><![CDATA[
-        Indtast disse kommandoer i tekstfeltet, og tryk på SEND.<br><br>
+        Indtast disse kommandoer i tekstfeltet, og tryк på SEND.<br><br>
         <b>SYSTEM:</b><br>
         <b>TXT-reset=wifi</b><br>
         — Nulstil Wi-Fi-indstillinger.<br><br>
@@ -191,8 +188,8 @@
         2. Opret forbindelse til Wi-Fi <b>LedLamp 1</b> (adgangskode: <b>12345678</b>).<br>
         3. Indstillingsvinduet åbnes (eller indtast adressen <b>192.168.4.1</b> i browseren).<br>
         4. Indtast navn og adgangskode til din router.<br>
-        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværк.<br>
-        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn og tryk på \"Tilføj lampe\".<br><br>
+        5. Lampen genstarter i klienttilstand och opretter forbindelse til dit netværк.<br>
+        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn och tryк på \"Tilføj lampe\".<br><br>
 
         <b>DRIFTSTILSTANDE:</b><br>
         1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværк. Intet internet.<br>
@@ -207,8 +204,8 @@
 
         <b>HOVEDSKÆRM:</b><br>
         • <b>Valg af lampe:</b> Giver mulighed for at vælge den ønskede lampe, hvis der er flere.<br>
-        • <b>Lampe:</b> Tænder og slukker lampen samt viser aktuel status.<br>
-        • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid og liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
+        • <b>Lampe:</b> Tænder och slukker lampen samt viser aktuel status.<br>
+        • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid och liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
         • <b>Effektliste:</b> Giver mulighed for at vælge en effekt fra listen.<br>
         • <b>Skydere:</b><br>
         — <i>Lysstyrke:</i> Lysstyrke for den aktuelle effekt.<br>
@@ -217,7 +214,7 @@
         • <b>Nulstil:</b> Nulstiller indstillingerne for den aktuelle effekt til standard.<br>
         <br>
         <i><b>GEM INDSTILLINGER:</b><br>
-        Appen husker automatisk den sidst valgte effekt. Lampen husker hastigheds- og lysstyrkeindstillinger for hver effekt individuelt.</i><br>
+        Appen husker automatisk den sidst valgte effekt. Lampen husker hastigheds- och lysstyrkeindstillinger for hver effekt individuelt.</i><br>
         <br>
         --------------------------------<br>
         <br>
@@ -227,16 +224,16 @@
         Søg efter lamper på netværкет, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
 
         <b>2. APP INDSTILLINGER</b><br>
-        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller knappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
+        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller кnappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
 
         <b>3. EFFEKT STYRING</b><br>
-        Sorter effektlisten (træk op/ned) og deaktiver uønskede effekter fra hovedskærmen.<br><br>
+        Sorter effektlisten (træk op/ned) och deaktiver uønskede effekter fra hovedskærmen.<br><br>
 
         <b>4. CYKLUS TILSTAND</b><br>
-        Vælg effekter til automatisk afspilning og indstil skifteinterval.<br><br>
+        Vælg effekter til automatisk afspilning och indstil skifteinterval.<br><br>
 
         <b>5. LYS VÆKKEUR</b><br>
-        Indstil tid og ugedage for jævn solopgangssimulering før opvågning.<br><br>
+        Indstil tid och ugedage for jævn solopgangssimulering før opvågning.<br><br>
 
         <b>6. SLUK TIMER</b><br>
         Indstil nedtælling til automatisk slukning af lampen.<br><br>
@@ -245,7 +242,7 @@
         Tegn med pixels på matricen i realtid. Værktøjer: blyant, viskelæder, farvevælger, pensellysstyrke. Tegningen gemmes i effekten &quot;Tegning&quot;.<br><br>
 
         <b>8. LØBENDE TEKST</b><br>
-        Send tekst til effekten &quot;Løbende tekst&quot;. Bruges også til servicekommandoer.<br><br>
+        Send tekst til effekten &quot;Løbende tekst&quot;. Bruges також til servicekommandoer.<br><br>
 
         <b>9. TÆNDINGSPLAN</b><br>
         Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag och slukke en anden.<br><br>
@@ -257,19 +254,19 @@
     <!-- Afsnit 3: Knapkontrol -->
     <string name="text_manual_3"><![CDATA[
         <b>KNAPKONTROL:</b><br><br>
-        Lampen kan betjenes ved hjælp af berøringsknappen placeret øverst på lampen. Når der trykkes, lyser knappen rødt.<br><br>
-        • <b>1 klik</b> — Tænd / Sluk.<br>
-        • <b>2 klik</b> — Næste effekt.<br>
-        • <b>3 klik</b> — Forrige effekt.<br>
-        • <b>4 klik</b> — OTA firmwareopdateringstilstand (for udviklere).<br>
-        • <b>5 klik</b> — Vis IP-adresse (løbende tekst).<br>
-        • <b>6 klik</b> — Vis aktuel tid.<br>
-        • <b>7 klik</b> — Skift Wi-Fi-tilstand (Adgangspunkt <-> Klient).<br>
+        Lampen kan betjenes ved hjælp af berøringsknappen placeret øverst på lampen. Når der trykkes, lyser кnappen rødt.<br><br>
+        • <b>1 кlik</b> — Tænd / Sluk.<br>
+        • <b>2 кlik</b> — Næste effekt.<br>
+        • <b>3 кlik</b> — Forrige effekt.<br>
+        • <b>4 кlik</b> — OTA firmwareopdateringstilstand (for udviklere).<br>
+        • <b>5 кlik</b> — Vis IP-adresse (løbende tekst).<br>
+        • <b>6 кlik</b> — Vis aktuel tid.<br>
+        • <b>7 кlik</b> — Skift Wi-Fi-tilstand (Adgangspunkt <-> Klient).<br>
         <br>
         <b>HOLDHANDLINGER:</b><br><br>
         • <b>Hold</b> — Juster lysstyrke.<br>
-        • <b>1 klik + Hold</b> — Juster hastighed.<br>
-        • <b>2 klik + Hold</b> — Juster skala.<br>
+        • <b>1 кlik + Hold</b> — Juster hastighed.<br>
+        • <b>2 кlik + Hold</b> — Juster skala.<br>
         <br>
         <i>Bemærk: Hvert efterfølgende hold ændrer justeringsretningen (øg/mindsk).</i>
     ]]></string>
@@ -284,7 +281,7 @@
         • <b>Visningsrækkefølge af effekter på hovedskærmen:</b> Gemmes i телефоnen. Individuel for hver.<br><br>
 
         <b>FLERE LAMPER:</b><br>
-        Tilføj deres IP-adresser i menuen &quot;Forbindelse&quot; og skift mellem dem på hovedskærmen. Alle kommandoer sendes kun til den lampe, der er valgt på hovedskærmen.
+        Tilføj deres IP-adresser i menuen &quot;Forbindelse&quot; och skift mellem dem på hovedskærmen. Alle kommandoer sendes кun til den lampe, der er valgt på hovedskærmen.
     ]]></string>
     <string name="label_device_time">Enhedstid:</string>
     <string name="error_connection">Ingen forbindelse</string>
