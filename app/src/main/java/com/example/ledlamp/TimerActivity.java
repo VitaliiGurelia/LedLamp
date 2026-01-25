@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class TimerActivity extends BaseActivity { // Використовуємо BaseActivity для мови
+public class TimerActivity extends BaseActivity {
     private static final String TAG = "TimerActivity";
 
     Spinner spinnerTimer;
@@ -33,9 +33,8 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
     private final int[] timerValues = {0, 5, 10, 15, 30, 45, 60};
     private CountDownTimer countDownTimer;
 
-    // Змінні для слухача UDP
     private boolean isListening = false;
-    private Thread listenerThread;
+    private boolean isUserAction = false; // Щоб уникнути циклічного спрацювання спінера
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +47,28 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
         btnBack = findViewById(R.id.btnBack);
 
         setupSpinner();
+
+        // Важливо: спочатку перевіряємо збережений таймер
         checkSavedTimer();
 
         if (spinnerTimer != null) {
+            spinnerTimer.setOnTouchListener((v, event) -> {
+                isUserAction = true;
+                return false;
+            });
+
             spinnerTimer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (!isUserAction) return;
+                    
                     int minutes = timerValues[position];
-                    // Відправляємо команду тільки якщо це вибір користувача
-                    // (Для спрощення шлемо завжди, лампа обробить)
                     if (minutes > 0) startTimer(minutes);
                     else stopTimer();
+                    
+                    isUserAction = false;
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
 
@@ -75,19 +80,19 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
         }
     }
 
-    // --- СИНХРОНІЗАЦІЯ ЧАСУ З ЛАМПОЮ ---
-
     @Override
     protected void onResume() {
         super.onResume();
         isListening = true;
-        startUdpListener(); // Тепер цей метод оголошений нижче!
+        startUdpListener();
+        checkSavedTimer(); // Перевіряємо ще раз при поверненні в Activity
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        isListening = false; // Зупиняємо потік при виході
+        isListening = false;
+        if (countDownTimer != null) countDownTimer.cancel();
     }
 
     private void startUdpListener() {
@@ -98,14 +103,12 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
                 SharedPreferences settings = getSharedPreferences("LampSettings", MODE_PRIVATE);
                 String ip = settings.getString("LAMP_IP", "");
 
-                // 1. Питаємо статус лампи один раз при вході
                 if (!ip.isEmpty()) {
                     byte[] data = "GET".getBytes();
                     DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName(ip), LAMP_PORT);
                     socket.send(p);
                 }
 
-                // 2. Починаємо слухати відповіді
                 while (isListening) {
                     try {
                         byte[] buf = new byte[1024];
@@ -113,19 +116,16 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
                         socket.receive(packet);
                         String msg = new String(packet.getData(), 0, packet.getLength());
 
-                        // Пакет CURR містить час у форматі HH:mm:ss в самому кінці
                         if (msg.startsWith("CURR")) {
                             String[] parts = msg.split(" ");
                             if (parts.length >= 10) {
-                                String lampTime = parts[parts.length - 1]; // Останній елемент
+                                String lampTime = parts[parts.length - 1];
                                 runOnUiThread(() -> {
                                     if (textCurrentTime != null) textCurrentTime.setText(lampTime);
                                 });
                             }
                         }
-                    } catch (Exception e) {
-                        // Timeout або помилка прийому - просто крутимо цикл далі
-                    }
+                    } catch (Exception e) {}
                 }
                 socket.close();
             } catch (Exception e) {
@@ -133,8 +133,6 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
             }
         }).start();
     }
-
-    // --- ЛОГІКА ТАЙМЕРА ---
 
     private void setupSpinner() {
         if (spinnerTimer == null) return;
@@ -150,44 +148,80 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
     }
 
     private void startTimer(int minutes) {
+        vibrate();
         sendUdpCommand("TOFF " + minutes);
+        
         if (countDownTimer != null) countDownTimer.cancel();
+        
         long millis = minutes * 60 * 1000L;
         long endTime = System.currentTimeMillis() + millis;
-        getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putLong("timer_end_time", endTime).apply();
+        
+        // Зберігаємо час закінчення
+        getSharedPreferences("LampSettings", MODE_PRIVATE)
+                .edit()
+                .putLong("timer_end_time", endTime)
+                .putInt("timer_initial_min", minutes)
+                .apply();
+                
         startCountdownUI(millis);
     }
 
     private void stopTimer() {
+        vibrate();
         sendUdpCommand("TOFF 0");
         if (countDownTimer != null) countDownTimer.cancel();
         if (textCountdown != null) textCountdown.setText(R.string.timer_not_active);
-        getSharedPreferences("LampSettings", MODE_PRIVATE).edit().remove("timer_end_time").apply();
+        
+        getSharedPreferences("LampSettings", MODE_PRIVATE)
+                .edit()
+                .remove("timer_end_time")
+                .remove("timer_initial_min")
+                .apply();
     }
 
     private void startCountdownUI(long millisLeft) {
         if (textCountdown == null) return;
+        
+        if (countDownTimer != null) countDownTimer.cancel();
+
         countDownTimer = new CountDownTimer(millisLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = millisUntilFinished / 1000;
-                if (textCountdown != null) {
-                    textCountdown.setText(String.format(Locale.US, "%02d:%02d", seconds / 60, seconds % 60));
-                }
+                textCountdown.setText(String.format(Locale.US, "%02d:%02d", seconds / 60, seconds % 60));
             }
+
             @Override
             public void onFinish() {
-                if (textCountdown != null) textCountdown.setText("00:00");
-                if (spinnerTimer != null) spinnerTimer.setSelection(0);
+                textCountdown.setText(R.string.timer_not_active);
+                spinnerTimer.setSelection(0);
+                getSharedPreferences("LampSettings", MODE_PRIVATE).edit().remove("timer_end_time").apply();
             }
         }.start();
     }
 
     private void checkSavedTimer() {
-        long endTime = getSharedPreferences("LampSettings", MODE_PRIVATE).getLong("timer_end_time", 0);
+        SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
+        long endTime = prefs.getLong("timer_end_time", 0);
         long now = System.currentTimeMillis();
-        if (endTime > now) startCountdownUI(endTime - now);
-        else if (textCountdown != null) textCountdown.setText(R.string.timer_not_active);
+        
+        if (endTime > now) {
+            long timeLeft = endTime - now;
+            startCountdownUI(timeLeft);
+            
+            // Оновлюємо вибір у спінері (опціонально, показуємо початковий вибір)
+            int initialMin = prefs.getInt("timer_initial_min", 0);
+            for (int i = 0; i < timerValues.length; i++) {
+                if (timerValues[i] == initialMin) {
+                    spinnerTimer.setSelection(i);
+                    break;
+                }
+            }
+        } else {
+            if (textCountdown != null) textCountdown.setText(R.string.timer_not_active);
+            if (spinnerTimer != null) spinnerTimer.setSelection(0);
+            prefs.edit().remove("timer_end_time").apply();
+        }
     }
 
     private void sendUdpCommand(String command) {
@@ -213,8 +247,8 @@ public class TimerActivity extends BaseActivity { // Використовуєм�
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (v != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else { v.vibrate(50); }
+                    v.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else { v.vibrate(20); }
             }
         }
     }

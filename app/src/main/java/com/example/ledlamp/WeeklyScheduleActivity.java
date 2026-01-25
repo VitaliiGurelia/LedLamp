@@ -29,7 +29,6 @@ import java.util.Locale;
 public class WeeklyScheduleActivity extends BaseActivity {
     private static final String TAG = "WeeklyScheduleActivity";
 
-    // [День][Слот][0=Год, 1=Хв, 2=Дія, 3=Ефект]
     public static int[][][] scheduleData = new int[7][5][4];
 
     LinearLayout containerDays;
@@ -95,13 +94,8 @@ public class WeeklyScheduleActivity extends BaseActivity {
             lampList.add(new Lamp("Default", currentIp));
         }
 
-        // --- ЛОГІКА ПРИХОВУВАННЯ ---
         if (layoutLampSelection != null) {
-            if (lampList.size() < 2) {
-                layoutLampSelection.setVisibility(View.GONE);
-            } else {
-                layoutLampSelection.setVisibility(View.VISIBLE);
-            }
+            layoutLampSelection.setVisibility(lampList.size() < 2 ? View.GONE : View.VISIBLE);
         }
 
         lampAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, lampList);
@@ -227,7 +221,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 runOnUiThread(() -> Toast.makeText(this, R.string.msg_saved, Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
                 Log.e(TAG, "Failed to send schedule", e);
-                runOnUiThread(() -> Toast.makeText(this, R.string.msg_lamp_not_found, Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, R.string.msg_sync_error, Toast.LENGTH_SHORT).show());
             } finally {
                 if (socket != null) socket.close();
             }
@@ -235,7 +229,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
     }
 
     private void loadFromLamp() {
-        if (selectedLampIp.isEmpty() || selectedLampIp.equals("192.168.0.105")) return;
+        if (selectedLampIp.isEmpty()) return;
         new Thread(() -> {
             try {
                 DatagramSocket socket = new DatagramSocket();
@@ -251,12 +245,9 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 String data = new String(recv.getData(), 0, recv.getLength());
                 if (data.startsWith("SCH_DAT")) {
                     String[] items = data.substring(7).trim().split(" ");
-                    // Очистка перед завантаженням
-                    for (int d_i = 0; d_i < 7; d_i++) {
-                        for (int s_i = 0; s_i < 5; s_i++) {
-                            scheduleData[d_i][s_i][2] = 0;
-                            scheduleData[d_i][s_i][3] = 0;
-                        }
+                    for (int d_i = 0; d_i < 7; d_i++) for (int s_i = 0; s_i < 5; s_i++) {
+                        scheduleData[d_i][s_i][2] = 0;
+                        scheduleData[d_i][s_i][3] = 0;
                     }
 
                     for (String item : items) {
@@ -267,11 +258,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
                             int h = Integer.parseInt(parts[2]);
                             int m = Integer.parseInt(parts[3]);
                             int a = Integer.parseInt(parts[4]);
-                            int e = 0;
-                            if (parts.length >= 6) {
-                                e = Integer.parseInt(parts[5]);
-                            }
-                            
+                            int e = parts.length >= 6 ? Integer.parseInt(parts[5]) : 0;
                             if (d < 7 && s < 5) {
                                 scheduleData[d][s][0] = h;
                                 scheduleData[d][s][1] = m;
@@ -285,6 +272,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 socket.close();
             } catch (Exception e) {
                 Log.e(TAG, "Load failed", e);
+                runOnUiThread(() -> Toast.makeText(this, R.string.msg_sync_error, Toast.LENGTH_SHORT).show());
             }
         }).start();
     }

@@ -58,7 +58,7 @@
     <string name="title_matrix">НАЛАШТУВАННЯ МАТРИЦІ</string>
     <string name="menu_text">ТЕКСТОВИЙ РЯДОК</string>
     <string name="label_running_text">Бігучий рядок</string>
-    <string name="hint_enter_text">Введіть текст...</string>
+    <string name="hint_enter_text">Введіть текст…</string>
     <string name="btn_send_text">ВІДПРАВИТИ ТЕКСТ</string>
 
     <string name="btn_help">ДОВІДКА КОМАНД</string>
@@ -73,19 +73,9 @@
     <string name="msg_reset_done">Налаштування скинуто!</string>
     <string name="msg_hidden_effect">Грає прихований ефект: %1$s</string>
     <string name="msg_text_sent">Текст відправлено!</string>
-    <string name="msg_syncing">Синхронізація...</string>
+    <string name="msg_syncing">Синхронізація…</string>
     <string name="msg_synced">Синхронізовано!</string>
-
-    <!-- Нові переклади -->
-    <string name="msg_ip_exists">IP вже існує!</string>
-    <string name="msg_empty_fields">Помилка: Порожні поля</string>
-    <string name="msg_scanning">Сканування...</string>
-    <string name="msg_pinging">Ping %1$s...</string>
-    <string name="msg_ping_ok">✅ %1$s OK!</string>
-    <string name="msg_reset_cmd_sent">Команду скидання надіслано</string>
-    <string name="msg_deleted">Видалено</string>
-    <string name="msg_found_lamp">Знайдено: %1$s</string>
-    <string name="default_new_lamp_name">Нова Лампа</string>
+    <string name="msg_sync_error">Помилка синхронізації: лампа не відповідає</string>
     <string name="label_select_lamp_edit">ВИБЕРІТЬ ЛАМПУ ДЛЯ РЕДАГУВАННЯ:</string>
     <string name="error_no_ip">Помилка: IP не вибрано</string>
 
@@ -224,7 +214,7 @@
         <b><big>МЕНЮ НАЛАШТУВАНЬ</big></b><br><br>
 
         <b>1. З\'ЄДНАННЯ</b><br>
-        Пошук ламп у мережі, додавання нових ламп за IP-адресою, редагування спиву збережених ламп.<br><br>
+        Пошук ламп у мережі, додавання нових ламп за IP-адресою, редагування списку збережених ламп.<br><br>
 
         <b>2. НАЛАШТУВАННЯ ДОДАТКУ</b><br>
         Керування вібрацією, вибір стилю регуляторів, налаштування часу лампи. Лампа отримує час з мережі інтернет. Якщо інтернет відсутній, то час можна вказати лампі через відправку текстової команди або через кнопку &quot;Синхронізувати час&quot;. Якщо час на лампі буде відрізнятись від часу на телефоні, повторна синхронізація внесе корективи похибки. Синхронізація через інтернет завжди в пріоритеті.<br><br>

@@ -68,6 +68,7 @@
     <string name="msg_text_sent">Text sent!</string>
     <string name="msg_syncing">Syncing...</string>
     <string name="msg_synced">Synchronized!</string>
+    <string name="msg_sync_error">Sync error: lamp is not responding</string>
     <string name="label_select_lamp_edit">SELECT LAMP FOR EDITING:</string>
     <string name="error_no_ip">Error: IP not selected</string>
 

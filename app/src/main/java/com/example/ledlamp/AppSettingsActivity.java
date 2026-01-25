@@ -49,7 +49,6 @@ public class AppSettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
 
-        // Ініціалізація
         switchVibration = findViewById(R.id.switchVibration);
         switchExitConfirm = findViewById(R.id.switchExitConfirm);
         switchAutoDst = findViewById(R.id.switchAutoDst);
@@ -62,7 +61,6 @@ public class AppSettingsActivity extends BaseActivity {
 
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
 
-        // Відновлення стану
         if (switchVibration != null) switchVibration.setChecked(prefs.getBoolean("vibration", true));
         if (switchExitConfirm != null) switchExitConfirm.setChecked(prefs.getBoolean("exit_confirm", false));
         if (switchAutoDst != null) switchAutoDst.setChecked(prefs.getBoolean("auto_dst", false));
@@ -77,11 +75,9 @@ public class AppSettingsActivity extends BaseActivity {
 
         setupTimeZoneSpinner(prefs);
 
-        // --- ОБРОБНИКИ ---
-
         radioGroupTheme = findViewById(R.id.radioGroupTheme);
         if (radioGroupTheme != null) {
-            int savedTheme = prefs.getInt("app_theme", 0); // 0=Dark, 1=Light, 2=Cyber
+            int savedTheme = prefs.getInt("app_theme", 0);
             if (savedTheme == 1) radioGroupTheme.check(R.id.radioThemeLight);
             else if (savedTheme == 2) radioGroupTheme.check(R.id.radioThemeCyber);
             else radioGroupTheme.check(R.id.radioThemeDark);
@@ -94,7 +90,7 @@ public class AppSettingsActivity extends BaseActivity {
                 if (newTheme != prefs.getInt("app_theme", 0)) {
                     vibrate();
                     prefs.edit().putInt("app_theme", newTheme).apply();
-                    recreate(); // Оновлюємо поточний екран
+                    recreate();
                 }
             });
         }
@@ -169,7 +165,6 @@ public class AppSettingsActivity extends BaseActivity {
         isListening = false;
     }
 
-    // --- МОНІТОРИНГ ЧАСУ ---
     private void startTimeListener() {
         new Thread(() -> {
             DatagramSocket socket = null;
@@ -195,25 +190,29 @@ public class AppSettingsActivity extends BaseActivity {
 
                         String msg = new String(recv.getData(), 0, recv.getLength());
 
+                        // Підтримка обох типів пакетів CUR та CURR
                         if (msg.startsWith("CUR")) {
                             String[] parts = msg.trim().split(" ");
                             if (parts.length >= 2) {
-                                // Час і день в кінці пакету
-                                String dayStr = parts[parts.length - 1];
-                                String timeStr = parts[parts.length - 2];
+                                String timeStr = "";
+                                String dayName = "";
+                                
+                                // Логіка для CURR (зазвичай час в кінці)
+                                if (msg.startsWith("CURR") && parts.length >= 10) {
+                                    timeStr = parts[parts.length - 1];
+                                } else {
+                                    // Логіка для стандартного CUR
+                                    timeStr = parts[parts.length - 2];
+                                    try {
+                                        int dayNum = Integer.parseInt(parts[parts.length - 1]);
+                                        dayName = getDayNameByNumber(dayNum);
+                                    } catch (Exception e) {}
+                                }
 
                                 if (timeStr.contains(":")) {
-                                    String dayName = "";
-                                    try {
-                                        int dayNum = Integer.parseInt(dayStr);
-                                        dayName = getDayNameByNumber(dayNum);
-                                    } catch (Exception e) {
-                                        // Ignore parse exception
-                                    }
-
-                                    String finalStr = timeStr + "  " + dayName;
+                                    final String finalDisplay = timeStr + (dayName.isEmpty() ? "" : "  " + dayName);
                                     runOnUiThread(() -> {
-                                        if (textDeviceTime != null) textDeviceTime.setText(finalStr);
+                                        if (textDeviceTime != null) textDeviceTime.setText(finalDisplay);
                                     });
                                 }
                             }
@@ -225,7 +224,6 @@ public class AppSettingsActivity extends BaseActivity {
                     } catch (Exception e) {
                         Log.e(TAG, "Error receiving time", e);
                     }
-
                     Thread.sleep(1000);
                 }
             } catch (Exception e) {
@@ -237,7 +235,6 @@ public class AppSettingsActivity extends BaseActivity {
     }
 
     private String getDayNameByNumber(int dayNum) {
-        // 1=Нд ... 7=Сб
         switch (dayNum) {
             case 1: return getString(R.string.short_day_sun);
             case 2: return getString(R.string.short_day_mon);
@@ -271,7 +268,6 @@ public class AppSettingsActivity extends BaseActivity {
             if (val > 0) gmtLabels.add("GMT +" + val);
             else if (val < 0) gmtLabels.add("GMT " + val);
             else gmtLabels.add("GMT 0");
-
             if (val == savedGmt) selectedIndex = i;
         }
 
@@ -297,7 +293,6 @@ public class AppSettingsActivity extends BaseActivity {
         SharedPreferences settings = getSharedPreferences("LampSettings", MODE_PRIVATE);
         String ip = settings.getString("LAMP_IP", "");
         if (ip.isEmpty()) return;
-
         new Thread(() -> {
             try {
                 DatagramSocket socket = new DatagramSocket();
@@ -319,9 +314,7 @@ public class AppSettingsActivity extends BaseActivity {
             if (v != null && v.hasVibrator()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    v.vibrate(50);
-                }
+                } else { v.vibrate(50); }
             }
         }
     }
