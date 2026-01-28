@@ -1,5 +1,7 @@
 package com.example.ledlamp;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,10 +14,11 @@ public class UdpHelper {
     private boolean isListening = false;
     private Thread listenerThread;
     private String currentIp = "";
+    private InetAddress cachedAddress = null;
 
-    // Інтерфейс, щоб передавати повідомлення назад у MainActivity
     public interface UdpListener {
         void onMessageReceived(String message);
+        void onConnectionLost();
     }
 
     private UdpListener listener;
@@ -25,82 +28,84 @@ public class UdpHelper {
     }
 
     public void setIp(String ip) {
+        if (ip == null || ip.equals(this.currentIp)) return;
         this.currentIp = ip;
+        this.cachedAddress = null; // Скидаємо кеш, щоб резолвити нову IP
     }
 
-    // Відправка команди (без відповіді)
     public void sendCommand(String command) {
         if (currentIp.isEmpty()) return;
         new Thread(() -> {
-            try {
-                DatagramSocket socket = new DatagramSocket();
+            try (DatagramSocket socket = new DatagramSocket()) {
                 byte[] data = command.getBytes();
                 InetAddress address = InetAddress.getByName(currentIp);
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
-                socket.close();
             } catch (Exception e) {
                 Log.e(TAG, "Error sending command: " + command, e);
             }
         }).start();
     }
 
-    // Запуск слухача + Heartbeat (все в одному)
     public void startListening() {
         if (listenerThread != null && listenerThread.isAlive()) return;
         isListening = true;
 
         listenerThread = new Thread(() -> {
             DatagramSocket socket = null;
+            long lastResponseTime = System.currentTimeMillis();
+            long lastPingTime = 0;
+
             try {
                 socket = new DatagramSocket();
-                socket.setSoTimeout(100);
-                long lastPingTime = 0;
-                InetAddress address = null;
+                socket.setSoTimeout(500);
 
                 while (isListening) {
-                    if (!currentIp.isEmpty() && address == null) {
+                    if (currentIp.isEmpty()) {
+                        Thread.sleep(500);
+                        continue;
+                    }
+
+                    if (cachedAddress == null) {
                         try {
-                            address = InetAddress.getByName(currentIp);
+                            cachedAddress = InetAddress.getByName(currentIp);
                         } catch (Exception e) {
-                            Log.e(TAG, "Error resolving IP: " + currentIp, e);
+                            Log.e(TAG, "IP error: " + currentIp);
                         }
                     }
 
-                    // 1. ПІНГ
                     long now = System.currentTimeMillis();
-                    if (now - lastPingTime > 2000) {
-                        if (address != null) {
-                            try {
-                                byte[] data = "GET".getBytes();
-                                DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
-                                socket.send(packet);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error sending ping", e);
-                            }
-                        }
+
+                    // 1. ПЕРІОДИЧНЕ ОПИТУВАННЯ (кожні 2 сек)
+                    if (now - lastPingTime > 2000 && cachedAddress != null) {
+                        byte[] data = "GET".getBytes();
+                        socket.send(new DatagramPacket(data, data.length, cachedAddress, LAMP_PORT));
                         lastPingTime = now;
                     }
 
-                    // 2. ПРИЙОМ
+                    // 2. ПРИЙОМ ДАНИХ
                     try {
                         byte[] buf = new byte[1024];
                         DatagramPacket packet = new DatagramPacket(buf, buf.length);
                         socket.receive(packet);
                         String msg = new String(packet.getData(), 0, packet.getLength());
-
-                        // Передаємо повідомлення в Activity
+                        
+                        lastResponseTime = System.currentTimeMillis();
                         if (listener != null) {
-                            listener.onMessageReceived(msg);
+                            new Handler(Looper.getMainLooper()).post(() -> listener.onMessageReceived(msg));
                         }
                     } catch (SocketTimeoutException e) {
-                        // Тиша - це ок
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error receiving packet", e);
+                        // Перевіряємо, чи не задовго лампа мовчить
+                        if (System.currentTimeMillis() - lastResponseTime > 5000) {
+                            if (listener != null) {
+                                new Handler(Looper.getMainLooper()).post(() -> listener.onConnectionLost());
+                            }
+                            lastResponseTime = System.currentTimeMillis(); // Запобігаємо спаму помилками
+                        }
                     }
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error in listener thread", e);
+                Log.e(TAG, "Listener error", e);
             } finally {
                 if (socket != null) socket.close();
             }

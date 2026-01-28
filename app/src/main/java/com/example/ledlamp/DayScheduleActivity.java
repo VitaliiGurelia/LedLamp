@@ -1,11 +1,7 @@
 package com.example.ledlamp;
 
 import android.app.TimePickerDialog;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -162,20 +158,6 @@ public class DayScheduleActivity extends BaseActivity {
             } else {
                 root.setBackgroundResource(R.drawable.bg_item_slot_off);
                 spinnerEffect.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            if (v != null && v.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    v.vibrate(50);
-                }
             }
         }
     }

@@ -2,10 +2,7 @@ package com.example.ledlamp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +103,7 @@ public class CycleActivity extends BaseActivity {
 
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
+                vibrate();
                 sendCycleConfig(); // На всякий випадок зберігаємо при виході
                 finish();
             });
@@ -214,16 +212,5 @@ public class CycleActivity extends BaseActivity {
                 Log.e(TAG, "Error sending UDP command", e);
             }
         }).start();
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (v != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) v.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
-                else v.vibrate(20);
-            }
-        }
     }
 }

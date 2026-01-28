@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
 
-    // --- ЗМІННІ ІНТЕРФЕЙСУ ---
     Switch switchPower, switchCycle;
     SeekBar seekBarBrightness, seekBarSpeed, seekBarScale;
     TextView textBriVal, textSpeedVal, textScaleVal, labelScale;
@@ -40,25 +39,16 @@ public class MainActivity extends BaseActivity {
     ImageButton btnMenu;
     Button btnBriMinus, btnBriPlus, btnSpdMinus, btnSpdPlus, btnScaMinus, btnScaPlus;
 
-    // --- ДАНІ ---
     ArrayList<Lamp> lampList = new ArrayList<>();
     ArrayAdapter<Lamp> lampAdapter;
-
-    // Адаптер для ефектів
     ArrayAdapter<EffectEntity> effectsAdapter;
-    // Список видимих ефектів
     ArrayList<EffectEntity> visibleEffects = new ArrayList<>();
-
-    // Список користувача (статичний, щоб бачили інші Activity)
     public static ArrayList<EffectEntity> userEffectsList = new ArrayList<>();
 
-    // --- ЛОГІКА ---
     private int lastReportedHiddenId = -1;
     boolean isProgrammaticChange = false;
     boolean isUserAction = true;
     private long lastUpdate = 0;
-
-    // --- ПОМІЧНИК МЕРЕЖІ ---
     private UdpHelper udpHelper;
 
     @Override
@@ -66,28 +56,36 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ініціалізація UDP Helper
         udpHelper = new UdpHelper();
-        udpHelper.setListener(msg -> {
-            if (msg.startsWith("CUR")) {
-                parseCurPacket(msg);
+        udpHelper.setListener(new UdpHelper.UdpListener() {
+            @Override
+            public void onMessageReceived(String msg) {
+                if (msg.startsWith("CUR")) parseCurPacket(msg);
+            }
+
+            @Override
+            public void onConnectionLost() {
+                runOnUiThread(() -> {
+                    if (switchPower != null && switchPower.isChecked()) {
+                        isProgrammaticChange = true;
+                        switchPower.setChecked(false);
+                        Toast.makeText(MainActivity.this, R.string.msg_lamp_not_found, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
-        // Ініціалізація UI
         initViews();
         setupListeners();
         
-        // --- СПЕЦІАЛЬНИЙ ОБРОБНИК ДЛЯ ШКАЛИ МАСШТАБУ (КОЛЬОРУ) ---
         seekBarScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 boolean isRainbow = false;
                 if (spinnerEffects.getSelectedItem() != null) {
-                    try {
-                        EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
-                        isRainbow = (currentEffect.scaleType == 1);
-                    } catch (Exception e) {}
+                    EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
+                    isRainbow = (currentEffect.scaleType == 1);
+                    if (fromUser) currentEffect.scale = progress; 
                 }
                 updateScaleTextColor(progress, isRainbow);
                 if (fromUser) {
@@ -121,7 +119,6 @@ public class MainActivity extends BaseActivity {
         btnNext = findViewById(R.id.btnNextEffect);
         btnReset = findViewById(R.id.btnReset);
         labelScale = findViewById(R.id.labelScale);
-
         btnBriMinus = findViewById(R.id.btnBriMinus);
         btnBriPlus = findViewById(R.id.btnBriPlus);
         btnSpdMinus = findViewById(R.id.btnSpdMinus);
@@ -131,59 +128,45 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupListeners() {
-        if (btnMenu != null) {
-            btnMenu.setOnClickListener(v -> {
-                vibrate();
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            });
-        }
+        if (btnMenu != null) btnMenu.setOnClickListener(v -> {
+            vibrate();
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        });
 
-        // Лампи
         lampAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, lampList);
         lampAdapter.setDropDownViewResource(R.layout.spinner_item);
         if (spinnerLamps != null) {
             spinnerLamps.setAdapter(lampAdapter);
-
             spinnerLamps.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Lamp selectedLamp = lampList.get(position);
                     udpHelper.setIp(selectedLamp.ip);
-
-                    getSharedPreferences("LampSettings", MODE_PRIVATE)
-                            .edit().putString("LAST_LAMP_IP", selectedLamp.ip)
+                    getSharedPreferences("LampSettings", MODE_PRIVATE).edit()
+                            .putString("LAST_LAMP_IP", selectedLamp.ip)
                             .putString("LAMP_IP", selectedLamp.ip).apply();
-
                     udpHelper.sendCommand("GET");
                 }
                 @Override public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
 
-        // Ефекти
         effectsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, visibleEffects);
         effectsAdapter.setDropDownViewResource(R.layout.spinner_item);
         if (spinnerEffects != null) {
             spinnerEffects.setAdapter(effectsAdapter);
-
-            spinnerEffects.setOnTouchListener((v, event) -> {
-                isUserAction = true;
-                v.performClick();
-                return false;
-            });
-
+            spinnerEffects.setOnTouchListener((v, event) -> { isUserAction = true; return false; });
             spinnerEffects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (!isUserAction) {
-                        isUserAction = true;
-                        return;
-                    }
+                    if (!isUserAction) return;
                     EffectEntity effect = (EffectEntity) parent.getItemAtPosition(position);
                     udpHelper.sendCommand("EFF " + effect.id);
+                    udpHelper.sendCommand("BRI " + effect.bright);
+                    udpHelper.sendCommand("SPD " + effect.speed);
+                    udpHelper.sendCommand("SCA " + effect.scale);
                     updateInterfaceForEffect(effect);
-
-                    if (effect.id != 88) { // Не зберігаємо малювання
+                    if (effect.id != 88) {
                         getSharedPreferences("LampSettings", MODE_PRIVATE).edit().putInt("LAST_EFFECT_ID", effect.id).apply();
                     }
                 }
@@ -213,31 +196,43 @@ public class MainActivity extends BaseActivity {
             btnReset.setOnClickListener(v -> {
                 vibrate();
                 if (spinnerEffects.getSelectedItem() != null) {
-                    EffectEntity currentEffect = (EffectEntity) spinnerEffects.getSelectedItem();
-                    udpHelper.sendCommand("BRI " + currentEffect.defBright);
-                    udpHelper.sendCommand("SPD " + currentEffect.defSpeed);
-                    udpHelper.sendCommand("SCA " + currentEffect.defScale);
-
-                    seekBarBrightness.setProgress(currentEffect.defBright);
-                    seekBarSpeed.setProgress(currentEffect.defSpeed);
-                    seekBarScale.setProgress(currentEffect.defScale);
+                    EffectEntity eff = (EffectEntity) spinnerEffects.getSelectedItem();
+                    eff.bright = eff.defBright;
+                    eff.speed = eff.defSpeed;
+                    eff.scale = eff.defScale;
+                    udpHelper.sendCommand("BRI " + eff.bright);
+                    udpHelper.sendCommand("SPD " + eff.speed);
+                    udpHelper.sendCommand("SCA " + eff.scale);
+                    updateInterfaceForEffect(eff);
                     Toast.makeText(this, R.string.msg_reset_done, Toast.LENGTH_SHORT).show();
                 }
+            });
+            btnReset.setOnLongClickListener(v -> {
+                vibrate();
+                new android.app.AlertDialog.Builder(this)
+                        .setTitle(R.string.dialog_effects_reset_title)
+                        .setMessage(R.string.dialog_effects_reset_msg)
+                        .setPositiveButton(R.string.btn_yes, (d, w) -> {
+                            udpHelper.sendCommand("RND_Z");
+                            EffectsRepository.resetAllToDefaults();
+                            if (spinnerEffects.getSelectedItem() != null) {
+                                updateInterfaceForEffect((EffectEntity) spinnerEffects.getSelectedItem());
+                            }
+                            Toast.makeText(this, R.string.msg_reset_done, Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton(R.string.btn_no, null).show();
+                return true;
             });
         }
 
         if (switchPower != null) {
             switchPower.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                vibrate();
                 if (isProgrammaticChange) {
                     isProgrammaticChange = false;
                     return;
                 }
-                if (isChecked) {
-                    udpHelper.sendCommand("P_ON");
-                } else {
-                    udpHelper.sendCommand("P_OFF");
-                }
+                vibrate();
+                udpHelper.sendCommand(isChecked ? "P_ON" : "P_OFF");
             });
         }
 
@@ -251,23 +246,9 @@ public class MainActivity extends BaseActivity {
 
         setupSeekBar(seekBarBrightness, textBriVal, "BRI");
         setupSeekBar(seekBarSpeed, textSpeedVal, "SPD");
-        setupSeekBar(seekBarScale, textScaleVal, "SCA");
-
         setupPlusMinusButtons(btnBriMinus, btnBriPlus, seekBarBrightness, "BRI");
         setupPlusMinusButtons(btnSpdMinus, btnSpdPlus, seekBarSpeed, "SPD");
         setupPlusMinusButtons(btnScaMinus, btnScaPlus, seekBarScale, "SCA");
-
-        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
-            @Override public void handleOnBackPressed() {
-                if (getSharedPreferences("LampAppPrefs", MODE_PRIVATE).getBoolean("exit_confirm", false)) {
-                    new android.app.AlertDialog.Builder(MainActivity.this)
-                            .setTitle(R.string.dialog_exit_title)
-                            .setMessage(R.string.dialog_exit_msg)
-                            .setPositiveButton(R.string.btn_yes, (d, w) -> finish())
-                            .setNegativeButton(R.string.btn_no, null).show();
-                } else { finish(); }
-            }
-        });
     }
 
     @Override
@@ -275,14 +256,10 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         loadLamps();
         applySliderStyle();
-
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
-        String ip = prefs.getString("LAMP_IP", "");
-        udpHelper.setIp(ip);
-
+        udpHelper.setIp(prefs.getString("LAMP_IP", ""));
         reloadUserList(this);
         updateEffectsSpinnerList();
-
         udpHelper.startListening();
         udpHelper.sendCommand("GET"); 
     }
@@ -299,6 +276,11 @@ public class MainActivity extends BaseActivity {
             @Override public void onProgressChanged(SeekBar s, int p, boolean fromUser) {
                 if (textView != null) textView.setText(String.valueOf(p));
                 if (fromUser) {
+                    EffectEntity eff = (EffectEntity) spinnerEffects.getSelectedItem();
+                    if (eff != null) {
+                        if (cmd.equals("BRI")) eff.bright = p;
+                        else if (cmd.equals("SPD")) eff.speed = p;
+                    }
                     long now = System.currentTimeMillis();
                     if (now - lastUpdate > 50) {
                         udpHelper.sendCommand(cmd + " " + p);
@@ -323,6 +305,12 @@ public class MainActivity extends BaseActivity {
         vibrate();
         int val = Math.max(0, Math.min(seekBar.getMax(), seekBar.getProgress() + delta));
         seekBar.setProgress(val);
+        EffectEntity eff = (EffectEntity) spinnerEffects.getSelectedItem();
+        if (eff != null) {
+            if (cmd.equals("BRI")) eff.bright = val;
+            else if (cmd.equals("SPD")) eff.speed = val;
+            else if (cmd.equals("SCA")) eff.scale = val;
+        }
         udpHelper.sendCommand(cmd + " " + val);
     }
 
@@ -330,7 +318,6 @@ public class MainActivity extends BaseActivity {
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
         String json = prefs.getString("LAMPS_JSON", "[]");
         String lastIp = prefs.getString("LAST_LAMP_IP", "");
-
         lampList.clear();
         try {
             org.json.JSONArray arr = new org.json.JSONArray(json);
@@ -338,107 +325,76 @@ public class MainActivity extends BaseActivity {
                 org.json.JSONObject o = arr.getJSONObject(i);
                 lampList.add(new Lamp(o.getString("n"), o.getString("i")));
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Error loading lamps", e);
-        }
-
+        } catch (Exception e) {}
         if (lampList.isEmpty()) {
             String currentIp = prefs.getString("LAMP_IP", "");
             if (!currentIp.isEmpty()) lampList.add(new Lamp("Default Lamp", currentIp));
         }
-
-        // --- ЛОГІКА ПРИХОВУВАННЯ ---
-        if (spinnerLamps != null) {
-            if (lampList.size() < 2) {
-                spinnerLamps.setVisibility(View.GONE);
-            } else {
-                spinnerLamps.setVisibility(View.VISIBLE);
-            }
-        }
-
+        if (spinnerLamps != null) spinnerLamps.setVisibility(lampList.size() < 2 ? View.GONE : View.VISIBLE);
         if (lampAdapter != null) lampAdapter.notifyDataSetChanged();
-
         if (!lastIp.isEmpty()) {
             for (int i = 0; i < lampList.size(); i++) {
                 if (lampList.get(i).ip.equals(lastIp)) {
                     if (spinnerLamps != null) spinnerLamps.setSelection(i);
-                    udpHelper.setIp(lastIp);
-                    break;
+                    udpHelper.setIp(lastIp); break;
                 }
             }
-        } else if (!lampList.isEmpty()) {
-            udpHelper.setIp(lampList.get(0).ip);
         }
     }
 
     private void parseCurPacket(String msg) {
         try {
             String[] parts = msg.trim().split(" ");
-            if (parts.length >= 2) {
+            if (parts.length >= 6) {
                 int modeId = Integer.parseInt(parts[1]);
+                int bri = Integer.parseInt(parts[2]);
+                int spd = Integer.parseInt(parts[3]);
+                int sca = Integer.parseInt(parts[4]);
+                int state = Integer.parseInt(parts[5]);
 
-                if (parts.length >= 6) {
-                    int bri = Integer.parseInt(parts[2]);
-                    int spd = Integer.parseInt(parts[3]);
-                    int sca = Integer.parseInt(parts[4]);
-                    int state = Integer.parseInt(parts[5]);
-                    boolean isCycleOn = false;
-                    if (parts.length >= 11) isCycleOn = Integer.parseInt(parts[10]) == 1;
-                    boolean finalCycle = isCycleOn;
+                for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
+                    if (eff.id == modeId) {
+                        eff.bright = bri;
+                        eff.speed = spd;
+                        eff.scale = sca;
+                        break;
+                    }
+                }
 
-                    runOnUiThread(() -> {
-                        if (switchPower != null && switchPower.isChecked() != (state == 1)) {
-                            isProgrammaticChange = true;
-                            switchPower.setChecked(state == 1);
-                        }
-                        if (switchCycle != null && switchCycle.isChecked() != finalCycle) {
+                runOnUiThread(() -> {
+                    if (switchPower != null && switchPower.isChecked() != (state == 1)) {
+                        isProgrammaticChange = true;
+                        switchPower.setChecked(state == 1);
+                    }
+                    
+                    if (parts.length >= 11) {
+                        boolean isCycleOn = parts[10].equals("1");
+                        if (switchCycle != null && switchCycle.isChecked() != isCycleOn) {
                             switchCycle.setOnCheckedChangeListener(null);
-                            switchCycle.setChecked(finalCycle);
-                            updateEffectsSpinnerList();
+                            switchCycle.setChecked(isCycleOn);
                             switchCycle.setOnCheckedChangeListener((b, c) -> {
                                 vibrate();
                                 udpHelper.sendCommand(c ? "CYC 1" : "CYC 0");
                                 updateEffectsSpinnerList();
                             });
                         }
-                        if (seekBarBrightness != null) seekBarBrightness.setProgress(bri);
-                        if (seekBarSpeed != null) seekBarSpeed.setProgress(spd);
-                        if (seekBarScale != null) seekBarScale.setProgress(sca);
-                        if (textBriVal != null) textBriVal.setText(String.valueOf(bri));
-                        if (textSpeedVal != null) textSpeedVal.setText(String.valueOf(spd));
-                        if (textScaleVal != null) textScaleVal.setText(String.valueOf(sca));
+                    }
 
-                        int foundPos = -1;
-                        for (int i = 0; i < visibleEffects.size(); i++) {
-                            if (visibleEffects.get(i).id == modeId) {
-                                foundPos = i; break;
-                            }
+                    int foundPos = -1;
+                    for (int i = 0; i < visibleEffects.size(); i++) {
+                        if (visibleEffects.get(i).id == modeId) { foundPos = i; break; }
+                    }
+
+                    if (foundPos != -1) {
+                        if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
+                            isUserAction = false;
+                            spinnerEffects.setSelection(foundPos);
                         }
-                        if (foundPos != -1) {
-                            if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
-                                isUserAction = false;
-                                spinnerEffects.setSelection(foundPos);
-                            }
-                            updateInterfaceForEffect(visibleEffects.get(foundPos));
-                            lastReportedHiddenId = -1;
-                        } else {
-                            for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                                if (eff.id == modeId) {
-                                    updateInterfaceForEffect(eff);
-                                    if (lastReportedHiddenId != modeId) {
-                                        Toast.makeText(this, getString(R.string.msg_hidden_effect, eff.getLocalizedName()), Toast.LENGTH_SHORT).show();
-                                        lastReportedHiddenId = modeId;
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                }
+                        updateInterfaceForEffect(visibleEffects.get(foundPos));
+                    }
+                });
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Error parsing CUR packet", e);
-        }
+        } catch (Exception e) {}
     }
 
     public static void reloadUserList(Context context) {
@@ -450,20 +406,14 @@ public class MainActivity extends BaseActivity {
         } else {
             String[] ids = json.split(",");
             for (String idStr : ids) {
+                int id;
+                boolean visible = true;
                 if (idStr.startsWith("HIDDEN_")) {
-                    try {
-                        int id = Integer.parseInt(idStr.replace("HIDDEN_", ""));
-                        for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                            if (eff.id == id) { eff.isVisible = false; userEffectsList.add(eff); break; }
-                        }
-                    } catch (Exception e) {}
-                } else {
-                    try {
-                        int id = Integer.parseInt(idStr);
-                        for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                            if (eff.id == id) { eff.isVisible = true; userEffectsList.add(eff); break; }
-                        }
-                    } catch (Exception e) {}
+                    id = Integer.parseInt(idStr.replace("HIDDEN_", ""));
+                    visible = false;
+                } else { id = Integer.parseInt(idStr); }
+                for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
+                    if (eff.id == id) { eff.isVisible = visible; userEffectsList.add(eff); break; }
                 }
             }
             for (EffectEntity dbEff : EffectsRepository.EFFECTS_DB) {
@@ -480,9 +430,7 @@ public class MainActivity extends BaseActivity {
         boolean isCycleMode = switchCycle != null && switchCycle.isChecked();
         visibleEffects.clear();
         for (EffectEntity eff : userEffectsList) {
-            if (eff.isVisible) {
-                if (!isCycleMode || eff.useInCycle) visibleEffects.add(eff);
-            }
+            if (eff.isVisible && (!isCycleMode || eff.useInCycle)) visibleEffects.add(eff);
         }
         if (effectsAdapter != null) effectsAdapter.notifyDataSetChanged();
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
@@ -496,41 +444,32 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateInterfaceForEffect(EffectEntity effect) {
-        seekBarSpeed.setMax(effect.speedMax);
-        if (effect.scaleType == 2) {
-            seekBarScale.setVisibility(View.INVISIBLE);
-            textScaleVal.setVisibility(View.INVISIBLE);
-            labelScale.setVisibility(View.INVISIBLE);
-            btnScaMinus.setVisibility(View.INVISIBLE);
-            btnScaPlus.setVisibility(View.INVISIBLE);
-        } else {
-            seekBarScale.setVisibility(View.VISIBLE);
-            textScaleVal.setVisibility(View.VISIBLE);
-            labelScale.setVisibility(View.VISIBLE);
-            btnScaMinus.setVisibility(View.VISIBLE);
-            btnScaPlus.setVisibility(View.VISIBLE);
-            seekBarScale.setMax(effect.scaleMax);
-            seekBarScale.setPadding(0, 0, 0, 0);
-
-            if (effect.scaleType == 1) {
-                labelScale.setText(R.string.label_color);
-                seekBarScale.setProgressTintList(null);
-                seekBarScale.setProgressBackgroundTintList(null);
-                int[] colors = new int[] { 0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF, 0xFFFF0000 };
-                GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
-                rainbow.setCornerRadius(10f);
-                ClipDrawable transparentProgress = new ClipDrawable(new ColorDrawable(Color.TRANSPARENT), Gravity.START, ClipDrawable.HORIZONTAL);
-                LayerDrawable layers = new LayerDrawable(new Drawable[]{rainbow, transparentProgress});
-                layers.setId(0, android.R.id.background);
-                layers.setId(1, android.R.id.progress);
-                seekBarScale.setProgressDrawable(layers);
-                seekBarScale.setThumb(getResources().getDrawable(R.drawable.thumb_round));
-                if (seekBarScale.getThumb() != null) seekBarScale.getThumb().setTint(0xFFFFFFFF);
-                updateScaleTextColor(seekBarScale.getProgress(), true);
+        if (seekBarBrightness != null) {
+            seekBarBrightness.setProgress(effect.bright);
+            textBriVal.setText(String.valueOf(effect.bright));
+        }
+        if (seekBarSpeed != null) {
+            seekBarSpeed.setMax(effect.speedMax);
+            seekBarSpeed.setProgress(effect.speed);
+            textSpeedVal.setText(String.valueOf(effect.speed));
+        }
+        if (seekBarScale != null) {
+            if (effect.scaleType == 2) {
+                seekBarScale.setVisibility(View.INVISIBLE);
+                textScaleVal.setVisibility(View.INVISIBLE);
+                labelScale.setVisibility(View.INVISIBLE);
+                btnScaMinus.setVisibility(View.INVISIBLE);
+                btnScaPlus.setVisibility(View.INVISIBLE);
             } else {
-                labelScale.setText(R.string.label_scale);
-                applySliderStyle();
-                updateScaleTextColor(seekBarScale.getProgress(), false);
+                seekBarScale.setVisibility(View.VISIBLE);
+                textScaleVal.setVisibility(View.VISIBLE);
+                labelScale.setVisibility(View.VISIBLE);
+                btnScaMinus.setVisibility(View.VISIBLE);
+                btnScaPlus.setVisibility(View.VISIBLE);
+                seekBarScale.setMax(effect.scaleMax);
+                seekBarScale.setProgress(effect.scale);
+                labelScale.setText(effect.scaleType == 1 ? R.string.label_color : R.string.label_scale);
+                updateScaleTextColor(effect.scale, effect.scaleType == 1);
             }
         }
     }
@@ -541,12 +480,11 @@ public class MainActivity extends BaseActivity {
             float max = (float) seekBarScale.getMax();
             if (max == 0) max = 255f;
             float hue = (progress / max) * 360.0f;
-            int color = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
-            textScaleVal.setTextColor(color);
+            textScaleVal.setTextColor(Color.HSVToColor(new float[]{hue, 1.0f, 1.0f}));
         } else {
             android.util.TypedValue typedValue = new android.util.TypedValue();
-            boolean found = getTheme().resolveAttribute(R.attr.accentColor, typedValue, true);
-            textScaleVal.setTextColor(found ? typedValue.data : getResources().getColor(R.color.neon_green));
+            getTheme().resolveAttribute(R.attr.accentColor, typedValue, true);
+            textScaleVal.setTextColor(typedValue.data);
         }
     }
 
@@ -557,44 +495,19 @@ public class MainActivity extends BaseActivity {
         for (SeekBar sb : sliders) {
             if (sb == null) continue;
             sb.setPadding(0, 0, 0, 0);
-            sb.setThumbOffset(0);
             if (style == 1) {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_plasma));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_transparent));
-                int plasmaBlueColor = 0xFF006EFF;
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-                sb.setProgressTintList(android.content.res.ColorStateList.valueOf(plasmaBlueColor));
-                sb.setProgressBackgroundTintList(null);
+                sb.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFF006EFF));
             } else if (style == 3) {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_gradient));
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-                sb.setProgressTintList(null);
-                sb.setProgressBackgroundTintList(null);
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_cyber));
-                if (sb.getThumb() != null) sb.getThumb().setTintList(null);
             } else {
                 sb.setProgressDrawable(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.track_standard));
                 sb.setThumb(androidx.core.content.ContextCompat.getDrawable(this, R.drawable.thumb_round));
-                if (sb.getProgressDrawable() != null) sb.getProgressDrawable().setTintList(null);
-                sb.setProgressTintList(null);
-                sb.setProgressBackgroundTintList(null);
-                if (sb.getThumb() != null) sb.getThumb().setTintList(null);
             }
         }
     }
 
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (v != null && v.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else { v.vibrate(50); }
-            }
-        }
-    }
-    private void sendUdpCommand(String command) {
-        if (udpHelper != null) udpHelper.sendCommand(command);
-    }
+    private void sendUdpCommand(String command) { if (udpHelper != null) udpHelper.sendCommand(command); }
 }

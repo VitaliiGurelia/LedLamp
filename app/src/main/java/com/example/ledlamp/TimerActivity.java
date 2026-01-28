@@ -240,16 +240,4 @@ public class TimerActivity extends BaseActivity {
             }
         }).start();
     }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (v != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else { v.vibrate(20); }
-            }
-        }
-    }
 }

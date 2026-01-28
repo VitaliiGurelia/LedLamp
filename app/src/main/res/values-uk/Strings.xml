@@ -99,6 +99,9 @@
     <string name="dialog_factory_reset_title">Заводське скидання</string>
     <string name="dialog_factory_reset_msg">Ви впевнені? Це зітре всі розклади, будильники та налаштування ефектів.</string>
 
+    <string name="dialog_effects_reset_title">Скидання всіх ефектів</string>
+    <string name="dialog_effects_reset_msg">Ви дійсно хочете скинути налаштування всіх ефектів?</string>
+
     <string name="btn_yes">ТАК</string>
     <string name="btn_no">НІ</string>
     <string name="btn_cancel">СКАСУВАТИ</string>
@@ -255,7 +258,7 @@
         Гнучке налаштування часу ввімкнення та вимкнення лампи по днях тижня (до 5 подій на день). Дозволяється увімкнення лампи одного дня, а вимикання — іншого.<br><br>
 
         <b>10. МОВА / LANGUAGE</b><br>
-        Зміна мови інтерфейсу додатку (Українська, English, Dansk).
+        Зміна мови інтерфейсу додатку (Українська, English, Dansк).
     ]]></string>
 
 

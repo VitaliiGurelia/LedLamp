@@ -90,10 +90,13 @@
     <string name="dialog_delete_msg">Slet lampe "%1$s"?</string>
 
     <string name="dialog_reset_title">Nulstil Wi-Fi</string>
-    <string name="dialog_reset_msg">Er du sikker на at du vil nulstille Wi-Fi for "%1$s"?</string>
+    <string name="dialog_reset_msg">Er du sikker på at du vil nulstille Wi-Fi for "%1$s"?</string>
 
     <string name="dialog_factory_reset_title">Fabriksnulstilling</string>
     <string name="dialog_factory_reset_msg">Er du sikker? Dette vil slette alle tidsplaner, alarmer og effektindstillinger.</string>
+
+    <string name="dialog_effects_reset_title">Nulstil alle effekter</string>
+    <string name="dialog_effects_reset_msg">Vil du virkelig nulstille indstillingerne for alle effekter?</string>
 
     <string name="btn_yes">JA</string>
     <string name="btn_no">NEJ</string>
@@ -192,21 +195,21 @@
         2. Opret forbindelse til Wi-Fi <b>LedLamp 1</b> (adgangskode: <b>12345678</b>).<br>
         3. Indstillingsvinduet åbnes (eller indtast adressen <b>192.168.4.1</b> i browseren).<br>
         4. Indtast navn og adgangskode til din router.<br>
-        5. Lampen genstarter i klienttilstand і opretter forbindelse til dit netværк.<br>
-        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn і tryк на \"Tilføj lampe\".<br><br>
+        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværk.<br>
+        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn og tryk på \"Tilføj lampe\".<br><br>
 
         <b>DRIFTSTILSTANDE:</b><br>
-        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværк. Intет internet.<br>
+        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværk. Intet internet.<br>
         2. <b>Klient (WLAN):</b> Lampen er forbundet til routeren. Hovedtilstand.<br><br>
 
-        <i>Hvis lampen не kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
+        <i>Hvis lampen ikke kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
     ]]></string>
 
     <string name="text_manual_2"><![CDATA[
         <b><big>AFSNIT 2. BRUG AF APPEN</big></b><br><br>
 
         <b>HOVEDSKÆRM:</b><br>
-        • <b>Valg af lampe:</b> Giver mulighed for at vælge den ønskede lampe, hvis der er flere.<br>
+        • <b>Valg af lampe:</b> Giver mulighed for at vælge den ønskede lampe, hvis der є flere.<br>
         • <b>Lampe:</b> Tænder och slukker lampen samt viser aktuel status.<br>
         • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid och liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
         • <b>Effektliste:</b> Giver mulighed for at vælge en effekt fra listen.<br>
@@ -224,10 +227,10 @@
         <b><big>INDSTILLINGSMENU</big></b><br><br>
 
         <b>1. FORBINDELSE</b><br>
-        Søg efter lamper на netværкет, tilføj nye lamper via IP, rediger listen over gemте lamper.<br><br>
+        Søg efter lamper на netværket, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
 
         <b>2. APP INDSTILLINGER</b><br>
-        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intет internet, kan tid indstilles via tekstkommando eller кnappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
+        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller knappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
 
         <b>3. EFFEKT STYRING</b><br>
         Sorter effektlisten (træk op/ned) och deaktiver uønskede effekter fra hovedskærmen.<br><br>

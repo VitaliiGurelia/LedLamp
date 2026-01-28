@@ -3,24 +3,18 @@ package com.example.ledlamp;
 import java.util.ArrayList;
 
 public class EffectsRepository {
-    // Головний список ефектів (перенесено з MainActivity)
     public static final ArrayList<EffectEntity> EFFECTS_DB = new ArrayList<>();
 
     static {
-        // --- БАЗОВІ ---
         EFFECTS_DB.add(new EffectEntity(0, "Біле світло", "White Light", "Hvidt lys", 9, 207, 26, 1, 255, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(1, "Колір", "Color", "Farve", 9, 180, 99, 1, 255, 1, 100, 1));
         EFFECTS_DB.add(new EffectEntity(2, "Зміна кольору", "Color Change", "Farveskift", 10, 252, 32, 1, 255, 1, 255, 0));
-
-        // --- ГРУПА ВОГНІ ---
         EFFECTS_DB.add(new EffectEntity(18, "Вогонь 1", "Fire 1", "Ild 1", 22, 53, 3, 1, 255, 0, 255, 1));
         EFFECTS_DB.add(new EffectEntity(19, "Вогонь 2", "Fire 2", "Ild 2", 9, 51, 11, 1, 255, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(39, "Вогонь 3", "Fire 3", "Ild 3", 9, 225, 59, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(40, "Вогонь 4", "Fire 4", "Ild 4", 57, 225, 15, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(41, "Вогонь 5", "Fire 5", "Ild 5", 9, 220, 20, 120, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(42, "Вогонь 6", "Fire 6", "Ild 6", 22, 225, 1, 99, 252, 1, 100, 1));
-
-        // --- ІНШІ ЕФЕКТИ ---
         EFFECTS_DB.add(new EffectEntity(43, "Вихори полум'я", "Fire Whirls", "Ildhvirvler", 9, 240, 1, 99, 252, 1, 100, 1));
         EFFECTS_DB.add(new EffectEntity(45, "Магма", "Magma", "Magma", 9, 198, 20, 150, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(46, "Кипіння", "Boiling", "Kogning", 7, 240, 18, 170, 252, 1, 100, 0));
@@ -79,7 +73,7 @@ public class EffectsRepository {
         EFFECTS_DB.add(new EffectEntity(64, "Конфетті", "Sparkles", "Konfetti", 16, 142, 63, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(65, "Мерехтіння", "Twinkles", "Flimren", 25, 236, 4, 60, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(66, "Дим", "Smoke", "Røg", 9, 157, 100, 99, 252, 1, 100, 1));
-        EFFECTS_DB.add(new EffectEntity(67, "Різнокольоровий дим", "Color Smoke", "Farvet røg", 9, 157, 30, 99, 252, 1, 100, 0));
+        EFFECTS_DB.add(new EffectEntity(67, "Різнокольорові дим", "Color Smoke", "Farvet røg", 9, 157, 30, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(68, "Пікассо", "Picasso", "Picasso", 9, 189, 43, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(69, "Хвилі", "Waves", "Bølger", 9, 236, 80, 220, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(70, "Кольорові драже", "Sand", "Farvede piller", 9, 195, 80, 99, 252, 1, 100, 0));
@@ -88,7 +82,7 @@ public class EffectsRepository {
         EFFECTS_DB.add(new EffectEntity(73, "Хмарка в банці", "Simple Rain", "Sky i krukke", 30, 233, 2, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(74, "Гроза в банці", "Stormy Rain", "Tordenvejr", 20, 236, 25, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(75, "Опади", "Color Rain", "Nedbør", 15, 198, 99, 99, 252, 0, 255, 1));
-        EFFECTS_DB.add(new EffectEntity(76, "Різнокольоровий дощ", "Rain", "Farvet regn", 15, 225, 1, 99, 252, 1, 100, 1));
+        EFFECTS_DB.add(new EffectEntity(76, "Різнокольорові дощ", "Rain", "Farvet regn", 15, 225, 1, 99, 252, 1, 100, 1));
         EFFECTS_DB.add(new EffectEntity(77, "Снігопад", "Snow", "Snefald", 9, 180, 90, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(78, "Зорепад / Заметіль", "Starfall", "Stjerneskud", 20, 199, 54, 99, 252, 1, 100, 0));
         EFFECTS_DB.add(new EffectEntity(79, "Стрибуни", "Leapers", "Springere", 24, 203, 5, 150, 252, 1, 100, 0));
@@ -100,8 +94,15 @@ public class EffectsRepository {
         EFFECTS_DB.add(new EffectEntity(85, "Годинник", "Clock", "Ur", 4, 5, 100, 1, 245, 1, 100, 1));
         EFFECTS_DB.add(new EffectEntity(86, "Прапор України", "Flag UA", "Ukraines flag", 120, 150, 50, 1, 255, 1, 100, 2));
         EFFECTS_DB.add(new EffectEntity(87, "Прапор Данії", "Flag DK", "Danmarks flag", 120, 150, 20, 1, 255, 1, 100, 2));
-        EFFECTS_DB.add(new EffectEntity(88, "Малюнок", "Drawing", "Tegning", 10, 5, 1, 1, 255, 0, 255, 2)); // Type 2 (без масштабу)
+        EFFECTS_DB.add(new EffectEntity(88, "Малюнок", "Drawing", "Tegning", 10, 5, 1, 1, 255, 0, 255, 2));
         EFFECTS_DB.add(new EffectEntity(89, "Бігучий рядок", "Running Text", "Løbende tekst", 10, 99, 38, 1, 252, 1, 100, 1));
     }
 
+    public static void resetAllToDefaults() {
+        for (EffectEntity eff : EFFECTS_DB) {
+            eff.bright = eff.defBright;
+            eff.speed = eff.defSpeed;
+            eff.scale = eff.defScale;
+        }
+    }
 }

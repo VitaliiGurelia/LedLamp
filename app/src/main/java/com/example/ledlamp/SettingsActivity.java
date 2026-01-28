@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.View;
 import java.util.Locale;
 
@@ -110,20 +107,5 @@ public class SettingsActivity extends BaseActivity {
         SharedPreferences.Editor editor = getSharedPreferences("LampAppPrefs", MODE_PRIVATE).edit();
         editor.putString("My_Lang", langCode);
         editor.apply();
-    }
-
-    // Функція вібрації
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(android.content.Context.VIBRATOR_SERVICE);
-            if (v != null && v.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    v.vibrate(50);
-                }
-            }
-        }
     }
 }

@@ -1,12 +1,8 @@
 package com.example.ledlamp;
 
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +34,6 @@ public class DawnAlarmActivity extends BaseActivity {
     };
 
     private final int[] timeValues = {5, 10, 15, 20, 30, 40, 50, 60};
-    private boolean isListening = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +56,7 @@ public class DawnAlarmActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isListening = true;
         loadAlarmsFromLamp();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isListening = false;
     }
 
     private void setupDurationSpinner() {
@@ -188,7 +176,6 @@ public class DawnAlarmActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Failed to load alarms", e);
-                // ВИПРАВЛЕННЯ: Додано повідомлення про помилку синхронізації
                 runOnUiThread(() -> Toast.makeText(this, R.string.msg_sync_error, Toast.LENGTH_SHORT).show());
             }
         }).start();
@@ -214,16 +201,5 @@ public class DawnAlarmActivity extends BaseActivity {
                 Log.e(TAG, "UDP Send failed", e);
             }
         }).start();
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (v != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                else v.vibrate(50);
-            }
-        }
     }
 }

@@ -1,7 +1,11 @@
 package com.example.ledlamp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
@@ -10,17 +14,13 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Цей код виконається ПЕРЕД запуском будь-якого екрану
         applyLanguage();
-        
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         mCurrentTheme = prefs.getInt("app_theme", 0);
         applyTheme(mCurrentTheme);
-        
         super.onCreate(savedInstanceState);
     }
 
-    // Метод оновлення мови
     public void applyLanguage() {
         SharedPreferences languagePrefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
         String lang = languagePrefs.getString("My_Lang", "");
@@ -34,12 +34,22 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void applyTheme(int theme) {
-        if (theme == 1) {
-            setTheme(R.style.Theme_LedLamp_Light);
-        } else if (theme == 2) {
-            setTheme(R.style.Theme_LedLamp_Cyberpunk);
-        } else {
-            setTheme(R.style.Theme_LedLamp); // Темна (Default)
+        if (theme == 1) setTheme(R.style.Theme_LedLamp_Light);
+        else if (theme == 2) setTheme(R.style.Theme_LedLamp_Cyberpunk);
+        else setTheme(R.style.Theme_LedLamp);
+    }
+
+    public void vibrate() {
+        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
+        if (prefs.getBoolean("vibration", true)) {
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (v != null && v.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    v.vibrate(30);
+                }
+            }
         }
     }
 
@@ -47,11 +57,8 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         applyLanguage();
-        
-        // Перевіряємо чи не змінилась тема (наприклад, в іншому вікні)
         SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        int theme = prefs.getInt("app_theme", 0);
-        if (theme != mCurrentTheme) {
+        if (prefs.getInt("app_theme", 0) != mCurrentTheme) {
             recreate();
         }
     }

@@ -3,8 +3,6 @@ package com.example.ledlamp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -163,7 +161,6 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 }
             }
 
-            // ВИПРАВЛЕНО: Використовуємо сучасний Comparator та List.sort
             dayEvents.sort(Comparator.comparingInt(a -> a[0] * 60 + a[1]));
 
             if (!dayEvents.isEmpty()) {
@@ -278,17 +275,5 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 runOnUiThread(() -> Toast.makeText(this, R.string.msg_sync_error, Toast.LENGTH_SHORT).show());
             }
         }).start();
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            if (v != null) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else { v.vibrate(50); }
-            }
-        }
     }
 }

@@ -308,4 +308,7 @@
 
     <string name="dialog_factory_reset_title">Factory Reset</string>
     <string name="dialog_factory_reset_msg">Are you sure? This will erase all schedules, alarms, and effect settings.</string>
+
+    <string name="dialog_effects_reset_title">Reset all effects</string>
+    <string name="dialog_effects_reset_msg">Do you really want to reset the settings of all effects?</string>
 </resources>

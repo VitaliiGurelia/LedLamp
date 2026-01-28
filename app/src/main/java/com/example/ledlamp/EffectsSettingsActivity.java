@@ -36,7 +36,6 @@ public class EffectsSettingsActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Додаємо підтримку Drag and Drop
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             
@@ -44,22 +43,19 @@ public class EffectsSettingsActivity extends BaseActivity {
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 int fromPosition = viewHolder.getAdapterPosition();
                 int toPosition = target.getAdapterPosition();
-                
                 Collections.swap(MainActivity.userEffectsList, fromPosition, toPosition);
                 adapter.notifyItemMoved(fromPosition, toPosition);
                 return true;
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Свайпи не використовуємо
-            }
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
 
             @Override
             public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
                 super.onSelectedChanged(viewHolder, actionState);
-                // Візуальний ефект при виборі (підсвітка)
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    vibrate(); // Вібрація при початку перетягування
                     viewHolder.itemView.setAlpha(0.7f);
                     viewHolder.itemView.setScaleX(1.02f);
                     viewHolder.itemView.setScaleY(1.02f);
@@ -69,11 +65,10 @@ public class EffectsSettingsActivity extends BaseActivity {
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
-                // Скидаємо візуальні ефекти після того, як відпустили
                 viewHolder.itemView.setAlpha(1.0f);
                 viewHolder.itemView.setScaleX(1.0f);
                 viewHolder.itemView.setScaleY(1.0f);
-                saveOrder(); // Зберігаємо новий порядок
+                saveOrder();
             }
         });
 
@@ -81,6 +76,7 @@ public class EffectsSettingsActivity extends BaseActivity {
 
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
+                vibrate();
                 saveOrder();
                 finish();
             });
@@ -105,12 +101,11 @@ public class EffectsSettingsActivity extends BaseActivity {
         prefs.edit().putString("USER_EFFECTS_ORDER", sb.toString()).apply();
     }
 
-    // --- АДАПТЕР RECYCLERVIEW ---
     static class EffectsRecyclerAdapter extends RecyclerView.Adapter<EffectsRecyclerAdapter.EffectViewHolder> {
-        private final Context context;
+        private final BaseActivity context;
         private final ArrayList<EffectEntity> list;
 
-        public EffectsRecyclerAdapter(Context context, ArrayList<EffectEntity> list) {
+        public EffectsRecyclerAdapter(BaseActivity context, ArrayList<EffectEntity> list) {
             this.context = context;
             this.list = list;
         }
@@ -127,31 +122,25 @@ public class EffectsSettingsActivity extends BaseActivity {
             EffectEntity item = list.get(position);
             holder.tvName.setText(item.getLocalizedName());
             holder.tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
-            
-            holder.checkBox.setOnCheckedChangeListener(null); // Скидаємо, щоб уникнути багів при переробці
+            holder.checkBox.setOnCheckedChangeListener(null);
             holder.checkBox.setChecked(item.isVisible);
-            
-            holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                item.isVisible = isChecked;
-                holder.tvName.setAlpha(isChecked ? 1.0f : 0.5f);
+            holder.checkBox.setOnClickListener(v -> {
+                context.vibrate();
+                item.isVisible = holder.checkBox.isChecked();
+                holder.tvName.setAlpha(item.isVisible ? 1.0f : 0.5f);
             });
         }
 
         @Override
-        public int getItemCount() {
-            return list.size();
-        }
+        public int getItemCount() { return list.size(); }
 
         static class EffectViewHolder extends RecyclerView.ViewHolder {
             TextView tvName;
             CheckBox checkBox;
-
             public EffectViewHolder(@NonNull View itemView) {
                 super(itemView);
                 tvName = itemView.findViewById(R.id.textEffectName);
                 checkBox = itemView.findViewById(R.id.checkVisible);
-                
-                // Приховуємо старі кнопки стрілок, якщо вони є в макеті
                 View btnUp = itemView.findViewById(R.id.btnMoveUp);
                 View btnDown = itemView.findViewById(R.id.btnMoveDown);
                 if (btnUp != null) btnUp.setVisibility(View.GONE);

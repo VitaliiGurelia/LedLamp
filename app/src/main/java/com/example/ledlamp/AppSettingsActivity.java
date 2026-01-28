@@ -190,18 +190,15 @@ public class AppSettingsActivity extends BaseActivity {
 
                         String msg = new String(recv.getData(), 0, recv.getLength());
 
-                        // Підтримка обох типів пакетів CUR та CURR
                         if (msg.startsWith("CUR")) {
                             String[] parts = msg.trim().split(" ");
                             if (parts.length >= 2) {
                                 String timeStr = "";
                                 String dayName = "";
                                 
-                                // Логіка для CURR (зазвичай час в кінці)
                                 if (msg.startsWith("CURR") && parts.length >= 10) {
                                     timeStr = parts[parts.length - 1];
                                 } else {
-                                    // Логіка для стандартного CUR
                                     timeStr = parts[parts.length - 2];
                                     try {
                                         int dayNum = Integer.parseInt(parts[parts.length - 1]);
@@ -305,17 +302,5 @@ public class AppSettingsActivity extends BaseActivity {
                 Log.e(TAG, "Error sending UDP command", e);
             }
         }).start();
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(android.content.Context.VIBRATOR_SERVICE);
-            if (v != null && v.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else { v.vibrate(50); }
-            }
-        }
     }
 }

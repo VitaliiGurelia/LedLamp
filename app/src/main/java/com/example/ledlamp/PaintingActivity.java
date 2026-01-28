@@ -2,22 +2,16 @@ package com.example.ledlamp;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import java.net.DatagramPacket;
@@ -80,9 +74,7 @@ public class PaintingActivity extends BaseActivity {
         setupUI();
         setupListeners();
 
-        new android.os.Handler().postDelayed(() -> {
-            updateCalculatedColor();
-        }, 500);
+        new android.os.Handler().postDelayed(this::updateCalculatedColor, 500);
     }
 
     private void initThemeColors() {
@@ -132,21 +124,14 @@ public class PaintingActivity extends BaseActivity {
         matrixView.setCurrentColor(selectedColor);
 
         // Оновлюємо позицію курсора відповідно до Hue (0..360)
-        // Ширина viewSpectrum може змінюватись, тому треба брати актуальну ширину
         viewSpectrum.post(() -> {
             if (viewSpectrum == null || imgCursor == null) return;
             int width = viewSpectrum.getWidth();
             if (width > 0) {
-                // Hue 0..360 -> x 0..width
                 float x = (currentHue / 360f) * width;
-                
-                // Центруємо курсор
                 float cursorX = x - (imgCursor.getWidth() / 2f);
-                
-                // Обмежуємо межі
                 if (cursorX < 0) cursorX = 0;
                 if (cursorX > width - imgCursor.getWidth()) cursorX = width - imgCursor.getWidth();
-
                 imgCursor.setX(cursorX);
             }
         });
@@ -185,8 +170,6 @@ public class PaintingActivity extends BaseActivity {
             });
         }
 
-        // Ми тепер слухаємо дотики на viewSpectrum, але обробляємо їх
-        // так само. Тільки тепер ми будемо оновлювати UI курсора в updateCalculatedColor
         if (viewSpectrum != null) {
             viewSpectrum.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -202,13 +185,10 @@ public class PaintingActivity extends BaseActivity {
                         updateToolsUI();
                     }
 
-                    // Курсор буде оновлено всередині updateCalculatedColor
                     if (System.currentTimeMillis() - lastSendTime > 100) {
                         updateCalculatedColor();
                         lastSendTime = System.currentTimeMillis();
                     } else {
-                        // Якщо ми пропускаємо відправку UDP, все одно оновимо UI (превью + курсор)
-                        // Для плавності краще оновлювати курсор завжди
                         float saturation = (currentBrightness <= 0.5f) ? 1f : 2f * (1f - currentBrightness);
                         float value = (currentBrightness <= 0.5f) ? 2f * currentBrightness : 1f;
                         selectedColor = Color.HSVToColor(new float[]{currentHue, saturation, value});
@@ -216,7 +196,6 @@ public class PaintingActivity extends BaseActivity {
                         if (viewColorPreview != null)
                             viewColorPreview.getBackground().setTint(selectedColor);
 
-                        // Локальне оновлення позиції (дубляж логіки для швидкості UI)
                         if (imgCursor != null) {
                             float cursorX = x - (imgCursor.getWidth() / 2f);
                             imgCursor.setX(cursorX);
@@ -244,13 +223,8 @@ public class PaintingActivity extends BaseActivity {
                         }
                     }
                 }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
+                @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override public void onStopTrackingTouch(SeekBar seekBar) {
                     updateCalculatedColor();
                 }
             });
@@ -280,10 +254,10 @@ public class PaintingActivity extends BaseActivity {
 
     private void startMatrixListener() {
         new Thread(() -> {
-            try {
-                DatagramSocket socket = new DatagramSocket();
+            try (DatagramSocket socket = new DatagramSocket()) {
                 SharedPreferences settings = getSharedPreferences("LampSettings", MODE_PRIVATE);
                 String ip = settings.getString("LAMP_IP", "");
+                if (ip.isEmpty()) return;
                 InetAddress address = InetAddress.getByName(ip);
 
                 byte[] data = "MTRX_GET".getBytes();
@@ -294,16 +268,20 @@ public class PaintingActivity extends BaseActivity {
                 DatagramPacket recv = new DatagramPacket(buf, buf.length);
                 socket.setSoTimeout(3000);
 
-                socket.receive(recv);
-
-                if (recv.getLength() >= 768) {
-                    final byte[] matrixData = new byte[768];
-                    System.arraycopy(recv.getData(), 0, matrixData, 0, 768);
-                    runOnUiThread(() -> {
-                        if (matrixView != null) matrixView.setFullImage(matrixData);
-                    });
+                while (isListening) {
+                    try {
+                        socket.receive(recv);
+                        if (recv.getLength() >= 768) {
+                            final byte[] matrixData = new byte[768];
+                            System.arraycopy(recv.getData(), 0, matrixData, 0, 768);
+                            runOnUiThread(() -> {
+                                if (matrixView != null) matrixView.setFullImage(matrixData);
+                            });
+                        }
+                    } catch (Exception e) {
+                        if (!isListening) break;
+                    }
                 }
-                socket.close();
             } catch (Exception e) {
                 Log.e(TAG, "Error in matrix listener", e);
             }
@@ -312,8 +290,8 @@ public class PaintingActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         isListening = false;
+        super.onDestroy();
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
         int lastEffect = prefs.getInt("LAST_EFFECT_ID", 0);
         if (lastEffect != 88) {
@@ -368,27 +346,14 @@ public class PaintingActivity extends BaseActivity {
         if (ip.isEmpty()) return;
 
         new Thread(() -> {
-            try {
-                DatagramSocket socket = new DatagramSocket();
+            try (DatagramSocket socket = new DatagramSocket()) {
                 byte[] data = command.getBytes();
                 InetAddress address = InetAddress.getByName(ip);
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
                 socket.send(packet);
-                socket.close();
             } catch (Exception e) {
                 Log.e(TAG, "Error sending UDP command", e);
             }
         }).start();
-    }
-
-    private void vibrate() {
-        SharedPreferences prefs = getSharedPreferences("LampAppPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("vibration", true)) {
-            Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            if (v != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) v.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
-                else v.vibrate(20);
-            }
-        }
     }
 }
