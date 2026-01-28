@@ -59,7 +59,6 @@ public class ConnectionActivity extends BaseActivity {
 
         loadLamps();
 
-        // ДОДАВАННЯ
         if (btnAdd != null) {
             btnAdd.setOnClickListener(v -> {
                 vibrate();
@@ -84,7 +83,6 @@ public class ConnectionActivity extends BaseActivity {
             });
         }
 
-        // ПОШУК
         if (btnFind != null) {
             btnFind.setOnClickListener(v -> {
                 vibrate();
@@ -92,7 +90,6 @@ public class ConnectionActivity extends BaseActivity {
             });
         }
 
-        // НАЗАД
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
                 vibrate();
@@ -120,19 +117,13 @@ public class ConnectionActivity extends BaseActivity {
                 while (System.currentTimeMillis() < endTime) {
                     byte[] buf = new byte[1024];
                     DatagramPacket recv = new DatagramPacket(buf, buf.length);
-
                     try {
                         socket.receive(recv);
                         String foundIp = recv.getAddress().getHostAddress();
-
                         boolean exists = false;
                         for (Lamp l : lampList) {
-                            if (l.ip.equals(foundIp)) {
-                                exists = true;
-                                break;
-                            }
+                            if (l.ip.equals(foundIp)) { exists = true; break; }
                         }
-
                         if (!exists) {
                             foundNew = true;
                             runOnUiThread(() -> {
@@ -142,16 +133,11 @@ public class ConnectionActivity extends BaseActivity {
                             });
                             break;
                         }
-
-                    } catch (SocketTimeoutException e) {
-                        // Timeout
-                    }
+                    } catch (SocketTimeoutException e) {}
                 }
-
                 if (!foundNew) {
                     runOnUiThread(() -> Toast.makeText(ConnectionActivity.this, R.string.msg_lamp_not_found, Toast.LENGTH_SHORT).show());
                 }
-
             } catch (Exception e) {
                 Log.e(TAG, "Error finding lamp", e);
             } finally {
@@ -162,7 +148,6 @@ public class ConnectionActivity extends BaseActivity {
 
     private void saveLamps() {
         SharedPreferences prefs = getSharedPreferences("LampSettings", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
         JSONArray jsonArray = new JSONArray();
         for (Lamp l : lampList) {
             try {
@@ -170,12 +155,9 @@ public class ConnectionActivity extends BaseActivity {
                 obj.put("n", l.name);
                 obj.put("i", l.ip);
                 jsonArray.put(obj);
-            } catch (Exception e) {
-                Log.e(TAG, "Error saving lamp to JSON", e);
-            }
+            } catch (Exception e) {}
         }
-        editor.putString("LAMPS_JSON", jsonArray.toString());
-        editor.apply();
+        prefs.edit().putString("LAMPS_JSON", jsonArray.toString()).apply();
     }
 
     private void loadLamps() {
@@ -188,21 +170,14 @@ public class ConnectionActivity extends BaseActivity {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 lampList.add(new Lamp(obj.getString("n"), obj.getString("i")));
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Error loading lamps from JSON", e);
-        }
+        } catch (Exception e) {}
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
-    // --- АДАПТЕР СПИСКУ (Optimized with ViewHolder) ---
     class LampsAdapter extends ArrayAdapter<Lamp> {
-        
         private class ViewHolder {
-            TextView tvName;
-            TextView tvIp;
-            ImageButton btnCheck;
-            ImageButton btnWifiReset;
-            ImageButton btnDelete;
+            TextView tvName, tvIp;
+            ImageButton btnCheck, btnWifiReset, btnDelete, btnFactoryReset;
         }
 
         public LampsAdapter(Context context, ArrayList<Lamp> lamps) {
@@ -223,6 +198,7 @@ public class ConnectionActivity extends BaseActivity {
                 holder.btnCheck = convertView.findViewById(R.id.btnItemCheck);
                 holder.btnWifiReset = convertView.findViewById(R.id.btnItemWifiReset);
                 holder.btnDelete = convertView.findViewById(R.id.btnItemDelete);
+                holder.btnFactoryReset = convertView.findViewById(R.id.btnItemFactoryReset);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -232,29 +208,39 @@ public class ConnectionActivity extends BaseActivity {
                 holder.tvName.setText(lamp.name);
                 holder.tvIp.setText(lamp.ip);
 
-                // КНОПКА 1: ПЕРЕВІРКА
                 holder.btnCheck.setOnClickListener(v -> {
                     vibrate();
                     Toast.makeText(getContext(), getString(R.string.msg_pinging, lamp.name), Toast.LENGTH_SHORT).show();
                     new Thread(() -> {
-                        try {
-                            DatagramSocket s = new DatagramSocket();
+                        try (DatagramSocket s = new DatagramSocket()) {
                             s.setSoTimeout(2000);
                             byte[] d = "GET".getBytes();
-                            DatagramPacket p = new DatagramPacket(d, d.length, InetAddress.getByName(lamp.ip), LAMP_PORT);
-                            s.send(p);
-                            byte[] buf = new byte[1024];
-                            DatagramPacket r = new DatagramPacket(buf, buf.length);
-                            s.receive(r);
+                            s.send(new DatagramPacket(d, d.length, InetAddress.getByName(lamp.ip), LAMP_PORT));
+                            s.receive(new DatagramPacket(new byte[1024], 1024));
                             runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.msg_ping_ok, lamp.name), Toast.LENGTH_SHORT).show());
-                            s.close();
                         } catch (Exception e) {
-                            runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.msg_lamp_not_found), Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> Toast.makeText(getContext(), R.string.msg_lamp_not_found, Toast.LENGTH_SHORT).show());
                         }
                     }).start();
                 });
 
-                // КНОПКА 2: СКИНУТИ WI-FI
+                holder.btnFactoryReset.setOnClickListener(v -> {
+                    vibrate();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.dialog_factory_reset_title)
+                            .setMessage(R.string.dialog_factory_reset_msg)
+                            .setPositiveButton(R.string.btn_yes, (d, w) -> {
+                                new Thread(() -> {
+                                    try (DatagramSocket s = new DatagramSocket()) {
+                                        byte[] data = "WIPE".getBytes();
+                                        s.send(new DatagramPacket(data, data.length, InetAddress.getByName(lamp.ip), LAMP_PORT));
+                                        runOnUiThread(() -> Toast.makeText(getContext(), R.string.msg_saved, Toast.LENGTH_SHORT).show());
+                                    } catch (Exception e) { Log.e(TAG, "WIPE failed", e); }
+                                }).start();
+                            })
+                            .setNegativeButton(R.string.btn_no, null).show();
+                });
+
                 holder.btnWifiReset.setOnClickListener(v -> {
                     vibrate();
                     new AlertDialog.Builder(getContext())
@@ -262,23 +248,16 @@ public class ConnectionActivity extends BaseActivity {
                             .setMessage(getString(R.string.dialog_reset_msg, lamp.name))
                             .setPositiveButton(R.string.btn_yes, (dialog, which) -> {
                                 new Thread(() -> {
-                                    try {
-                                        DatagramSocket s = new DatagramSocket();
+                                    try (DatagramSocket s = new DatagramSocket()) {
                                         byte[] d = "RST".getBytes();
-                                        DatagramPacket p = new DatagramPacket(d, d.length, InetAddress.getByName(lamp.ip), LAMP_PORT);
-                                        s.send(p);
-                                        s.close();
+                                        s.send(new DatagramPacket(d, d.length, InetAddress.getByName(lamp.ip), LAMP_PORT));
                                         runOnUiThread(() -> Toast.makeText(getContext(), R.string.msg_reset_cmd_sent, Toast.LENGTH_SHORT).show());
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "Error sending reset command", e);
-                                    }
+                                    } catch (Exception e) {}
                                 }).start();
                             })
-                            .setNegativeButton(R.string.btn_no, null)
-                            .show();
+                            .setNegativeButton(R.string.btn_no, null).show();
                 });
 
-                // КНОПКА 3: ВИДАЛИТИ
                 holder.btnDelete.setOnClickListener(v -> {
                     vibrate();
                     new AlertDialog.Builder(getContext())
@@ -290,11 +269,9 @@ public class ConnectionActivity extends BaseActivity {
                                 notifyDataSetChanged();
                                 Toast.makeText(getContext(), R.string.msg_deleted, Toast.LENGTH_SHORT).show();
                             })
-                            .setNegativeButton(R.string.btn_cancel, null)
-                            .show();
+                            .setNegativeButton(R.string.btn_cancel, null).show();
                 });
             }
-
             return convertView;
         }
     }
@@ -304,11 +281,8 @@ public class ConnectionActivity extends BaseActivity {
         if (prefs.getBoolean("vibration", true)) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (v != null && v.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    v.vibrate(50);
-                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                else v.vibrate(50);
             }
         }
     }

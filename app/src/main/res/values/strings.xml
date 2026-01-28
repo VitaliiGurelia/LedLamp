@@ -53,7 +53,7 @@
     <!-- ЕКРАН МАТРИЦІ -->
     <string name="title_matrix">MATRIX SETTINGS</string>
     <string name="label_running_text">Running Text</string>
-    <string name="hint_enter_text">Enter text...</string>
+    <string name="hint_enter_text">Enter text…</string>
     <string name="btn_send_text">SEND TEXT</string>
     <string name="label_draw_order">Swap Colors (RGB/GRB)</string>
 
@@ -66,7 +66,7 @@
     <string name="msg_reset_done">Reset to defaults!</string>
     <string name="msg_hidden_effect">Playing hidden effect: %1$s</string>
     <string name="msg_text_sent">Text sent!</string>
-    <string name="msg_syncing">Syncing...</string>
+    <string name="msg_syncing">Syncing…</string>
     <string name="msg_synced">Synchronized!</string>
     <string name="msg_sync_error">Sync error: lamp is not responding</string>
     <string name="label_select_lamp_edit">SELECT LAMP FOR EDITING:</string>
@@ -75,8 +75,8 @@
     <!-- Нові рядки для ConnectionActivity -->
     <string name="msg_ip_exists">IP already exists!</string>
     <string name="msg_empty_fields">Error: Empty fields</string>
-    <string name="msg_scanning">Scanning...</string>
-    <string name="msg_pinging">Ping %1$s...</string>
+    <string name="msg_scanning">Scanning…</string>
+    <string name="msg_pinging">Ping %1$s…</string>
     <string name="msg_ping_ok">✅ %1$s OK!</string>
     <string name="msg_reset_cmd_sent">Reset command sent</string>
     <string name="msg_deleted">Deleted</string>
@@ -305,4 +305,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_cyber">Cyberpunk</string>
     <string name="effect_no_change">No Change</string>
+
+    <string name="dialog_factory_reset_title">Factory Reset</string>
+    <string name="dialog_factory_reset_msg">Are you sure? This will erase all schedules, alarms, and effect settings.</string>
 </resources>

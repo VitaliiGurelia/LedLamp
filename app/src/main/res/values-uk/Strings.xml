@@ -79,11 +79,25 @@
     <string name="label_select_lamp_edit">ВИБЕРІТЬ ЛАМПУ ДЛЯ РЕДАГУВАННЯ:</string>
     <string name="error_no_ip">Помилка: IP не вибрано</string>
 
+    <!-- ПОВІДОМЛЕННЯ CONNECTION -->
+    <string name="msg_ip_exists">IP вже існує!</string>
+    <string name="msg_empty_fields">Помилка: Порожні поля</string>
+    <string name="msg_scanning">Сканування…</string>
+    <string name="msg_pinging">Ping %1$s…</string>
+    <string name="msg_ping_ok">✅ %1$s OK!</string>
+    <string name="msg_reset_cmd_sent">Команду скидання надіслано</string>
+    <string name="msg_deleted">Видалено</string>
+    <string name="msg_found_lamp">Знайдено: %1$s</string>
+    <string name="default_new_lamp_name">Нова Лампа</string>
+
     <string name="dialog_delete_title">Видалення</string>
     <string name="dialog_delete_msg">Видалити лампу \"%1$s\"?</string>
 
     <string name="dialog_reset_title">Скидання Wi-Fi</string>
     <string name="dialog_reset_msg">Ви впевнені, що хочете скинути Wi-Fi для \"%1$s\"?</string>
+
+    <string name="dialog_factory_reset_title">Заводське скидання</string>
+    <string name="dialog_factory_reset_msg">Ви впевнені? Це зітре всі розклади, будильники та налаштування ефектів.</string>
 
     <string name="btn_yes">ТАК</string>
     <string name="btn_no">НІ</string>

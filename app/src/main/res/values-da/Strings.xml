@@ -75,7 +75,7 @@
     <string name="label_select_lamp_edit">VÆLG LAMPE TIL REDIGERING:</string>
     <string name="error_no_ip">Fejl: IP er ikke valgt</string>
 
-    <!-- Nye oversættelser for ConnectionActivity -->
+    <!-- DIALOGS -->
     <string name="msg_ip_exists">IP findes allerede!</string>
     <string name="msg_empty_fields">Fejl: Tomme felter</string>
     <string name="msg_scanning">Skanner…</string>
@@ -90,12 +90,16 @@
     <string name="dialog_delete_msg">Slet lampe "%1$s"?</string>
 
     <string name="dialog_reset_title">Nulstil Wi-Fi</string>
-    <string name="dialog_reset_msg">Er du sikker på at du vil nulstille Wi-Fi for "%1$s"?</string>
+    <string name="dialog_reset_msg">Er du sikker на at du vil nulstille Wi-Fi for "%1$s"?</string>
+
+    <string name="dialog_factory_reset_title">Fabriksnulstilling</string>
+    <string name="dialog_factory_reset_msg">Er du sikker? Dette vil slette alle tidsplaner, alarmer og effektindstillinger.</string>
 
     <string name="btn_yes">JA</string>
     <string name="btn_no">NEJ</string>
     <string name="btn_cancel">ANNULLER</string>
 
+    <!-- CYCLE SETTINGS -->
     <string name="title_cycle_settings">CYKLUS INDSTILLINGER</string>
     <string name="label_keep_cycle">Sluk ikke cyklus når lampen er slukket</string>
     <string name="label_interval">Skifteinterval</string>
@@ -106,6 +110,7 @@
     <string name="label_shuffle">Tilfældig rækkefølge</string>
     <string name="label_drag_hint">Hold for at trække og omarrangere</string>
 
+    <!-- DAWN ALARM -->
     <string name="title_dawn_alarm">LYS VÆKKEUR</string>
     <string name="label_dawn_duration">Solopgang varighed</string>
     <string name="label_lamp_time">Lampe tid: </string>
@@ -118,6 +123,7 @@
     <string name="day_sat">Lørdag</string>
     <string name="day_sun">Søndag</string>
 
+    <!-- SLEEP TIMER -->
     <string name="title_sleep_timer">SLUK TIMER</string>
     <string name="label_turn_off_in">Sluk lampen om</string>
     <string name="label_countdown">Slukker om:</string>
@@ -125,6 +131,7 @@
     <string name="timer_min">min</string>
     <string name="timer_not_active">Timer ikke aktiv</string>
 
+    <!-- SCHEDULE -->
     <string name="title_schedule">TIDSPLAN INDSTILLINGER</string>
     <string name="label_enable_schedule">Aktiver tidsplan</string>
     <string name="label_time_on">TÆND TID</string>
@@ -173,40 +180,35 @@
         — Deaktiver randomizer.
     ]]></string>
     <string name="menu_manual">BRUGERMANUAL</string>
-    <!-- AFSNITSOVERSKRIFTER -->
     <string name="title_manual_1">1. FORBINDELSE</string>
     <string name="title_manual_2">2. APP BRUG</string>
     <string name="title_manual_3">3. KNAPKONTROL</string>
     <string name="title_manual_4">4. FLERE ENHEDER</string>
     <string name="title_manual_5">5. KOMMANDOER</string>
 
-    <!-- AFSNITSTEKSTER -->
-
-    <!-- Section 1: Connection -->
     <string name="text_manual_1"><![CDATA[
         <b>FØRSTE TILSLUTNING:</b><br>
         1. Tænd lampen.<br>
         2. Opret forbindelse til Wi-Fi <b>LedLamp 1</b> (adgangskode: <b>12345678</b>).<br>
         3. Indstillingsvinduet åbnes (eller indtast adressen <b>192.168.4.1</b> i browseren).<br>
         4. Indtast navn og adgangskode til din router.<br>
-        5. Lampen genstarter i klienttilstand og opretter forbindelse til dit netværk.<br>
-        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn og tryk på \"Tilføj lampe\".<br><br>
+        5. Lampen genstarter i klienttilstand і opretter forbindelse til dit netværк.<br>
+        6. I menuen \"Forbindelse\", søg efter lamper. Når lampens IP-adresse vises, giv den et navn і tryк на \"Tilføj lampe\".<br><br>
 
         <b>DRIFTSTILSTANDE:</b><br>
-        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværk. Intet internet.<br>
+        1. <b>Adgangspunkt (AP):</b> Lampen opretter sit eget netværк. Intет internet.<br>
         2. <b>Klient (WLAN):</b> Lampen er forbundet til routeren. Hovedtilstand.<br><br>
 
-        <i>Hvis lampen ikke kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
+        <i>Hvis lampen не kan oprette forbindelse til routeren, opretter den et adgangspunkt igen.</i>
     ]]></string>
 
-    <!-- Section 2: App Usage -->
     <string name="text_manual_2"><![CDATA[
         <b><big>AFSNIT 2. BRUG AF APPEN</big></b><br><br>
 
         <b>HOVEDSKÆRM:</b><br>
         • <b>Valg af lampe:</b> Giver mulighed for at vælge den ønskede lampe, hvis der er flere.<br>
-        • <b>Lampe:</b> Tænder og slukker lampen samt viser aktuel status.<br>
-        • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid og liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
+        • <b>Lampe:</b> Tænder och slukker lampen samt viser aktuel status.<br>
+        • <b>Cyklus:</b> Aktiverer automatisk skift af effekter. Indstillinger for tid och liste findes i menuen &quot;Cyklus tilstand&quot;.<br>
         • <b>Effektliste:</b> Giver mulighed for at vælge en effekt fra listen.<br>
         • <b>Skydere:</b><br>
         — <i>Lysstyrke:</i> Lysstyrke for den aktuelle effekt.<br>
@@ -215,74 +217,72 @@
         • <b>Nulstil:</b> Nulstiller indstillingerne for den aktuelle effekt til standard.<br>
         <br>
         <i><b>GEM INDSTILLINGER:</b><br>
-        Appen husker automatisk den sidst valgte effekt. Lampen husker hastigheds- og lysstyrkeindstillinger for hver effekt individuelt.</i><br>
+        Appen husker automatisk den sidst valgte effekt. Lampen husker hastigheds- och lysstyrkeindstillinger for hver effekt individuelt.</i><br>
         <br>
         --------------------------------<br>
         <br>
         <b><big>INDSTILLINGSMENU</big></b><br><br>
 
         <b>1. FORBINDELSE</b><br>
-        Søg efter lamper på netværket, tilføj nye lamper via IP, rediger listen over gemte lamper.<br><br>
+        Søg efter lamper на netværкет, tilføj nye lamper via IP, rediger listen over gemте lamper.<br><br>
 
         <b>2. APP INDSTILLINGER</b><br>
-        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intet internet, kan tid indstilles via tekstkommando eller knappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
+        Vibrationsstyring, valg af skyderstil, tidsindstillinger. Lampen henter tid fra internettet. Hvis intет internet, kan tid indstilles via tekstkommando eller кnappen &quot;Synkroniser tid&quot;. Hvis lampetiden afviger fra telefontiden, vil gensynkronisering justere forskydningen. Internetsynkronisering har altid prioritet.<br><br>
 
         <b>3. EFFEKT STYRING</b><br>
-        Sorter effektlisten (træk op/ned) og deaktiver uønskede effekter fra hovedskærmen.<br><br>
+        Sorter effektlisten (træk op/ned) och deaktiver uønskede effekter fra hovedskærmen.<br><br>
 
         <b>4. CYKLUS TILSTAND</b><br>
-        Vælg effekter til automatisk afspilning og indstil skifteinterval.<br><br>
+        Vælg effekter til automatisk afspilning och indstil skifteinterval.<br><br>
 
         <b>5. LYS VÆKKEUR</b><br>
-        Indstil tid og ugedage for jævn solopgangssimulering før opvågning.<br><br>
+        Indstil tid och ugedage for jævn solopgangssimulering før opvågning.<br><br>
 
         <b>6. SLUK TIMER</b><br>
         Indstil nedtælling til automatisk slukning af lampen.<br><br>
 
         <b>7. TEGNING</b><br>
-        Tegn med pixels på matricen i realtid. Værktøjer: blyant, viskelæder, farvevælger, pensellysstyrke. Tegningen gemmes i effekten &quot;Tegning&quot;.<br><br>
+        Tegn med pixels на matricen i realtid. Værktøjer: blyant, viskelæder, farvevælger, pensellysstyrke. Tegningen gemmes i effekten &quot;Tegning&quot;.<br><br>
 
         <b>8. LØBENDE TEKST</b><br>
-        Send tekst til effekten &quot;Løbende tekst&quot;. Bruges også til servicekommandoer.<br><br>
+        Send tekst til effekten &quot;Løbende tekst&quot;. Bruges також til servicekommandoer.<br><br>
 
         <b>9. TÆNDINGSPLAN</b><br>
-        Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag og slukke en anden.<br><br>
+        Fleksibel tænd/sluk-plan efter ugedage (op til 5 hændelser pr. dag). Tillader at tænde en dag och slukke en anden.<br><br>
 
         <b>10. SPROG</b><br>
         Skift app-grænsefladesprog (Ukrainsk, Engelsk, Dansk).
     ]]></string>
 
-    <!-- Afsnit 3: Knapkontrol -->
     <string name="text_manual_3"><![CDATA[
         <b>KNAPKONTROL:</b><br><br>
-        Lampen kan betjenes ved hjælp af berøringsknappen placeret øverst på lampen. Når der trykkes, lyser knappen rødt.<br><br>
-        • <b>1 klik</b> — Tænd / Sluk.<br>
-        • <b>2 klik</b> — Næste effekt.<br>
-        • <b>3 klik</b> — Forrige effekt.<br>
-        • <b>4 klik</b> — OTA firmwareopdateringstilstand (for udviklere).<br>
-        • <b>5 klik</b> — Vis IP-adresse (løbende tekst).<br>
-        • <b>6 klik</b> — Vis aktuel tid.<br>
-        • <b>7 klik</b> — Skift Wi-Fi-tilstand (Adgangspunkt <-> Klient).<br>
+        Lampen kan betjenes ved hjælp af berøringsknappen placeret øverst на lampen. Når der trykkes, lyser кnappen rødt.<br><br>
+        • <b>1 кlik</b> — Tænd / Sluk.<br>
+        • <b>2 кlik</b> — Næste effekt.<br>
+        • <b>3 кlik</b> — Forrige effekt.<br>
+        • <b>4 кlik</b> — OTA firmwareopdateringstilstand (for udviklere).<br>
+        • <b>5 кlik</b> — Vis IP-adresse (løbende tekst).<br>
+        • <b>6 кlik</b> — Vis aktuel tid.<br>
+        • <b>7 кlik</b> — Skift Wi-Fi-tilstand (Adgangspunkt <-> Klient).<br>
         <br>
         <b>HOLDHANDLINGER:</b><br><br>
         • <b>Hold</b> — Juster lysstyrke.<br>
-        • <b>1 klik + Hold</b> — Juster hastighed.<br>
-        • <b>2 klik + Hold</b> — Juster skala.<br>
+        • <b>1 кlik + Hold</b> — Juster hastighed.<br>
+        • <b>2 кlik + Hold</b> — Juster skala.<br>
         <br>
         <i>Bemærk: Hvert efterfølgende hold ændrer justeringsretningen (øg/mindsk).</i>
     ]]></string>
 
-    <!-- Afsnit 4: Flere Enheder -->
     <string name="text_manual_4"><![CDATA[
         <b>FLERE TELEFONER:</b><br>
-        Du kan styre lampen fra forskellige telefoner.<br><br>
+        Du kan styre lampen fra forskellige телефоner.<br><br>
 
         <b>SYNKRONISERING:</b><br>
-        • <b>&quot;Cyklus&quot; liste:</b> Gemmes i lampen. Fælles for alle. Listen i lampen opdateres ved den seneste ændring på enhver telefon.<br>
-        • <b>Visningsrækkefølge af effekter på hovedskærmen:</b> Gemmes i telefonen. Individuel for hver.<br><br>
+        • <b>&quot;Cyklus&quot; liste:</b> Gemmes і lampen. Fælles for alle. Listen і lampen opdateres ved den seneste ændring на enhver телефон.<br>
+        • <b>Visningsrækkefølge af effekter на hovedskærmen:</b> Gemmes і телефоне. Individuel for hver.<br><br>
 
         <b>FLERE LAMPER:</b><br>
-        Tilføj deres IP-adresser i menuen &quot;Forbindelse&quot; і skift mellem dem на головному екрані. Alle kommandoer sendes кun til den lampe, der er valgt на головному екрані.
+        Tilføj deres IP-adresser och menuen &quot;Forbindelse&quot; och skift mellem dem на головному екрані. Alle kommandoer sendes кun til den lampe, der er valgt на головному екрані.
     ]]></string>
     <string name="label_device_time">Enhedstid:</string>
     <string name="error_connection">Ingen forbindelse</string>
