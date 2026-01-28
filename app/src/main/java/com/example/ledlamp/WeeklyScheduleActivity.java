@@ -24,11 +24,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class WeeklyScheduleActivity extends BaseActivity {
     private static final String TAG = "WeeklyScheduleActivity";
 
+    // [День][Слот][0=Год, 1=Хв, 2=Дія, 3=Ефект]
     public static int[][][] scheduleData = new int[7][5][4];
 
     LinearLayout containerDays;
@@ -161,7 +163,8 @@ public class WeeklyScheduleActivity extends BaseActivity {
                 }
             }
 
-            java.util.Collections.sort(dayEvents, (a, b) -> Integer.compare(a[0] * 60 + a[1], b[0] * 60 + b[1]));
+            // ВИПРАВЛЕНО: Використовуємо сучасний Comparator та List.sort
+            dayEvents.sort(Comparator.comparingInt(a -> a[0] * 60 + a[1]));
 
             if (!dayEvents.isEmpty()) {
                 for (int[] event : dayEvents) {
@@ -229,7 +232,7 @@ public class WeeklyScheduleActivity extends BaseActivity {
     }
 
     private void loadFromLamp() {
-        if (selectedLampIp.isEmpty()) return;
+        if (selectedLampIp.isEmpty() || selectedLampIp.equals("192.168.0.105")) return;
         new Thread(() -> {
             try {
                 DatagramSocket socket = new DatagramSocket();
