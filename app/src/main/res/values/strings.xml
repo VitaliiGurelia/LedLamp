@@ -311,4 +311,18 @@
 
     <string name="dialog_effects_reset_title">Reset all effects</string>
     <string name="dialog_effects_reset_msg">Do you really want to reset the settings of all effects?</string>
+
+    <string name="btn_save">SAVE</string>
+    <string name="dialog_rename_lamp_title">Rename Lamp</string>
+    <string name="btn_ota">WI-FI UPDATE (OTA)</string>
+    <string name="title_ota">Wi-Fi Update (OTA)</string>
+    <string name="btn_activate_ota">Activate OTA</string>
+    <string name="note_ota_instruction">Attention: to protect against accidental triggering, the lamp firmware requires TWO presses of the \'Activate OTA\' button within 30 seconds. After the second press, the lamp will flash yellow, enable the \'Matrix\' effect, and enter firmware update mode for 5 minutes.</string>
+    <string name="msg_ota_sent">OTA command sent. If this is the first press, confirm again within 30 seconds.</string>
+    <string name="no_lamps_saved">No saved lamps</string>
+
+    <string name="btn_apply_workdays">APPLY TO WORKDAYS</string>
+    <string name="btn_apply_all_days">APPLY TO ALL DAYS</string>
+    <string name="msg_applied_to_workdays">Applied to workdays (Mon–Fri)</string>
+    <string name="msg_applied_to_all_days">Applied to all days (Mon–Sun)</string>
 </resources>

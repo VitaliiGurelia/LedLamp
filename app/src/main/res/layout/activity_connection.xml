@@ -91,6 +91,17 @@
             android:background="?attr/panelColor"
             android:layout_marginBottom="20dp"/>
 
+        <!-- КНОПКА OTA -->
+        <Button
+            android:id="@+id/btnOta"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/btn_ota"
+            android:backgroundTint="?attr/accentColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
         <!-- КНОПКА ВИХОДУ -->
         <Button
             android:id="@+id/btnBack"

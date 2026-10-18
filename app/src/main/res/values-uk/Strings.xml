@@ -304,4 +304,18 @@
     <string name="theme_light">Світла</string>
     <string name="theme_cyber">Кіберпанк</string>
     <string name="effect_no_change">Без змін</string>
+
+    <string name="btn_save">ЗБЕРЕГТИ</string>
+    <string name="dialog_rename_lamp_title">Зміна назви лампи</string>
+    <string name="btn_ota">ОНОВЛЕННЯ ПО WI-FI (OTA)</string>
+    <string name="title_ota">Оновлення по Wi-Fi (OTA)</string>
+    <string name="btn_activate_ota">Активувати OTA</string>
+    <string name="note_ota_instruction">Увага: для захисту від випадкового спрацьовування прошивка лампи вимагає ДВОХ натискань кнопки \'Активувати OTA\' протягом 30 секунд. Після другого натискання лампа блимне жовтим кольором, увімкне ефект \'Матриця\' і перейде в режим прошивки на 5 хвилин.</string>
+    <string name="msg_ota_sent">Команду OTA надіслано. Якщо це перше натискання — підтвердіть ще раз протягом 30 секунд.</string>
+    <string name="no_lamps_saved">Немає збережених ламп</string>
+
+    <string name="btn_apply_workdays">ЗАСТОСУВАТИ ДЛЯ РОБОЧИХ ДНІВ</string>
+    <string name="btn_apply_all_days">ЗАСТОСУВАТИ ДЛЯ ВСІХ ДНІВ</string>
+    <string name="msg_applied_to_workdays">Застосовано для робочих днів (Пн–Пт)</string>
+    <string name="msg_applied_to_all_days">Застосовано для всіх днів (Пн–Нд)</string>
 </resources>

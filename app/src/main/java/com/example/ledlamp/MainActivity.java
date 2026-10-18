@@ -49,6 +49,8 @@ public class MainActivity extends BaseActivity {
     boolean isProgrammaticChange = false;
     boolean isUserAction = true;
     private long lastUpdate = 0;
+    private long lastUserEffectSelectionTime = 0;
+    private int pendingEffectId = -1;
     private UdpHelper udpHelper;
 
     @Override
@@ -161,7 +163,9 @@ public class MainActivity extends BaseActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (!isUserAction) return;
                     EffectEntity effect = (EffectEntity) parent.getItemAtPosition(position);
-                    udpHelper.sendCommand("EFF " + effect.id);
+                    lastUserEffectSelectionTime = System.currentTimeMillis();
+                    pendingEffectId = effect.id;
+                    udpHelper.sendCommand("EFF " + effect.id, 2, 30);
                     udpHelper.sendCommand("BRI " + effect.bright);
                     udpHelper.sendCommand("SPD " + effect.speed);
                     udpHelper.sendCommand("SCA " + effect.scale);
@@ -177,6 +181,7 @@ public class MainActivity extends BaseActivity {
         if (btnPrev != null) {
             btnPrev.setOnClickListener(v -> {
                 vibrate();
+                isUserAction = true;
                 int current = spinnerEffects.getSelectedItemPosition();
                 if (current > 0) spinnerEffects.setSelection(current - 1);
                 else spinnerEffects.setSelection(visibleEffects.size() - 1);
@@ -186,6 +191,7 @@ public class MainActivity extends BaseActivity {
         if (btnNext != null) {
             btnNext.setOnClickListener(v -> {
                 vibrate();
+                isUserAction = true;
                 int current = spinnerEffects.getSelectedItemPosition();
                 if (current < visibleEffects.size() - 1) spinnerEffects.setSelection(current + 1);
                 else spinnerEffects.setSelection(0);
@@ -352,12 +358,25 @@ public class MainActivity extends BaseActivity {
                 int sca = Integer.parseInt(parts[4]);
                 int state = Integer.parseInt(parts[5]);
 
-                for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
-                    if (eff.id == modeId) {
-                        eff.bright = bri;
-                        eff.speed = spd;
-                        eff.scale = sca;
-                        break;
+                long timeSinceUserSelection = System.currentTimeMillis() - lastUserEffectSelectionTime;
+                boolean inImmunityWindow = timeSinceUserSelection < 2000;
+
+                if (inImmunityWindow && pendingEffectId != -1) {
+                    if (modeId == pendingEffectId) {
+                        pendingEffectId = -1;
+                    }
+                }
+
+                boolean shouldUpdateEffectUi = !(inImmunityWindow && pendingEffectId != -1);
+
+                if (shouldUpdateEffectUi) {
+                    for (EffectEntity eff : EffectsRepository.EFFECTS_DB) {
+                        if (eff.id == modeId) {
+                            eff.bright = bri;
+                            eff.speed = spd;
+                            eff.scale = sca;
+                            break;
+                        }
                     }
                 }
 
@@ -380,17 +399,19 @@ public class MainActivity extends BaseActivity {
                         }
                     }
 
-                    int foundPos = -1;
-                    for (int i = 0; i < visibleEffects.size(); i++) {
-                        if (visibleEffects.get(i).id == modeId) { foundPos = i; break; }
-                    }
-
-                    if (foundPos != -1) {
-                        if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
-                            isUserAction = false;
-                            spinnerEffects.setSelection(foundPos);
+                    if (shouldUpdateEffectUi) {
+                        int foundPos = -1;
+                        for (int i = 0; i < visibleEffects.size(); i++) {
+                            if (visibleEffects.get(i).id == modeId) { foundPos = i; break; }
                         }
-                        updateInterfaceForEffect(visibleEffects.get(foundPos));
+
+                        if (foundPos != -1) {
+                            if (spinnerEffects != null && spinnerEffects.getSelectedItemPosition() != foundPos) {
+                                isUserAction = false;
+                                spinnerEffects.setSelection(foundPos);
+                            }
+                            updateInterfaceForEffect(visibleEffects.get(foundPos));
+                        }
                     }
                 });
             }

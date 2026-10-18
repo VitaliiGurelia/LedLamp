@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -132,11 +133,39 @@ public class DayScheduleActivity extends BaseActivity {
             slotsContainer.addView(row);
         }
 
+        Button btnApplyWorkdays = findViewById(R.id.btnApplyWorkdays);
+        Button btnApplyAll = findViewById(R.id.btnApplyAll);
+
+        if (btnApplyWorkdays != null) {
+            btnApplyWorkdays.setOnClickListener(v -> {
+                vibrate();
+                copyCurrentScheduleToDays(0, 5);
+                Toast.makeText(this, R.string.msg_applied_to_workdays, Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        if (btnApplyAll != null) {
+            btnApplyAll.setOnClickListener(v -> {
+                vibrate();
+                copyCurrentScheduleToDays(0, 7);
+                Toast.makeText(this, R.string.msg_applied_to_all_days, Toast.LENGTH_SHORT).show();
+            });
+        }
+
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
                 vibrate();
                 finish();
             });
+        }
+    }
+
+    private void copyCurrentScheduleToDays(int startDay, int endDay) {
+        for (int d = startDay; d < endDay; d++) {
+            if (d == currentDayIndex) continue;
+            for (int s = 0; s < 5; s++) {
+                System.arraycopy(WeeklyScheduleActivity.scheduleData[currentDayIndex][s], 0, WeeklyScheduleActivity.scheduleData[d][s], 0, 4);
+            }
         }
     }
 

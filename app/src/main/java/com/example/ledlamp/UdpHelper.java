@@ -33,18 +33,27 @@ public class UdpHelper {
         this.cachedAddress = null; // Скидаємо кеш, щоб резолвити нову IP
     }
 
-    public void sendCommand(String command) {
+    public void sendCommand(String command, int repeatCount, int delayMs) {
         if (currentIp.isEmpty()) return;
         new Thread(() -> {
             try (DatagramSocket socket = new DatagramSocket()) {
                 byte[] data = command.getBytes();
                 InetAddress address = InetAddress.getByName(currentIp);
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, LAMP_PORT);
-                socket.send(packet);
+                for (int i = 0; i < repeatCount; i++) {
+                    socket.send(packet);
+                    if (i < repeatCount - 1 && delayMs > 0) {
+                        try { Thread.sleep(delayMs); } catch (InterruptedException ignored) {}
+                    }
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error sending command: " + command, e);
             }
         }).start();
+    }
+
+    public void sendCommand(String command) {
+        sendCommand(command, 1, 0);
     }
 
     public void startListening() {

@@ -298,4 +298,18 @@
     <string name="theme_light">Lys</string>
     <string name="theme_cyber">Cyberpunk</string>
     <string name="effect_no_change">Ingen ændring</string>
+
+    <string name="btn_save">GEM</string>
+    <string name="dialog_rename_lamp_title">Omdøb lampe</string>
+    <string name="btn_ota">WI-FI OPDATERING (OTA)</string>
+    <string name="title_ota">Wi-Fi Opdatering (OTA)</string>
+    <string name="btn_activate_ota">Aktivér OTA</string>
+    <string name="note_ota_instruction">Bemærk: For at beskytte mod utilsigtet aktivering kræver lampens firmware TO tryk på knappen \'Aktivér OTA\' inden for 30 sekunder. Efter det andet tryk vil lampen blinke gult, tænde for \'Matrix\'-effekten og gå i firmwaretilstand i 5 minutter.</string>
+    <string name="msg_ota_sent">OTA-kommando sendt. Hvis dette er første tryk, skal du bekræfte igen inden for 30 sekunder.</string>
+    <string name="no_lamps_saved">Ingen gemte lamper</string>
+
+    <string name="btn_apply_workdays">ANVEND PÅ ARBEJDSDAGE</string>
+    <string name="btn_apply_all_days">ANVEND PÅ ALLE DAGE</string>
+    <string name="msg_applied_to_workdays">Anvendt på arbejdsdage (Man–Fre)</string>
+    <string name="msg_applied_to_all_days">Anvendt på alle dage (Man–Søn)</string>
 </resources>

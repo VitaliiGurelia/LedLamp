@@ -4,19 +4,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +33,7 @@ public class ConnectionActivity extends BaseActivity {
     private static final String TAG = "ConnectionActivity";
 
     EditText editName, editIp;
-    Button btnAdd, btnFind, btnBack;
+    Button btnAdd, btnFind, btnOta, btnBack;
     ListView listView;
 
     ArrayList<Lamp> lampList = new ArrayList<>();
@@ -48,6 +50,7 @@ public class ConnectionActivity extends BaseActivity {
         editIp = findViewById(R.id.editIpAddress);
         btnAdd = findViewById(R.id.btnAddLamp);
         btnFind = findViewById(R.id.btnFindLamps);
+        btnOta = findViewById(R.id.btnOta);
         btnBack = findViewById(R.id.btnBack);
         listView = findViewById(R.id.listViewLamps);
 
@@ -87,12 +90,107 @@ public class ConnectionActivity extends BaseActivity {
             });
         }
 
+        if (btnOta != null) {
+            btnOta.setOnClickListener(v -> {
+                vibrate();
+                showOtaDialog();
+            });
+        }
+
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
-                vibrate(); // ДОДАНО
+                vibrate();
                 finish();
             });
         }
+    }
+
+    private void showOtaDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_ota, null);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+
+        LinearLayout container = view.findViewById(R.id.containerOtaLamps);
+        TextView tvNoLamps = view.findViewById(R.id.tvNoLamps);
+        Button btnClose = view.findViewById(R.id.btnCloseOtaDialog);
+
+        if (btnClose != null) {
+            btnClose.setOnClickListener(v -> {
+                vibrate();
+                dialog.dismiss();
+            });
+        }
+
+        if (lampList.isEmpty()) {
+            if (tvNoLamps != null) tvNoLamps.setVisibility(View.VISIBLE);
+        } else {
+            if (tvNoLamps != null) tvNoLamps.setVisibility(View.GONE);
+            for (Lamp lamp : lampList) {
+                View item = LayoutInflater.from(this).inflate(R.layout.item_ota_lamp, container, false);
+                TextView tvName = item.findViewById(R.id.tvOtaLampName);
+                TextView tvIp = item.findViewById(R.id.tvOtaLampIp);
+                Button btnActivate = item.findViewById(R.id.btnActivateOta);
+
+                if (tvName != null) tvName.setText(lamp.name);
+                if (tvIp != null) tvIp.setText(lamp.ip);
+                if (btnActivate != null) {
+                    btnActivate.setOnClickListener(v -> {
+                        vibrate();
+                        sendOtaCommand(lamp.ip);
+                        Toast.makeText(ConnectionActivity.this, R.string.msg_ota_sent, Toast.LENGTH_LONG).show();
+                    });
+                }
+                container.addView(item);
+            }
+        }
+
+        dialog.show();
+    }
+
+    private void sendOtaCommand(String ip) {
+        new Thread(() -> {
+            try (DatagramSocket socket = new DatagramSocket()) {
+                byte[] data = "OTA".getBytes();
+                DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ip), LAMP_PORT);
+                socket.send(packet);
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending OTA command to " + ip, e);
+            }
+        }).start();
+    }
+
+    private void showRenameDialog(Lamp lamp) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dialog_rename_lamp_title);
+
+        final EditText input = new EditText(this);
+        input.setSingleLine(true);
+        input.setText(lamp.name);
+        if (lamp.name != null) {
+            input.setSelection(lamp.name.length());
+        }
+
+        FrameLayout container = new FrameLayout(this);
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        container.setPadding(padding, padding / 2, padding, padding / 2);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton(R.string.btn_save, (dialog, which) -> {
+            String newName = input.getText().toString().trim();
+            if (!newName.isEmpty()) {
+                lamp.name = newName;
+                saveLamps();
+                adapter.notifyDataSetChanged();
+                Toast.makeText(ConnectionActivity.this, R.string.msg_saved, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ConnectionActivity.this, R.string.msg_empty_fields, Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, null);
+        builder.show();
     }
 
     private void findNewLamp() {
@@ -186,6 +284,15 @@ public class ConnectionActivity extends BaseActivity {
             if (lamp != null) {
                 holder.tvName.setText(lamp.name);
                 holder.tvIp.setText(lamp.ip);
+
+                View.OnLongClickListener renameListener = v -> {
+                    vibrate();
+                    showRenameDialog(lamp);
+                    return true;
+                };
+                holder.tvName.setOnLongClickListener(renameListener);
+                convertView.setOnLongClickListener(renameListener);
+
                 holder.btnCheck.setOnClickListener(v -> {
                     vibrate();
                     Toast.makeText(getContext(), getString(R.string.msg_pinging, lamp.name), Toast.LENGTH_SHORT).show();
